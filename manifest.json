@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "My Chrome Sidepanel App",
+  "version": "1.0",
+  "description": "A sidepanel app created with Vite, React, and TypeScript",
+  "side_panel": {
+    "default_path": "index.html"
+  },
+  "permissions": ["sidePanel"],
+  "background": {
+    "service_worker": "src/background.ts",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "Open Mettatate"
+  }
+}
