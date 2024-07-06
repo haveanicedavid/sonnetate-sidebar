@@ -18,16 +18,12 @@ type ChildMap = { [headerId: number]: number[] }
 type OrderedChunkByIndex = { [docIndex: number]: OrderedChunk }
 
 export function parseMd(markdown: string): Block[] {
+  // Trim leading and trailing whitespace, and split by double newlines
   const textWithDocIndex: { text: string; docIndex: number }[] = markdown
-    .split('\n\n')
-    .map((text, index) => {
-      return { text, docIndex: index }
-    })
+    .trim()
+    .split(/\n{2,}/)
+    .map((text, index) => ({ text: text.trim(), docIndex: index }))
 
-  /**
-   * Key represents the depth of the heading, where 0 represents the root level.
-   * Value represents the docIndex of the parent heading.
-   */
   const headerIndexByDepth: { [depth: number]: number } = {
     0: -1,
     1: -1,
@@ -41,7 +37,6 @@ export function parseMd(markdown: string): Block[] {
   const childrenByParentIndex: ChildMap = {}
   const orderedBlocksByIndex: OrderedChunkByIndex = {}
 
-  // represents root level
   let currDepth = 0
 
   const basicBlocks: Chunk[] = textWithDocIndex.map(({ text, docIndex }) => {
@@ -87,5 +82,18 @@ export function parseMd(markdown: string): Block[] {
 
   blocksNoChildren.sort((a, b) => a.docIndex - b.docIndex)
 
-  return []
+  function buildNestedStructure(parentIndex: number): Block[] {
+    const children = childrenByParentIndex[parentIndex] || []
+    return children.map((childIndex) => {
+      const block = orderedBlocksByIndex[childIndex]
+      return {
+        text: block.text,
+        type: block.type,
+        children: buildNestedStructure(childIndex),
+        order: block.order,
+      }
+    })
+  }
+
+  return buildNestedStructure(-1)
 }

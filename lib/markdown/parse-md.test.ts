@@ -62,7 +62,7 @@ Paragraph 3
   ])
 })
 
-test.skip('parses lists', () => {
+test('parses lists', () => {
   const markdown = `
 # List Examples
 
@@ -138,7 +138,7 @@ test.skip('parses lists', () => {
   ])
 })
 
-test.skip('parses blockquotes and code blocks', () => {
+test('parses blockquotes and code blocks', () => {
   const markdown = `
 # Quotes and Code
 
@@ -177,7 +177,7 @@ function hello() {
   ])
 })
 
-test.skip('parses images', () => {
+test('parses images', () => {
   const markdown = `
 # Images
 
