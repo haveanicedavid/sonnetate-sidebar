@@ -1,5 +1,3 @@
-// src/parse-md.test.ts
-
 import { expect, test } from 'vitest'
 import { parseMd } from './parse-md'
 
