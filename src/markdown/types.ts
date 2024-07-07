@@ -1,4 +1,4 @@
-export type BlockType =
+export type MdBlockType =
   | 'heading'
   | 'paragraph'
   | 'ordered-list'
@@ -8,9 +8,9 @@ export type BlockType =
   | 'codeblock'
   | 'image'
 
-export interface Block {
+export interface MdBlock {
   text: string
-  type: BlockType
-  children: Block[]
+  type: MdBlockType
+  children: MdBlock[]
   order: number
 }
