@@ -7,7 +7,7 @@ const config = {
   tabWidth: 2,
   semi: false,
   singleQuote: true,
-  importOrder: ['^@core/(.*)$', '^@server/(.*)$', '^@ui/(.*)$', '^[./]'],
+  importOrder: ['^@core/(.*)$', '^@/(.*)$', '^[./]'],
   importOrderSeparation: true,
   importOrderSortSpecifiers: true,
   plugins: ['@trivago/prettier-plugin-sort-imports'],

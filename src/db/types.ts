@@ -1,5 +1,13 @@
 type BlockType = 'block' | 'topic'
 
+export type DbSchema = {
+  blocks: Block
+  summaries: Summary
+  topics: Topic
+  trees: Tree
+  users: User
+}
+
 export interface Block {
   id: string
   children: Block[]
