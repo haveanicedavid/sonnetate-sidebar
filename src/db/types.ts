@@ -1,34 +1,54 @@
 type BlockType = 'block' | 'topic'
 
 export interface Block {
-  children: Block[]
   id: string
+  children: Block[]
   order: number
   parent: Block
+  summary: Summary
   text: string
   type: BlockType
   tree: Tree
+  user: User
 }
-
-export interface Tree {
-  id: string
-  topic: Topic
-  up: Tree | null
-  down: Tree[] | null
-}
-
-export interface Topic {
-  id: string
-  name: string
-  meta: Topic | null
-  subtopics: Topic[] | null
-}
-
 
 export interface Summary {
   id: string
   blocks: Block[]
   topics: Topic[]
   createdAt: number
-  subject: string
+  for: string
+  description: string
+  user: User
+}
+
+export interface Topic {
+  id: string
+  name: string
+  parents: Topic[] | null
+  children: Topic[] | null
+  trees: Tree[]
+  summaries: Summary[]
+  users: User[]
+}
+
+export interface Tree {
+  id: string
+  topic: Topic
+  /** Same as the topic name */
+  name: string
+  parent: Tree | null
+  children: Tree[] | null
+  blocks: Block[]
+  user: User
+}
+
+export interface User {
+  id: string
+  blocks: Block[]
+  handle: string
+  password: string
+  summaries: Summary[]
+  topics: Topic[]
+  trees: Tree[]
 }
