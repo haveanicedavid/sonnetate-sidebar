@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest'
+
 import { getBlockType, getHeadingLevel } from './utils'
 
 test('getBlockType correctly identifies block types', () => {
@@ -16,14 +17,14 @@ test('getBlockType correctly identifies block types', () => {
 })
 
 test('getHeadingLevel correctly identifies heading levels', () => {
-  expect(getHeadingLevel('# Heading 1')).toBe(1);
-  expect(getHeadingLevel('## Heading 2')).toBe(2);
-  expect(getHeadingLevel('### Heading 3')).toBe(3);
-  expect(getHeadingLevel('#### Heading 4')).toBe(4);
-  expect(getHeadingLevel('##### Heading 5')).toBe(5);
-  expect(getHeadingLevel('###### Heading 6')).toBe(6);
+  expect(getHeadingLevel('# Heading 1')).toBe(1)
+  expect(getHeadingLevel('## Heading 2')).toBe(2)
+  expect(getHeadingLevel('### Heading 3')).toBe(3)
+  expect(getHeadingLevel('#### Heading 4')).toBe(4)
+  expect(getHeadingLevel('##### Heading 5')).toBe(5)
+  expect(getHeadingLevel('###### Heading 6')).toBe(6)
   // fails
-  expect(getHeadingLevel('######7 not Heading 7')).toBe(0);
-  expect(getHeadingLevel('not a header')).toBe(0);
-  expect(getHeadingLevel('#not-a-header')).toBe(0);
-});
+  expect(getHeadingLevel('######7 not Heading 7')).toBe(0)
+  expect(getHeadingLevel('not a header')).toBe(0)
+  expect(getHeadingLevel('#not-a-header')).toBe(0)
+})

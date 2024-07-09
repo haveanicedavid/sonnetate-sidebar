@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest'
+
 import { parseMd } from './parse-md'
 
 test('parses headings and paragraphs', () => {

@@ -14,7 +14,7 @@ export function createUser({
   db.transact([
     tx.users[id].update({
       handle,
-      apiKey
+      apiKey,
     }),
   ])
 }

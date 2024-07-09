@@ -5,9 +5,9 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
+import { useUserAtom } from '@/db/ui-store'
 import { streamSummarization } from '@/lib/ai/messages'
 import { MARKDOWN_STUB } from '@/lib/markdown/stub'
-import { useUserAtom } from '@/db/ui-store'
 
 export function HomePage() {
   const [userInput, setUserInput] = useState('')
@@ -15,7 +15,7 @@ export function HomePage() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [user] = useUserAtom()
-  console.log("🪚 user:", user);
+  console.log('🪚 user:', user)
 
   const handleSummarize = async (prompt?: string) => {
     setIsLoading(true)
@@ -28,7 +28,11 @@ export function HomePage() {
         currentWindow: true,
       })
       if (tab.url) {
-        for await (const chunk of streamSummarization({ url: tab.url, prompt, apiKey: user?.apiKey })) {
+        for await (const chunk of streamSummarization({
+          url: tab.url,
+          prompt,
+          apiKey: user?.apiKey,
+        })) {
           setSummary((prev) => prev + chunk)
         }
       } else {

@@ -1,8 +1,9 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
 import { type ManifestV3Export, crx } from '@crxjs/vite-plugin'
-import manifest from './manifest.json'
+import react from '@vitejs/plugin-react'
 import path from 'path'
+import { defineConfig } from 'vite'
+
+import manifest from './manifest.json'
 
 export default defineConfig({
   plugins: [react(), crx({ manifest: manifest as ManifestV3Export })],

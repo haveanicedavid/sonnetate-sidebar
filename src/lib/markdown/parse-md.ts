@@ -1,6 +1,7 @@
+import { groupBy } from 'remeda'
+
 import type { Block, BlockType } from './types'
 import { getBlockType, getHeadingLevel } from './utils'
-import { groupBy } from 'remeda'
 
 interface Chunk {
   text: string
