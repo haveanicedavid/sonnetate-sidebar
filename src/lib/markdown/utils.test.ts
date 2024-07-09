@@ -1,6 +1,6 @@
-import { expect, test } from 'vitest'
+import { describe, expect, test } from 'vitest'
 
-import { getBlockType, getHeadingLevel } from './utils'
+import { getBlockType, getDescription, getHeadingLevel } from './utils'
 
 test('getBlockType correctly identifies block types', () => {
   expect(getBlockType('# Heading')).toBe('heading')
@@ -27,4 +27,43 @@ test('getHeadingLevel correctly identifies heading levels', () => {
   expect(getHeadingLevel('######7 not Heading 7')).toBe(0)
   expect(getHeadingLevel('not a header')).toBe(0)
   expect(getHeadingLevel('#not-a-header')).toBe(0)
+})
+
+describe('getDescription', () => {
+  test('extracts content under the first header', () => {
+    const markdown = `# Heading
+
+paragraph describing
+more description
+
+## Another heading
+This should not be included`
+
+    expect(getDescription(markdown)).toBe(
+      'paragraph describing\nmore description'
+    )
+  })
+
+  test('returns empty string if no content after header', () => {
+    const markdown = `# Heading
+
+## Another heading
+Content under second heading`
+
+    expect(getDescription(markdown)).toBe('')
+  })
+
+  test('returns empty string if no headers', () => {
+    const markdown = `This is just a paragraph
+without any headers`
+
+    expect(getDescription(markdown)).toBe('')
+  })
+
+  test('handles markdown with only one header', () => {
+    const markdown = `# Single Heading
+This is the only content`
+
+    expect(getDescription(markdown)).toBe('This is the only content')
+  })
 })
