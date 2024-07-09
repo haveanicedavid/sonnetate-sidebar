@@ -1,14 +1,26 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
 
-import { MdBlock } from './types'
+import { MdBlock, MdBlockWithId } from '../types'
 import {
-    createTopicTree,
+  assignIds,
+  createTopicTree,
   getBlockType,
   getDescription,
   getHeadingLevel,
   getTopics,
   getTrees,
-} from './utils'
+} from '../utils'
+
+// Mock the id() function from InstantDB
+vi.mock('@instantdb/react', () => ({
+  id: vi
+    .fn()
+    .mockReturnValueOnce('id1')
+    .mockReturnValueOnce('id2')
+    .mockReturnValueOnce('id3')
+    .mockReturnValueOnce('id4')
+    .mockReturnValueOnce('id5'),
+}))
 
 test('getBlockType correctly identifies block types', () => {
   expect(getBlockType('# Heading')).toBe('heading')
@@ -180,7 +192,7 @@ describe('getTopics', () => {
       'Topic 1/topic 2/topic 3',
       'Topic 1/another topic',
       'Different topic/topic 3',
-      'Topic 1/Topic 1/nested topic'
+      'Topic 1/Topic 1/nested topic',
     ]
 
     const result = getTopics(paths)
@@ -191,7 +203,7 @@ describe('getTopics', () => {
       'another topic',
       'nested topic',
       'topic 2',
-      'topic 3'
+      'topic 3',
     ])
   })
 
@@ -212,7 +224,7 @@ describe('createTopicTree', () => {
       'Topic 1/another topic',
       'Different topic/topic 3',
       'Topic 1/Topic 2',
-      'Very/Deep/Nested/Structure/With/Many/Levels'
+      'Very/Deep/Nested/Structure/With/Many/Levels',
     ]
 
     const result = createTopicTree(trees)
@@ -229,23 +241,19 @@ describe('createTopicTree', () => {
                 children: [
                   {
                     label: 'topic 4',
-                    children: [
-                      { label: 'topic 5', children: [] }
-                    ]
-                  }
-                ]
-              }
-            ]
+                    children: [{ label: 'topic 5', children: [] }],
+                  },
+                ],
+              },
+            ],
           },
           { label: 'another topic', children: [] },
-          { label: 'Topic 2', children: [] }
-        ]
+          { label: 'Topic 2', children: [] },
+        ],
       },
       {
         label: 'Different topic',
-        children: [
-          { label: 'topic 3', children: [] }
-        ]
+        children: [{ label: 'topic 3', children: [] }],
       },
       {
         label: 'Very',
@@ -264,20 +272,18 @@ describe('createTopicTree', () => {
                         children: [
                           {
                             label: 'Many',
-                            children: [
-                              { label: 'Levels', children: [] }
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
+                            children: [{ label: 'Levels', children: [] }],
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
     ])
   })
 
@@ -290,7 +296,7 @@ describe('createTopicTree', () => {
     expect(createTopicTree(trees)).toEqual([
       { label: 'Topic A', children: [] },
       { label: 'Topic B', children: [] },
-      { label: 'Topic C', children: [] }
+      { label: 'Topic C', children: [] },
     ])
   })
 
@@ -299,10 +305,94 @@ describe('createTopicTree', () => {
     expect(createTopicTree(trees)).toEqual([
       {
         label: 'Spaced Topic',
-        children: [
-          { label: 'Nested Spaced', children: [] }
-        ]
-      }
+        children: [{ label: 'Nested Spaced', children: [] }],
+      },
     ])
+  })
+})
+
+describe('assignIds', () => {
+  test('assigns unique ids and parentIds to all blocks and their children', () => {
+    const inputBlocks: MdBlock[] = [
+      {
+        text: '# Header 1',
+        type: 'heading',
+        tree: '',
+        children: [
+          {
+            text: 'Paragraph 1',
+            type: 'paragraph',
+            tree: 'Header 1',
+            children: [],
+            order: 0,
+          },
+          {
+            text: '## Subheader',
+            type: 'heading',
+            tree: 'Header 1',
+            children: [
+              {
+                text: 'Paragraph 2',
+                type: 'paragraph',
+                tree: 'Header 1/Subheader',
+                children: [],
+                order: 0,
+              },
+            ],
+            order: 1,
+          },
+        ],
+        order: 0,
+      },
+    ]
+
+    const result = assignIds(inputBlocks)
+
+    const expectedOutput: MdBlockWithId[] = [
+      {
+        id: 'id1',
+        parentId: null,
+        text: '# Header 1',
+        type: 'heading',
+        tree: '',
+        children: [
+          {
+            id: 'id2',
+            parentId: 'id1',
+            text: 'Paragraph 1',
+            type: 'paragraph',
+            tree: 'Header 1',
+            children: [],
+            order: 0,
+          },
+          {
+            id: 'id3',
+            parentId: 'id1',
+            text: '## Subheader',
+            type: 'heading',
+            tree: 'Header 1',
+            children: [
+              {
+                id: 'id4',
+                parentId: 'id3',
+                text: 'Paragraph 2',
+                type: 'paragraph',
+                tree: 'Header 1/Subheader',
+                children: [],
+                order: 0,
+              },
+            ],
+            order: 1,
+          },
+        ],
+        order: 0,
+      },
+    ]
+
+    expect(result).toEqual(expectedOutput)
+  })
+
+  test('handles empty input', () => {
+    expect(assignIds([])).toEqual([])
   })
 })

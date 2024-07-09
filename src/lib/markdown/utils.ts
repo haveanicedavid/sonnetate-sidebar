@@ -1,4 +1,5 @@
-import type { MdBlock, MdBlockType } from './types'
+import { id } from '@instantdb/react'
+import type { FlatMdBlock, MdBlock, MdBlockType, MdBlockWithId } from './types'
 
 export function getBlockType(text: string): MdBlockType {
   const firstLine = text.split('\n')[0]
@@ -99,3 +100,36 @@ export function createTopicTree(trees: string[]): TreeNode[] {
   return root
 }
 
+export function assignIds(blocks: MdBlock[]): MdBlockWithId[] {
+  function assignIdRecursively(block: MdBlock, parentId: string | null): MdBlockWithId {
+    const newId = id();
+    const blockWithId: MdBlockWithId = {
+      ...block,
+      id: newId,
+      parentId,
+      children: block.children.map(child => assignIdRecursively(child, newId))
+    };
+    return blockWithId;
+  }
+
+  return blocks.map(block => assignIdRecursively(block, null));
+}
+
+export function flattenMdBlocks(blocks: MdBlockWithId[]): FlatMdBlock[] {
+  const flatBlocks: FlatMdBlock[] = [];
+
+  function flatten(block: MdBlockWithId) {
+    const { children, ...flatBlock } = block;
+    flatBlocks.push(flatBlock);
+
+    for (const child of children) {
+      flatten(child);
+    }
+  }
+
+  for (const block of blocks) {
+    flatten(block);
+  }
+
+  return flatBlocks;
+}

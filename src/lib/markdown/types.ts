@@ -15,3 +15,11 @@ export interface MdBlock {
   children: MdBlock[]
   order: number
 }
+
+export interface MdBlockWithId extends MdBlock {
+  id: string
+  parentId: string | null
+  children: MdBlockWithId[]
+}
+
+export interface FlatMdBlock extends Omit<MdBlockWithId, 'children'> {}
