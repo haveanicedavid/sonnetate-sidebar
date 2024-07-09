@@ -110,7 +110,7 @@ describe('getTrees', () => {
     ]
 
     const result = getTrees(parsedMd)
-    expect(result).toEqual(['header 1', 'header 1/header 2'])
+    expect(result).toEqual(['Header 1', 'Header 1/Header 2'])
   })
 
   test('returns empty array for markdown with no trees', () => {
@@ -141,7 +141,7 @@ describe('getTrees', () => {
             tree: 'Header 1',
             children: [
               {
-                text: '### [[Header 1/Header 2/HEADER 3|Header 3]]',
+                text: '### [[Header 1/Header 2/HEADER 3|HEADER 3]]',
                 type: 'heading',
                 tree: 'Header 1/Header 2',
                 children: [
@@ -165,59 +165,9 @@ describe('getTrees', () => {
 
     const result = getTrees(parsedMd)
     expect(result).toEqual([
-      'header 1',
-      'header 1/header 2',
-      'header 1/header 2/header 3',
-    ])
-  })
-
-  test('handles mixed case and returns lowercase unique trees', () => {
-    const parsedMd: MdBlock[] = [
-      {
-        text: '# [[MiXeD CaSe]]',
-        type: 'heading',
-        tree: '',
-        children: [
-          {
-            text: '## [[MiXeD CaSe/LoWeR cAsE|Lower Case]]',
-            type: 'heading',
-            tree: 'MiXeD CaSe',
-            children: [
-              {
-                text: 'Paragraph',
-                type: 'paragraph',
-                tree: 'MiXeD CaSe/LoWeR cAsE',
-                children: [],
-                order: 0,
-              },
-            ],
-            order: 0,
-          },
-          {
-            text: '## [[MiXeD CaSe/UPPER CASE|Upper Case]]',
-            type: 'heading',
-            tree: 'MiXeD CaSe',
-            children: [
-              {
-                text: 'Another Paragraph',
-                type: 'paragraph',
-                tree: 'MiXeD CaSe/UPPER CASE',
-                children: [],
-                order: 0,
-              },
-            ],
-            order: 1,
-          },
-        ],
-        order: 0,
-      },
-    ]
-
-    const result = getTrees(parsedMd)
-    expect(result).toEqual([
-      'mixed case',
-      'mixed case/lower case',
-      'mixed case/upper case',
+      'Header 1',
+      'Header 1/Header 2',
+      'Header 1/Header 2/HEADER 3',
     ])
   })
 })

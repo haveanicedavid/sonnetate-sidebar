@@ -46,7 +46,7 @@ export function getTrees(parsedMd: MdBlock[]): string[] {
   function traverse(blocks: MdBlock[]) {
     for (const block of blocks) {
       if (block.tree !== '') {
-        trees.add(block.tree.toLowerCase())
+        trees.add(block.tree)
       }
       traverse(block.children)
     }
