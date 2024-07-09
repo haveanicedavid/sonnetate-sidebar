@@ -7,12 +7,15 @@ import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
 import { streamSummarization } from '@/lib/ai/messages'
 import { MARKDOWN_STUB } from '@/lib/markdown/stub'
+import { useUserAtom } from '@/db/ui-store'
 
 export function HomePage() {
   const [userInput, setUserInput] = useState('')
   const [summary, setSummary] = useState(MARKDOWN_STUB)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [user] = useUserAtom()
+  console.log("🪚 user:", user);
 
   const handleSummarize = async (prompt?: string) => {
     setIsLoading(true)
@@ -25,7 +28,7 @@ export function HomePage() {
         currentWindow: true,
       })
       if (tab.url) {
-        for await (const chunk of streamSummarization({ url: tab.url, prompt })) {
+        for await (const chunk of streamSummarization({ url: tab.url, prompt, apiKey: user?.apiKey })) {
           setSummary((prev) => prev + chunk)
         }
       } else {

@@ -2,22 +2,23 @@ import Anthropic from '@anthropic-ai/sdk'
 
 import { createSystemPrompt } from './prompts'
 
-const API_KEY =
-  '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'
-
-const anthropic = new Anthropic({
-  apiKey: API_KEY,
-})
-
 export async function* streamSummarization({
   url,
+  apiKey,
   tags,
   prompt,
 }: {
   url: string
+  apiKey?: string
   tags?: string
   prompt?: string
 }) {
+  if (!apiKey) throw new Error('API key is required')
+
+  const anthropic = new Anthropic({
+    apiKey,
+  })
+
   const content = prompt
     ? `look at the following webpage and use it to answer my question\n\nwebpage: ${url}\n\nquestion: ${prompt}`
     : `summarize the following webpage: ${url}`
