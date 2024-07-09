@@ -1,8 +1,8 @@
-export const MARKDOWN_STUB = `# My App Testing Guide
+export const MARKDOWN_STUB = `# [[Testing Guide]]
 
 This document outlines the steps and components required to thoroughly test the application.
 
-## Installation
+## [[Installation]]
 
 Follow these steps to install the application:
 
@@ -10,9 +10,9 @@ Follow these steps to install the application:
 2. Navigate to the project directory
 3. Run \`npm install\` to install dependencies
 
-## Features to Test
+## [[Features to Test/slash|alias]]
 
-### User Authentication
+### [[User Authentication]]
 
 1. **Sign Up**:
     - Verify that a new user can create an account with valid credentials.

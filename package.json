@@ -30,6 +30,7 @@
     "react-markdown": "^9.0.1",
     "react-router-dom": "^6.24.1",
     "remark": "^15.0.1",
+    "remark-gfm": "^4.0.0",
     "remark-parse": "^11.0.0",
     "remark-wiki-link": "^2.0.1",
     "remeda": "^2.2.2",

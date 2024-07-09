@@ -20,7 +20,7 @@ export async function* streamSummarization({
   })
 
   const content = prompt
-    ? `look at the following webpage and use it to answer my question\n\nwebpage: ${url}\n\nquestion: ${prompt}`
+    ? `look at the webpage ${url} and use it for the following prompt. Make sure you use it for the first heading you respond with. {{prompt}}:\n\n${prompt}`
     : `summarize the following webpage: ${url}`
 
   const stream = await anthropic.messages.create({

@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+import remarkWikiLink from 'remark-wiki-link'
 
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -15,7 +17,6 @@ export function HomePage() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [user] = useUserAtom()
-  console.log('🪚 user:', user)
 
   const handleSummarize = async (prompt?: string) => {
     setIsLoading(true)
@@ -29,8 +30,8 @@ export function HomePage() {
       })
       if (tab.url) {
         for await (const chunk of streamSummarization({
-          url: tab.url,
           prompt,
+          url: tab.url,
           apiKey: user?.apiKey,
         })) {
           setSummary((prev) => prev + chunk)
@@ -64,7 +65,14 @@ export function HomePage() {
 
         {summary && (
           <Card className="p-4 mt-4 markdown">
-            <ReactMarkdown>{summary}</ReactMarkdown>
+            <ReactMarkdown
+              remarkPlugins={[
+                remarkGfm,
+                [remarkWikiLink, { aliasDivider: '|' }],
+              ]}
+            >
+              {summary}
+            </ReactMarkdown>
           </Card>
         )}
       </div>
@@ -76,7 +84,7 @@ export function HomePage() {
           <Separator className="flex-grow" />
         </div>
 
-        <form onSubmit={() => handleSummarize(userInput)}>
+        <div>
           <Textarea
             value={userInput}
             onChange={(e) => setUserInput(e.target.value)}
@@ -84,10 +92,15 @@ export function HomePage() {
             className="min-h-[100px] mb-2"
             disabled={isLoading}
           />
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={isLoading}
+            onClick={() => handleSummarize(userInput)}
+          >
             {isLoading ? 'Processing...' : 'Send'}
           </Button>
-        </form>
+        </div>
       </div>
     </div>
   )
