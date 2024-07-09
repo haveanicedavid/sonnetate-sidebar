@@ -1,4 +1,4 @@
-export const MarkdownStub = `# My App Testing Guide
+export const MARKDOWN_STUB = `# My App Testing Guide
 
 This document outlines the steps and components required to thoroughly test the application.
 

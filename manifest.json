@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "My Chrome Sidepanel App",
+  "name": "Sonnetate - AI powered annotations",
   "version": "1.0",
-  "description": "A sidepanel app created with Vite, React, and TypeScript",
+  "description": "PKM inspired, AI fueled, annotations for the web",
   "side_panel": {
     "default_path": "index.html"
   },
@@ -12,6 +12,7 @@
     "type": "module"
   },
   "action": {
-    "default_title": "Open Mettatate"
-  }
+    "default_title": "Open Sonnetate"
+  },
+  "host_permissions": ["https://*.anthropic.com/"]
 }

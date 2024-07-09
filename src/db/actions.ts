@@ -1,27 +1,12 @@
-import { db } from '@/App'
+import { id, tx } from '@instantdb/react'
 
-export function signInUser(handle: string, password: string) {
-  const query = {
-    users: {
-      $: {
-        where: {
-          handle,
-        },
-      },
-    },
-  }
-  const { error, data } = db.useQuery(query)
+import { db } from '@/db'
 
-  if (error) {
-    console.error(error)
-    throw new Error(error.message)
-  }
-
-  const user = data.users[0]
-  console.log('user', user)
-  if (user?.password !== password) {
-    throw new Error('Invalid password')
-  }
-
-  return user
+export function signUpUser(handle: string, password: string) {
+  db.transact([
+    tx.users[id()].update({
+      handle,
+      password,
+    }),
+  ])
 }

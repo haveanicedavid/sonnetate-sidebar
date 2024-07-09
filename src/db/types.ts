@@ -47,16 +47,16 @@ export interface Tree {
   name: string
   parent: Tree | null
   children: Tree[] | null
-  blocks: Block[]
-  user: User
+  // blocks: Block[]
+  // user: User
 }
 
 export interface User {
   id: string
-  blocks: Block[]
+  // blocks: Block[]
   handle: string
   password: string
-  summaries: Summary[]
-  topics: Topic[]
-  trees: Tree[]
+  // summaries: Summary[]
+  // topics: Topic[]
+  // trees: Tree[]
 }

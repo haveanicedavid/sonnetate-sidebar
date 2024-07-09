@@ -1,0 +1,114 @@
+@tailwind base;
+/* Shadcn overwrites rendered markdown styles. This isn't ideal, but fixes for now */
+
+@layer base {
+  .markdown {
+    @apply text-base leading-7;
+  }
+
+  .markdown > * + * {
+    @apply mt-6;
+  }
+
+  .markdown h1 {
+    @apply mb-6 scroll-m-20 text-3xl font-extrabold tracking-tight lg:text-4xl;
+  }
+
+  .markdown h2 {
+    @apply mt-10 mb-4 scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight transition-colors first:mt-0;
+  }
+
+  .markdown h3 {
+    @apply mt-8 mb-4 scroll-m-20 text-xl font-semibold tracking-tight;
+  }
+
+  .markdown h4 {
+    @apply mt-8 mb-4 scroll-m-20 text-lg font-semibold tracking-tight;
+  }
+
+  .markdown h5 {
+    @apply mt-8 mb-4 scroll-m-20 text-base font-semibold tracking-tight;
+  }
+
+  .markdown h6 {
+    @apply mt-8 mb-4 scroll-m-20 text-base font-semibold tracking-tight text-muted-foreground;
+  }
+
+  .markdown p {
+    @apply leading-7;
+  }
+
+  .markdown a {
+    @apply font-medium text-primary underline underline-offset-4 hover:text-primary/80;
+  }
+
+  .markdown blockquote {
+    @apply mt-6 border-l-2 pl-6 italic;
+  }
+
+  .markdown ul,
+  .markdown ol {
+    @apply my-6 ml-6 space-y-2;
+  }
+
+  .markdown ul {
+    @apply list-disc;
+  }
+
+  .markdown ol {
+    @apply list-decimal;
+  }
+
+  .markdown li {
+    @apply pl-2;
+  }
+
+  .markdown li::marker {
+    @apply text-muted-foreground;
+  }
+
+  .markdown li > ul,
+  .markdown li > ol {
+    @apply my-2 ml-4;
+  }
+
+  .markdown table {
+    @apply my-6 w-full overflow-y-auto;
+  }
+
+  .markdown thead {
+    @apply bg-muted;
+  }
+
+  .markdown th {
+    @apply border px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right;
+  }
+
+  .markdown tbody tr {
+    @apply border-b;
+  }
+
+  .markdown td {
+    @apply px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right;
+  }
+
+  .markdown code {
+    @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
+  }
+
+  .markdown pre {
+    @apply mt-6 mb-4 overflow-x-auto rounded-lg bg-muted p-4;
+  }
+
+  .markdown pre code {
+    @apply block bg-transparent p-0 font-mono text-sm;
+  }
+
+  .markdown hr {
+    @apply my-8 border-muted-foreground/20;
+  }
+
+  .markdown img {
+    @apply max-w-full rounded-lg;
+  }
+}
