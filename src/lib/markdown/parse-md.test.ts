@@ -27,31 +27,31 @@ Paragraph 3
         {
           text: 'Paragraph 1',
           type: 'paragraph',
-          tree: 'header 1',
+          tree: 'Header 1',
           children: [],
           order: 0,
         },
         {
           text: '## [[Header 1/Header 2|Header 2]]',
           type: 'heading',
-          tree: 'header 1',
+          tree: 'Header 1',
           children: [
             {
               text: 'Paragraph 2',
               type: 'paragraph',
-              tree: 'header 1/header 2',
+              tree: 'Header 1/Header 2',
               children: [],
               order: 0,
             },
             {
               text: '### [[Header 1/Header 2/Header 3|Header 3]]',
               type: 'heading',
-              tree: 'header 1/header 2',
+              tree: 'Header 1/Header 2',
               children: [
                 {
                   text: 'Paragraph 3',
                   type: 'paragraph',
-                  tree: 'header 1/header 2/header 3',
+                  tree: 'Header 1/Header 2/Header 3',
                   children: [],
                   order: 0,
                 },
@@ -102,12 +102,12 @@ test('parses lists with wikilink headings and lowercase tree field', () => {
         {
           text: '## [[List Examples/Unordered List|Unordered List]]',
           type: 'heading',
-          tree: 'list examples',
+          tree: 'List Examples',
           children: [
             {
               text: '- Item 1\n- Item 2\n  - Nested Item 1\n  - Nested Item 2',
               type: 'unordered-list',
-              tree: 'list examples/unordered list',
+              tree: 'List Examples/Unordered List',
               children: [],
               order: 0,
             },
@@ -117,12 +117,12 @@ test('parses lists with wikilink headings and lowercase tree field', () => {
         {
           text: '## [[List Examples/Ordered List|Ordered List]]',
           type: 'heading',
-          tree: 'list examples',
+          tree: 'List Examples',
           children: [
             {
               text: '1. First\n2. Second\n   1. Nested First\n   2. Nested Second',
               type: 'ordered-list',
-              tree: 'list examples/ordered list',
+              tree: 'List Examples/Ordered List',
               children: [],
               order: 0,
             },
@@ -132,12 +132,12 @@ test('parses lists with wikilink headings and lowercase tree field', () => {
         {
           text: '## [[List Examples/Task List|Task List]]',
           type: 'heading',
-          tree: 'list examples',
+          tree: 'List Examples',
           children: [
             {
               text: '- [ ] Todo 1\n- [x] Done 1',
               type: 'task-list',
-              tree: 'list examples/task list',
+              tree: 'List Examples/Task List',
               children: [],
               order: 0,
             },
@@ -175,14 +175,14 @@ function hello() {
         {
           text: '> This is a blockquote\n> It can span multiple lines',
           type: 'blockquote',
-          tree: 'quotes and code',
+          tree: 'Quotes and Code',
           children: [],
           order: 0,
         },
         {
           text: '```javascript\nfunction hello() {\n  console.log("Hello, world!");\n}\n```',
           type: 'codeblock',
-          tree: 'quotes and code',
+          tree: 'Quotes and Code',
           children: [],
           order: 1,
         },
@@ -216,26 +216,26 @@ Another image here.
         {
           text: '![Alt text](https://example.com/image.jpg)',
           type: 'image',
-          tree: 'images',
+          tree: 'Images',
           children: [],
           order: 0,
         },
         {
           text: 'Paragraph with ![inline image](https://example.com/inline.png) inside.',
           type: 'paragraph',
-          tree: 'images',
+          tree: 'Images',
           children: [],
           order: 1,
         },
         {
           text: '## [[Images/Nested Images|Nested Images]]',
           type: 'heading',
-          tree: 'images',
+          tree: 'Images',
           children: [
             {
               text: 'Another image here.',
               type: 'paragraph',
-              tree: 'images/nested images',
+              tree: 'Images/Nested Images',
               children: [],
               order: 0,
             },

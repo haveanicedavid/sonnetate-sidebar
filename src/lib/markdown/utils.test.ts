@@ -2,6 +2,7 @@ import { describe, expect, test } from 'vitest'
 
 import { MdBlock } from './types'
 import {
+    createTopicTree,
   getBlockType,
   getDescription,
   getHeadingLevel,
@@ -201,5 +202,107 @@ describe('getTopics', () => {
   test('handles single-level topics', () => {
     const paths = ['Topic A', 'Topic B', 'Topic C']
     expect(getTopics(paths)).toEqual(['Topic A', 'Topic B', 'Topic C'])
+  })
+})
+
+describe('createTopicTree', () => {
+  test('creates correct tree structure from list of trees with arbitrary depth', () => {
+    const trees = [
+      'Topic 1/topic 2/topic 3/topic 4/topic 5',
+      'Topic 1/another topic',
+      'Different topic/topic 3',
+      'Topic 1/Topic 2',
+      'Very/Deep/Nested/Structure/With/Many/Levels'
+    ]
+
+    const result = createTopicTree(trees)
+
+    expect(result).toEqual([
+      {
+        label: 'Topic 1',
+        children: [
+          {
+            label: 'topic 2',
+            children: [
+              {
+                label: 'topic 3',
+                children: [
+                  {
+                    label: 'topic 4',
+                    children: [
+                      { label: 'topic 5', children: [] }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          { label: 'another topic', children: [] },
+          { label: 'Topic 2', children: [] }
+        ]
+      },
+      {
+        label: 'Different topic',
+        children: [
+          { label: 'topic 3', children: [] }
+        ]
+      },
+      {
+        label: 'Very',
+        children: [
+          {
+            label: 'Deep',
+            children: [
+              {
+                label: 'Nested',
+                children: [
+                  {
+                    label: 'Structure',
+                    children: [
+                      {
+                        label: 'With',
+                        children: [
+                          {
+                            label: 'Many',
+                            children: [
+                              { label: 'Levels', children: [] }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ])
+  })
+
+  test('handles empty input', () => {
+    expect(createTopicTree([])).toEqual([])
+  })
+
+  test('handles single-level topics', () => {
+    const trees = ['Topic A', 'Topic B', 'Topic C']
+    expect(createTopicTree(trees)).toEqual([
+      { label: 'Topic A', children: [] },
+      { label: 'Topic B', children: [] },
+      { label: 'Topic C', children: [] }
+    ])
+  })
+
+  test('trims whitespace from topics', () => {
+    const trees = ['  Spaced Topic  /  Nested Spaced  ']
+    expect(createTopicTree(trees)).toEqual([
+      {
+        label: 'Spaced Topic',
+        children: [
+          { label: 'Nested Spaced', children: [] }
+        ]
+      }
+    ])
   })
 })

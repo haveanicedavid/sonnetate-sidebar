@@ -2,12 +2,21 @@ import { id, tx } from '@instantdb/react'
 
 import { db } from '@/db'
 import { parseMd } from '@/lib/markdown/parse-md'
-import { getDescription, getTrees } from '@/lib/markdown/utils'
+import { getDescription, getTopics, getTrees } from '@/lib/markdown/utils'
 
-export function createSummary({ md, url }: { md: string; url: string }) {
+export function createSummary({
+  md,
+  url,
+  userId,
+}: {
+  md: string
+  url: string
+  userId: string
+}) {
   const description = getDescription(md)
   const mdBlocks = parseMd(md)
   const trees = getTrees(mdBlocks)
+  const topics = getTopics(trees)
 
   const summaryId = id()
 

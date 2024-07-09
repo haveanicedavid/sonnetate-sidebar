@@ -68,3 +68,34 @@ export function getTopics(paths: string[]): string[] {
 
   return Array.from(topics).sort()
 }
+
+interface TreeNode {
+  label: string
+  children: TreeNode[]
+}
+
+export function createTopicTree(trees: string[]): TreeNode[] {
+  const root: TreeNode[] = []
+
+  for (const tree of trees) {
+    const parts = tree.split('/').map(part => part.trim())
+    let currentLevel = root
+
+    for (let i = 0; i < parts.length; i++) {
+      const part = parts[i]
+      let existingNode = currentLevel.find(node => node.label === part)
+
+      if (!existingNode) {
+        existingNode = { label: part, children: [] }
+        currentLevel.push(existingNode)
+      }
+
+      if (i < parts.length - 1) {
+        currentLevel = existingNode.children
+      }
+    }
+  }
+
+  return root
+}
+
