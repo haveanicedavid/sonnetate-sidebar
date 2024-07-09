@@ -8,6 +8,7 @@ interface Chunk {
   type: MdBlockType
   parentIndex: number
   docIndex: number
+  tree: string
 }
 
 interface OrderedChunk extends Chunk {
@@ -17,6 +18,16 @@ interface OrderedChunk extends Chunk {
 type ChildMap = { [headerId: number]: number[] }
 
 type OrderedChunkByIndex = { [docIndex: number]: OrderedChunk }
+
+function extractWikilinkContent(text: string): string {
+  const match = text.match(/\[\[(.*?)\]\]/)
+  if (match) {
+    const content = match[1]
+    const parts = content.split('|')
+    return parts[0] // Return the path part, ignoring the alias if present
+  }
+  return ''
+}
 
 export function parseMd(markdown: string): MdBlock[] {
   // Trim leading and trailing whitespace, and split by double newlines
@@ -39,15 +50,23 @@ export function parseMd(markdown: string): MdBlock[] {
   const orderedBlocksByIndex: OrderedChunkByIndex = {}
 
   let currDepth = 0
+  let currTree: string[] = []
 
   const basicBlocks: Chunk[] = textWithDocIndex.map(({ text, docIndex }) => {
     const type = getBlockType(text)
     let parentIndex = headerIndexByDepth[currDepth]
+    let tree = currTree.join('/')
 
     if (type === 'heading') {
       const headingDepth = getHeadingLevel(text)
       parentIndex = headerIndexByDepth[headingDepth - 1]
       currDepth = headingDepth
+
+      const wikilinkContent = extractWikilinkContent(text)
+      const pathParts = wikilinkContent.split('/')
+      currTree = pathParts.slice(0, headingDepth)
+
+      tree = currTree.slice(0, -1).join('/')
 
       for (const depth in headerIndexByDepth) {
         if (parseInt(depth) >= headingDepth) {
@@ -65,6 +84,7 @@ export function parseMd(markdown: string): MdBlock[] {
       type,
       docIndex,
       parentIndex,
+      tree,
     }
   })
 
@@ -90,6 +110,7 @@ export function parseMd(markdown: string): MdBlock[] {
       return {
         text: block.text,
         type: block.type,
+        tree: block.tree,
         children: buildNestedStructure(childIndex),
         order: block.order,
       }
