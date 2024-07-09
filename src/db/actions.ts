@@ -1,12 +1,20 @@
-import { id, tx } from '@instantdb/react'
+import { tx } from '@instantdb/react'
 
 import { db } from '@/db'
 
-export function signUpUser(handle: string, password: string) {
+export function createUser({
+  id,
+  handle,
+  apiKey,
+}: {
+  id: string
+  handle: string
+  apiKey: string
+}) {
   db.transact([
-    tx.users[id()].update({
+    tx.users[id].update({
       handle,
-      password,
+      apiKey
     }),
   ])
 }

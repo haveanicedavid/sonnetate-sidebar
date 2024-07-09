@@ -55,7 +55,7 @@ export interface User {
   id: string
   // blocks: Block[]
   handle: string
-  password: string
+  apiKey: string
   // summaries: Summary[]
   // topics: Topic[]
   // trees: Tree[]
