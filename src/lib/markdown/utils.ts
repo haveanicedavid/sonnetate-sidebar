@@ -55,3 +55,16 @@ export function getTrees(parsedMd: MdBlock[]): string[] {
   traverse(parsedMd)
   return Array.from(trees).sort()
 }
+
+export function getTopics(paths: string[]): string[] {
+  const topics = new Set<string>()
+
+  for (const path of paths) {
+    const parts = path.split('/')
+    for (const part of parts) {
+      topics.add(part.trim())
+    }
+  }
+
+  return Array.from(topics).sort()
+}

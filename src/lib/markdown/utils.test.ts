@@ -5,6 +5,7 @@ import {
   getBlockType,
   getDescription,
   getHeadingLevel,
+  getTopics,
   getTrees,
 } from './utils'
 
@@ -169,5 +170,36 @@ describe('getTrees', () => {
       'Header 1/Header 2',
       'Header 1/Header 2/HEADER 3',
     ])
+  })
+})
+
+describe('getTopics', () => {
+  test('returns unique topics from an array of paths', () => {
+    const paths = [
+      'Topic 1/topic 2/topic 3',
+      'Topic 1/another topic',
+      'Different topic/topic 3',
+      'Topic 1/Topic 1/nested topic'
+    ]
+
+    const result = getTopics(paths)
+
+    expect(result).toEqual([
+      'Different topic',
+      'Topic 1',
+      'another topic',
+      'nested topic',
+      'topic 2',
+      'topic 3'
+    ])
+  })
+
+  test('handles empty input', () => {
+    expect(getTopics([])).toEqual([])
+  })
+
+  test('handles single-level topics', () => {
+    const paths = ['Topic A', 'Topic B', 'Topic C']
+    expect(getTopics(paths)).toEqual(['Topic A', 'Topic B', 'Topic C'])
   })
 })
