@@ -14,7 +14,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.24.3",
     "@hookform/resolvers": "^3.9.0",
-    "@instantdb/react": "^0.10.27",
+    "@instantdb/react": "^0.10.29",
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",

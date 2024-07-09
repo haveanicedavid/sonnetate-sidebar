@@ -1,11 +1,11 @@
 import { groupBy } from 'remeda'
 
-import type { Block, BlockType } from './types'
+import type { MdBlock, MdBlockType } from './types'
 import { getBlockType, getHeadingLevel } from './utils'
 
 interface Chunk {
   text: string
-  type: BlockType
+  type: MdBlockType
   parentIndex: number
   docIndex: number
 }
@@ -18,7 +18,7 @@ type ChildMap = { [headerId: number]: number[] }
 
 type OrderedChunkByIndex = { [docIndex: number]: OrderedChunk }
 
-export function parseMd(markdown: string): Block[] {
+export function parseMd(markdown: string): MdBlock[] {
   // Trim leading and trailing whitespace, and split by double newlines
   const textWithDocIndex: { text: string; docIndex: number }[] = markdown
     .trim()
@@ -83,7 +83,7 @@ export function parseMd(markdown: string): Block[] {
 
   blocksNoChildren.sort((a, b) => a.docIndex - b.docIndex)
 
-  function buildNestedStructure(parentIndex: number): Block[] {
+  function buildNestedStructure(parentIndex: number): MdBlock[] {
     const children = childrenByParentIndex[parentIndex] || []
     return children.map((childIndex) => {
       const block = orderedBlocksByIndex[childIndex]

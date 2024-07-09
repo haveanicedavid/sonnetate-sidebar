@@ -15,8 +15,8 @@ importers:
         specifier: ^3.9.0
         version: 3.9.0(react-hook-form@7.52.1(react@18.3.1))
       '@instantdb/react':
-        specifier: ^0.10.27
-        version: 0.10.27(react@18.3.1)
+        specifier: ^0.10.29
+        version: 0.10.29(react@18.3.1)
       '@radix-ui/react-label':
         specifier: ^2.1.0
         version: 2.1.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -478,11 +478,11 @@ packages:
     resolution: {integrity: sha512-93zYdMES/c1D69yZiKDBj0V24vqNzB/koF26KPaagAfd3P/4gUlh3Dys5ogAK+Exi9QyzlD8x/08Zt7wIKcDcA==}
     deprecated: Use @eslint/object-schema instead
 
-  '@instantdb/core@0.10.27':
-    resolution: {integrity: sha512-M04kWBfSNBgn5vvmkmwAcsfiR6Cd+Rafn0TERuDfC9tSulwx5+cHdAwww9F0y4ZPf5rOi6aPuTa4YcOolUL1gw==}
+  '@instantdb/core@0.10.29':
+    resolution: {integrity: sha512-j2yG//JipV6juvp1McEe0OE746sLirE1jxWRR7+HeOnB8uD+nYEPIBcbOhqc1m6HrHh8HWJ1+lbEpjXraKLCEQ==}
 
-  '@instantdb/react@0.10.27':
-    resolution: {integrity: sha512-qBs6MVR5ZLODUiLqm9GpIuLFnF7hb7VfHjHn0h2DatGQ8rml5JoQodxSzm4QhiIla6XXCkkjHONYPEsykcvhNg==}
+  '@instantdb/react@0.10.29':
+    resolution: {integrity: sha512-wq8TVtSSFbKnu+jK7Kegufhf9GUc2NKnw0Qv/xMTc5PXcc4964JEzp+QqoP6UFin0Wj9vq8NSG56+EopA5Smbg==}
     peerDependencies:
       react: '>=16'
 
@@ -3395,15 +3395,15 @@ snapshots:
 
   '@humanwhocodes/object-schema@2.0.3': {}
 
-  '@instantdb/core@0.10.27':
+  '@instantdb/core@0.10.29':
     dependencies:
       immer: 9.0.14
       object-hash: 3.0.0
       uuid: 9.0.1
 
-  '@instantdb/react@0.10.27(react@18.3.1)':
+  '@instantdb/react@0.10.29(react@18.3.1)':
     dependencies:
-      '@instantdb/core': 0.10.27
+      '@instantdb/core': 0.10.29
       react: 18.3.1
 
   '@isaacs/cliui@8.0.2':
