@@ -1,6 +1,12 @@
 import { describe, expect, test } from 'vitest'
 
-import { getBlockType, getDescription, getHeadingLevel } from './utils'
+import { MdBlock } from './types'
+import {
+  getBlockType,
+  getDescription,
+  getHeadingLevel,
+  getTrees,
+} from './utils'
 
 test('getBlockType correctly identifies block types', () => {
   expect(getBlockType('# Heading')).toBe('heading')
@@ -65,5 +71,153 @@ without any headers`
 This is the only content`
 
     expect(getDescription(markdown)).toBe('This is the only content')
+  })
+})
+
+describe('getTrees', () => {
+  test('returns unique lowercase trees from parsed markdown', () => {
+    const parsedMd: MdBlock[] = [
+      {
+        text: '# [[Header 1]]',
+        type: 'heading',
+        tree: '',
+        children: [
+          {
+            text: 'Paragraph 1',
+            type: 'paragraph',
+            tree: 'Header 1',
+            children: [],
+            order: 0,
+          },
+          {
+            text: '## [[Header 1/Header 2|Header 2]]',
+            type: 'heading',
+            tree: 'Header 1',
+            children: [
+              {
+                text: 'Paragraph 2',
+                type: 'paragraph',
+                tree: 'Header 1/Header 2',
+                children: [],
+                order: 0,
+              },
+            ],
+            order: 1,
+          },
+        ],
+        order: 0,
+      },
+    ]
+
+    const result = getTrees(parsedMd)
+    expect(result).toEqual(['header 1', 'header 1/header 2'])
+  })
+
+  test('returns empty array for markdown with no trees', () => {
+    const parsedMd: MdBlock[] = [
+      {
+        text: 'Just a paragraph',
+        type: 'paragraph',
+        tree: '',
+        children: [],
+        order: 0,
+      },
+    ]
+
+    const result = getTrees(parsedMd)
+    expect(result).toEqual([])
+  })
+
+  test('handles nested structures correctly and converts to lowercase', () => {
+    const parsedMd: MdBlock[] = [
+      {
+        text: '# [[Header 1]]',
+        type: 'heading',
+        tree: '',
+        children: [
+          {
+            text: '## [[Header 1/Header 2|Header 2]]',
+            type: 'heading',
+            tree: 'Header 1',
+            children: [
+              {
+                text: '### [[Header 1/Header 2/HEADER 3|Header 3]]',
+                type: 'heading',
+                tree: 'Header 1/Header 2',
+                children: [
+                  {
+                    text: 'Deep paragraph',
+                    type: 'paragraph',
+                    tree: 'Header 1/Header 2/HEADER 3',
+                    children: [],
+                    order: 0,
+                  },
+                ],
+                order: 0,
+              },
+            ],
+            order: 0,
+          },
+        ],
+        order: 0,
+      },
+    ]
+
+    const result = getTrees(parsedMd)
+    expect(result).toEqual([
+      'header 1',
+      'header 1/header 2',
+      'header 1/header 2/header 3',
+    ])
+  })
+
+  test('handles mixed case and returns lowercase unique trees', () => {
+    const parsedMd: MdBlock[] = [
+      {
+        text: '# [[MiXeD CaSe]]',
+        type: 'heading',
+        tree: '',
+        children: [
+          {
+            text: '## [[MiXeD CaSe/LoWeR cAsE|Lower Case]]',
+            type: 'heading',
+            tree: 'MiXeD CaSe',
+            children: [
+              {
+                text: 'Paragraph',
+                type: 'paragraph',
+                tree: 'MiXeD CaSe/LoWeR cAsE',
+                children: [],
+                order: 0,
+              },
+            ],
+            order: 0,
+          },
+          {
+            text: '## [[MiXeD CaSe/UPPER CASE|Upper Case]]',
+            type: 'heading',
+            tree: 'MiXeD CaSe',
+            children: [
+              {
+                text: 'Another Paragraph',
+                type: 'paragraph',
+                tree: 'MiXeD CaSe/UPPER CASE',
+                children: [],
+                order: 0,
+              },
+            ],
+            order: 1,
+          },
+        ],
+        order: 0,
+      },
+    ]
+
+    const result = getTrees(parsedMd)
+    expect(result).toEqual([
+      'mixed case',
+      'mixed case/lower case',
+      'mixed case/upper case',
+    ])
   })
 })

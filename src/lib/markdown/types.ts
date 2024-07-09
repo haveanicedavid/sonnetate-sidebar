@@ -11,6 +11,7 @@ export type MdBlockType =
 export interface MdBlock {
   text: string
   type: MdBlockType
+  tree: string
   children: MdBlock[]
   order: number
 }

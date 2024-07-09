@@ -1,4 +1,4 @@
-import type { MdBlockType } from './types'
+import type { MdBlock, MdBlockType } from './types'
 
 export function getBlockType(text: string): MdBlockType {
   const firstLine = text.split('\n')[0]
@@ -38,4 +38,20 @@ export function getDescription(markdown: string): string {
   }
 
   return contentAfterHeader.slice(0, nextHeaderIndex).join('\n').trim()
+}
+
+export function getTrees(parsedMd: MdBlock[]): string[] {
+  const trees = new Set<string>()
+
+  function traverse(blocks: MdBlock[]) {
+    for (const block of blocks) {
+      if (block.tree !== '') {
+        trees.add(block.tree.toLowerCase())
+      }
+      traverse(block.children)
+    }
+  }
+
+  traverse(parsedMd)
+  return Array.from(trees).sort()
 }

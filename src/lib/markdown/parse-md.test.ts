@@ -2,7 +2,7 @@ import { expect, test } from 'vitest'
 
 import { parseMd } from './parse-md'
 
-test('parses headings with wikilinks, paragraphs, and tree field', () => {
+test('parses headings with wikilinks, paragraphs, and lowercase tree field', () => {
   const markdown = `# [[Header 1]]
 
 Paragraph 1
@@ -27,31 +27,31 @@ Paragraph 3
         {
           text: 'Paragraph 1',
           type: 'paragraph',
-          tree: 'Header 1',
+          tree: 'header 1',
           children: [],
           order: 0,
         },
         {
           text: '## [[Header 1/Header 2|Header 2]]',
           type: 'heading',
-          tree: 'Header 1',
+          tree: 'header 1',
           children: [
             {
               text: 'Paragraph 2',
               type: 'paragraph',
-              tree: 'Header 1/Header 2',
+              tree: 'header 1/header 2',
               children: [],
               order: 0,
             },
             {
               text: '### [[Header 1/Header 2/Header 3|Header 3]]',
               type: 'heading',
-              tree: 'Header 1/Header 2',
+              tree: 'header 1/header 2',
               children: [
                 {
                   text: 'Paragraph 3',
                   type: 'paragraph',
-                  tree: 'Header 1/Header 2/Header 3',
+                  tree: 'header 1/header 2/header 3',
                   children: [],
                   order: 0,
                 },
@@ -67,7 +67,7 @@ Paragraph 3
   ])
 })
 
-test('parses lists with wikilink headings and tree field', () => {
+test('parses lists with wikilink headings and lowercase tree field', () => {
   const markdown = `
 # [[List Examples]]
 
@@ -102,12 +102,12 @@ test('parses lists with wikilink headings and tree field', () => {
         {
           text: '## [[List Examples/Unordered List|Unordered List]]',
           type: 'heading',
-          tree: 'List Examples',
+          tree: 'list examples',
           children: [
             {
               text: '- Item 1\n- Item 2\n  - Nested Item 1\n  - Nested Item 2',
               type: 'unordered-list',
-              tree: 'List Examples/Unordered List',
+              tree: 'list examples/unordered list',
               children: [],
               order: 0,
             },
@@ -117,12 +117,12 @@ test('parses lists with wikilink headings and tree field', () => {
         {
           text: '## [[List Examples/Ordered List|Ordered List]]',
           type: 'heading',
-          tree: 'List Examples',
+          tree: 'list examples',
           children: [
             {
               text: '1. First\n2. Second\n   1. Nested First\n   2. Nested Second',
               type: 'ordered-list',
-              tree: 'List Examples/Ordered List',
+              tree: 'list examples/ordered list',
               children: [],
               order: 0,
             },
@@ -132,12 +132,12 @@ test('parses lists with wikilink headings and tree field', () => {
         {
           text: '## [[List Examples/Task List|Task List]]',
           type: 'heading',
-          tree: 'List Examples',
+          tree: 'list examples',
           children: [
             {
               text: '- [ ] Todo 1\n- [x] Done 1',
               type: 'task-list',
-              tree: 'List Examples/Task List',
+              tree: 'list examples/task list',
               children: [],
               order: 0,
             },
@@ -150,7 +150,7 @@ test('parses lists with wikilink headings and tree field', () => {
   ])
 })
 
-test('parses blockquotes and code blocks with wikilink headings and tree field', () => {
+test('parses blockquotes and code blocks with wikilink headings and lowercase tree field', () => {
   const markdown = `
 # [[Quotes and Code]]
 
@@ -175,14 +175,14 @@ function hello() {
         {
           text: '> This is a blockquote\n> It can span multiple lines',
           type: 'blockquote',
-          tree: 'Quotes and Code',
+          tree: 'quotes and code',
           children: [],
           order: 0,
         },
         {
           text: '```javascript\nfunction hello() {\n  console.log("Hello, world!");\n}\n```',
           type: 'codeblock',
-          tree: 'Quotes and Code',
+          tree: 'quotes and code',
           children: [],
           order: 1,
         },
@@ -192,7 +192,7 @@ function hello() {
   ])
 })
 
-test('parses images with wikilink headings and tree field', () => {
+test('parses images with wikilink headings and lowercase tree field', () => {
   const markdown = `
 # [[Images]]
 
@@ -216,26 +216,26 @@ Another image here.
         {
           text: '![Alt text](https://example.com/image.jpg)',
           type: 'image',
-          tree: 'Images',
+          tree: 'images',
           children: [],
           order: 0,
         },
         {
           text: 'Paragraph with ![inline image](https://example.com/inline.png) inside.',
           type: 'paragraph',
-          tree: 'Images',
+          tree: 'images',
           children: [],
           order: 1,
         },
         {
           text: '## [[Images/Nested Images|Nested Images]]',
           type: 'heading',
-          tree: 'Images',
+          tree: 'images',
           children: [
             {
               text: 'Another image here.',
               type: 'paragraph',
-              tree: 'Images/Nested Images',
+              tree: 'images/nested images',
               children: [],
               order: 0,
             },

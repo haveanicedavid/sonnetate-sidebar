@@ -24,7 +24,7 @@ function extractWikilinkContent(text: string): string {
   if (match) {
     const content = match[1]
     const parts = content.split('|')
-    return parts[0] // Return the path part, ignoring the alias if present
+    return parts[0].toLowerCase() // Return the lowercase path part, ignoring the alias if present
   }
   return ''
 }
@@ -55,7 +55,7 @@ export function parseMd(markdown: string): MdBlock[] {
   const basicBlocks: Chunk[] = textWithDocIndex.map(({ text, docIndex }) => {
     const type = getBlockType(text)
     let parentIndex = headerIndexByDepth[currDepth]
-    let tree = currTree.join('/')
+    let tree = currTree.join('/').toLowerCase()
 
     if (type === 'heading') {
       const headingDepth = getHeadingLevel(text)
@@ -66,7 +66,7 @@ export function parseMd(markdown: string): MdBlock[] {
       const pathParts = wikilinkContent.split('/')
       currTree = pathParts.slice(0, headingDepth)
 
-      tree = currTree.slice(0, -1).join('/')
+      tree = currTree.slice(0, -1).join('/').toLowerCase()
 
       for (const depth in headerIndexByDepth) {
         if (parseInt(depth) >= headingDepth) {

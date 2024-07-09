@@ -24,6 +24,7 @@ export interface Summary {
   id: string
   blocks: Block[]
   topics: Topic[]
+  trees: Tree[]
   createdAt: number
   for: string
   description: string
@@ -33,6 +34,7 @@ export interface Summary {
 export interface Topic {
   id: string
   name: string
+  label: string
   parents: Topic[] | null
   children: Topic[] | null
   trees: Tree[]
@@ -42,13 +44,9 @@ export interface Topic {
 
 export interface Tree {
   id: string
-  topic: Topic
-  /** Same as the topic name */
-  name: string
-  parent: Tree | null
-  children: Tree[] | null
-  // blocks: Block[]
-  // user: User
+  topics: Topic[]
+  blocks: Block[]
+  user: User
 }
 
 export interface User {

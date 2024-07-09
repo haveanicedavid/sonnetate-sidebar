@@ -8,6 +8,7 @@ const config = {
   semi: false,
   singleQuote: true,
   importOrder: ['^@core/(.*)$', '^@/(.*)$', '^[./]'],
+  printWidth: 80,
   importOrderSeparation: true,
   importOrderSortSpecifiers: true,
   plugins: ['@trivago/prettier-plugin-sort-imports'],
