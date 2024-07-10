@@ -1,6 +1,7 @@
 import { Save, Share } from 'lucide-react'
 import { useState } from 'react'
 import ReactMarkdown from 'react-markdown'
+import { useNavigate } from 'react-router-dom'
 import remarkGfm from 'remark-gfm'
 import remarkWikiLink from 'remark-wiki-link'
 
@@ -21,36 +22,14 @@ import { useUserAtom } from '@/db/ui-store'
 import { streamSummarization } from '@/lib/ai/messages'
 import { useCurrentUrl } from '@/lib/hooks/use-current-tab'
 import { MARKDOWN_STUB } from '@/lib/markdown/stub'
-import { useNavigate } from 'react-router-dom'
-
-const MOCK_SUMMARIES = [
-  {
-    id: '1',
-    title: 'The Future of AI',
-    description:
-      'An exploration of artificial intelligence and its potential impact on society.',
-  },
-  {
-    id: '2',
-    title: 'Climate Change Solutions',
-    description:
-      'Innovative approaches to combating global warming and its effects.',
-  },
-  {
-    id: '3',
-    title: 'Space Exploration in 2023',
-    description:
-      'Recent advancements and future plans for human space exploration.',
-  },
-  // Add more mock summaries as needed
-]
 
 export function HomePage() {
   const url = useCurrentUrl()
   const navigate = useNavigate()
 
   const [userInput, setUserInput] = useState('')
-  const [summary, setSummary] = useState(MARKDOWN_STUB)
+  // const [summary, setSummary] = useState(MARKDOWN_STUB)
+  const [summary, setSummary] = useState('')
   const [canSave, setCanSave] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -69,12 +48,11 @@ export function HomePage() {
     },
   })
 
-    console.log("🪚 summaries:", data);
-  const uiSummaries = data?.summaries.map((summary) => {
+  const uiSummaries = (data?.summaries || []).map((summary) => {
     return {
       id: summary.id,
       title: summary.topicName,
-      description: summary.description
+      description: summary.description,
     }
   })
 
@@ -139,14 +117,14 @@ export function HomePage() {
   return (
     <TooltipProvider>
       <div className="flex flex-col h-full p-4">
-        {uiSummaries && (
+        {uiSummaries?.length > 0 ? (
           <div className="h-40 mb-8">
             <HorizontalSummaryList
               summaries={uiSummaries}
               onViewSummary={handleViewSummary}
             />
           </div>
-        )}
+        ) : null}
 
         <div className="flex-grow overflow-auto">
           {error && (

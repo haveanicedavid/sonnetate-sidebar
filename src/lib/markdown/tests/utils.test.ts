@@ -3,6 +3,7 @@ import { describe, expect, test, vi } from 'vitest'
 import { MdBlock, MdBlockWithId } from '../types'
 import {
   assignIds,
+  createMarkdownFromBlocks,
   createTopicTree,
   getBlockType,
   getDescription,
@@ -394,5 +395,119 @@ describe('assignIds', () => {
 
   test('handles empty input', () => {
     expect(assignIds([])).toEqual([])
+  })
+})
+
+describe('createMarkdownFromBlocks', () => {
+  test('creates markdown string from nested blocks with proper spacing', () => {
+    const rootBlock: MdBlock = {
+      text: '# Root Header',
+      type: 'heading',
+      tree: '',
+      order: 0,
+      children: [
+        {
+          text: 'First paragraph',
+          type: 'paragraph',
+          tree: 'Root Header',
+          order: 1,
+          children: []
+        },
+        {
+          text: '## Subheader',
+          type: 'heading',
+          tree: 'Root Header',
+          order: 2,
+          children: [
+            {
+              text: 'Nested paragraph',
+              type: 'paragraph',
+              tree: 'Root Header/Subheader',
+              order: 0,
+              children: []
+            }
+          ]
+        },
+        {
+          text: 'Last paragraph',
+          type: 'paragraph',
+          tree: 'Root Header',
+          order: 3,
+          children: []
+        }
+      ]
+    }
+
+    const result = createMarkdownFromBlocks(rootBlock)
+
+    const expectedMarkdown = `# Root Header
+
+First paragraph
+
+## Subheader
+
+Nested paragraph
+
+Last paragraph`
+
+    expect(result).toBe(expectedMarkdown)
+  })
+
+  test('handles blocks with no children', () => {
+    const singleBlock: MdBlock = {
+      text: 'Single paragraph',
+      type: 'paragraph',
+      tree: '',
+      order: 0,
+      children: []
+    }
+
+    const result = createMarkdownFromBlocks(singleBlock)
+
+    expect(result).toBe('Single paragraph')
+  })
+
+  test('sorts children by order and maintains proper spacing', () => {
+    const rootBlock: MdBlock = {
+      text: '# Root',
+      type: 'heading',
+      tree: '',
+      order: 0,
+      children: [
+        {
+          text: 'Third',
+          type: 'paragraph',
+          tree: 'Root',
+          order: 2,
+          children: []
+        },
+        {
+          text: 'First',
+          type: 'paragraph',
+          tree: 'Root',
+          order: 0,
+          children: []
+        },
+        {
+          text: 'Second',
+          type: 'paragraph',
+          tree: 'Root',
+          order: 1,
+          children: []
+        }
+      ]
+    }
+
+    const result = createMarkdownFromBlocks(rootBlock)
+
+    const expectedMarkdown = `# Root
+
+First
+
+Second
+
+Third`
+
+    expect(result).toBe(expectedMarkdown)
   })
 })

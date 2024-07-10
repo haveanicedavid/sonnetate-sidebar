@@ -10,12 +10,25 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { db } from '@/db'
+// import { useCurrentUrl } from '@/lib/hooks/use-current-tab'
 
 type LayoutProps = {
   exploreNotifications?: number
 }
 
-export function Layout({ exploreNotifications = 0 }: LayoutProps) {
+export function AppLayout({ exploreNotifications = 0 }: LayoutProps) {
+  // const url = useCurrentUrl()
+
+  // const { data } = db.useQuery({
+  //   summaries: {
+  //     $: {
+  //       where: {
+  //         isShared: true,
+  //       },
+  //     },
+  //   },
+  // })
+
   const handleLogout = () => {
     db.auth.signOut()
   }
@@ -39,32 +52,50 @@ export function Layout({ exploreNotifications = 0 }: LayoutProps) {
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Link to="/explore">
+                <Link to="/summaries/mine">
                   <Button
                     variant="ghost"
                     size="icon"
                     className="h-7 w-7 relative"
                   >
                     <Compass className="h-4 w-4" />
-                    {exploreNotifications > 0 && (
-                      <Badge
-                        variant="destructive"
-                        className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px]"
-                      >
-                        {exploreNotifications > 99
-                          ? '99+'
-                          : exploreNotifications}
-                      </Badge>
-                    )}
                   </Button>
                 </Link>
               </TooltipTrigger>
               <TooltipContent>
                 <p>
-                  See {exploreNotifications} shared summaries from other users
+                  See all your summaries
                 </p>
               </TooltipContent>
             </Tooltip>
+            {/* <Tooltip> */}
+            {/*   <TooltipTrigger asChild> */}
+            {/*     <Link to="/explore"> */}
+            {/*       <Button */}
+            {/*         variant="ghost" */}
+            {/*         size="icon" */}
+            {/*         className="h-7 w-7 relative" */}
+            {/*       > */}
+            {/*         <Compass className="h-4 w-4" /> */}
+            {/*         {exploreNotifications > 0 && ( */}
+            {/*           <Badge */}
+            {/*             variant="destructive" */}
+            {/*             className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px]" */}
+            {/*           > */}
+            {/*             {exploreNotifications > 99 */}
+            {/*               ? '99+' */}
+            {/*               : exploreNotifications} */}
+            {/*           </Badge> */}
+            {/*         )} */}
+            {/*       </Button> */}
+            {/*     </Link> */}
+            {/*   </TooltipTrigger> */}
+            {/*   <TooltipContent> */}
+            {/*     <p> */}
+            {/*       See {exploreNotifications} shared summaries from other users */}
+            {/*     </p> */}
+            {/*   </TooltipContent> */}
+            {/* </Tooltip> */}
           </div>
           <Tooltip>
             <TooltipTrigger asChild>

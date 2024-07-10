@@ -1,6 +1,7 @@
 import { Routes as ReactRoutes, Route } from 'react-router-dom'
 
-import { Layout } from './components/layout'
+import { AppLayout } from './components/layout/app-layout'
+// import { NavigateLayout } from './components/layout/navigate-layout'
 import { HomePage } from './pages/home'
 import { SummaryPage } from './pages/summary'
 import { TopicPage } from './pages/topic'
@@ -8,9 +9,10 @@ import { TopicPage } from './pages/topic'
 export function Routes() {
   return (
     <ReactRoutes>
-      <Route element={<Layout />}>
+      <Route element={<AppLayout />}>
         <Route path="/">
           <Route index element={<HomePage />} />
+          {/* <Route path="summaries" element={<NavigateLayout />}> */}
           <Route path="summaries">
             <Route path=":id" element={<SummaryPage />} />
           </Route>

@@ -25,6 +25,7 @@ export function createSummary({
   const summaryId = id()
   const description = getDescription(md)
   const mdBlocks = parseMd(md)
+  console.log('🪚 mdBlocks:', mdBlocks)
   const trees = getTrees(mdBlocks)
   const topicTree = createTopicTree(trees)
   const summaryTopic = topicTree[0].label
@@ -37,7 +38,10 @@ export function createSummary({
       .link({ users: userId })
   })
 
-  const mdBlocksWithId = flattenMdBlocks(assignIds(mdBlocks))
+  const withIds = assignIds(mdBlocks)
+  const rootBlock = withIds[0]
+  console.log('🪚 rootBlock:', rootBlock)
+  const flatBlocksWithId = flattenMdBlocks(withIds)
 
   const createPathTxns = trees.map((tree) => {
     const pathName = tree.toLowerCase()
@@ -65,7 +69,7 @@ export function createSummary({
     })
   })
 
-  const blockTxs = mdBlocksWithId.map((block) => {
+  const blockTxs = flatBlocksWithId.map((block) => {
     const { id, text, tree, order, type, parentId } = block
 
     return tx.blocks[id]
@@ -75,7 +79,6 @@ export function createSummary({
         type: type === 'heading' ? 'tree' : 'block',
       })
       .link({
-        summary: summaryId,
         user: userId,
         ...(parentId ? { parent: parentId } : {}),
         ...(tree.length > 0 ? { tree: treeMap[tree] } : {}),
@@ -85,8 +88,6 @@ export function createSummary({
   // TODO: not really sure if this is correct or guaranteed, but setting up the
   // trees first prevents a not-null error in blocks. I assume because of the
   // tree lookup
-  // db.transact(createTopicTxs)
-  // db.transact([...createPathTxns, ...treeTxs])
   db.transact([
     ...createTopicTxs,
     ...createPathTxns,
@@ -101,8 +102,12 @@ export function createSummary({
       })
       .link({
         user: userId,
+        rootBlock: rootBlock.id,
       }),
     ...blockTxs,
   ])
-  // db.transact(blockTxs)
+}
+
+export function shareSummary(summaryId: string) {
+  db.transact([tx.summaries[summaryId].update({ isShared: true })])
 }
