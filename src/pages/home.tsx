@@ -19,17 +19,17 @@ import {
 import { db } from '@/db'
 import { createSummary } from '@/db/actions/summary'
 import { useUserAtom } from '@/db/ui-store'
-import { streamSummarization } from '@/lib/ai/messages'
+import { streamTransformedMarkdown } from '@/lib/ai/messages'
 import { useCurrentUrl } from '@/lib/hooks/use-current-tab'
-import { MARKDOWN_STUB } from '@/lib/markdown/stub'
+import { MARKDOWN_STUB_WITH_HIERARCHY } from '@/lib/markdown/stub'
 
 export function HomePage() {
   const url = useCurrentUrl()
   const navigate = useNavigate()
 
   const [userInput, setUserInput] = useState('')
-  // const [summary, setSummary] = useState(MARKDOWN_STUB)
-  const [summary, setSummary] = useState('')
+  const [summary, setSummary] = useState(MARKDOWN_STUB_WITH_HIERARCHY)
+  // const [summary, setSummary] = useState('')
   const [canSave, setCanSave] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -63,7 +63,7 @@ export function HomePage() {
 
     try {
       if (url) {
-        for await (const chunk of streamSummarization({
+        for await (const chunk of streamTransformedMarkdown({
           prompt,
           url,
           apiKey: user?.apiKey,
