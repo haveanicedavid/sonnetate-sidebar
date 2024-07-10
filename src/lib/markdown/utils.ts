@@ -100,6 +100,29 @@ export function createTopicTree(trees: string[]): TreeNode[] {
   return root
 }
 
+export interface FlatTreeNode {
+  label: string;
+  parent: string | null;
+}
+
+export function flattenTopicTree(tree: TreeNode[]): FlatTreeNode[] {
+  const flatNodes: FlatTreeNode[] = [];
+
+  function flatten(node: TreeNode, parent: string | null) {
+    flatNodes.push({ label: node.label, parent });
+    
+    for (const child of node.children) {
+      flatten(child, node.label);
+    }
+  }
+
+  for (const node of tree) {
+    flatten(node, null);
+  }
+
+  return flatNodes;
+}
+
 export function assignIds(blocks: MdBlock[]): MdBlockWithId[] {
   function assignIdRecursively(block: MdBlock, parentId: string | null): MdBlockWithId {
     const newId = id();
@@ -133,3 +156,4 @@ export function flattenMdBlocks(blocks: MdBlockWithId[]): FlatMdBlock[] {
 
   return flatBlocks;
 }
+

@@ -1,4 +1,4 @@
-type BlockType = 'block' | 'topic'
+type BlockType = 'block' | 'tree'
 
 export type DbSchema = {
   blocks: Block

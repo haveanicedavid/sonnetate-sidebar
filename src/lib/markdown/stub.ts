@@ -1,72 +1,64 @@
-export const MARKDOWN_STUB = `# [[Testing Guide]]
+export const MARKDOWN_STUB = `# [[Main Topic]]
 
-This document outlines the steps and components required to thoroughly test the application.
+This is a paragraph under the main topic. It contains some **bold text**, *italic text*, and even some \`inline code\`. This paragraph showcases basic Markdown formatting.
 
-## [[Installation]]
+## [[Main Topic/Subtopic 1|Subtopic 1]]
 
-Follow these steps to install the application:
+- This is an unordered list item
+- Another unordered list item
+- A third unordered list item
 
-1. Clone the repository
-2. Navigate to the project directory
-3. Run \`npm install\` to install dependencies
+### [[Main Topic/Subtopic 1/Nested Topic|Nested Topic]]
 
-## [[Features to Test/slash|alias]]
+1. This is an ordered list item
+2. Another ordered list item
+3. A third ordered list item
 
-### [[User Authentication]]
+#### [[Main Topic/Subtopic 1/Nested Topic/Deep Nested Topic|Deep Nested Topic]]
 
-1. **Sign Up**:
-    - Verify that a new user can create an account with valid credentials.
-    - Ensure that appropriate error messages are shown for invalid input.
+> This is a blockquote. It can contain multiple lines and even other Markdown elements.
+> 
+> - Like this unordered list
+> - Within the blockquote
 
-2. **Login**:
-    - Test login functionality with valid credentials.
-    - Verify that incorrect credentials show proper error messages.
+##### [[Main Topic/Subtopic 1/Nested Topic/Deep Nested Topic/Even Deeper|Even Deeper]]
 
-3. **Password Reset**:
-    - Check the process for resetting the password.
-    - Ensure that the reset link is sent to the user's email.
+Here's a task list:
 
-### User Interface
+- [ ] Uncompleted task
+- [x] Completed task
+- [ ] Another uncompleted task
 
-#### Navigation Bar
+###### [[Main Topic/Subtopic 1/Nested Topic/Deep Nested Topic/Even Deeper/Deepest Level|Deepest Level]]
 
-- Ensure all links in the navigation bar are working.
-- Check the responsiveness of the navigation bar on different devices.
+\`\`\`python
+def hello_world():
+    print("Hello, World!")
 
-#### Home Page
+hello_world()
+\`\`\`
 
-- Verify that the home page loads correctly.
-- Ensure that all elements are aligned properly.
-- Test the responsiveness of the home page.
+## [[Main Topic/Subtopic 2|Subtopic 2]]
 
-### Performance
+Here's a table:
 
-- Load Testing:
-    - Simulate multiple users accessing the app simultaneously.
-    - Measure the response time of the app.
+| Header 1 | Header 2 | Header 3 |
+|----------|----------|----------|
+| Row 1, Col 1 | Row 1, Col 2 | Row 1, Col 3 |
+| Row 2, Col 1 | Row 2, Col 2 | Row 2, Col 3 |
 
-- Stress Testing:
-    - Increase the load to find the breaking point of the app.
-    - Verify the app's behavior under extreme conditions.
+### [[Main Topic/Subtopic 2/Images|Images]]
 
-## Bug Tracking
+![Alt text for image](https://example.com/image.jpg)
 
-- Create a detailed report of any bugs found.
-- Use the following format for reporting bugs:
+#### [[Main Topic/Subtopic 2/Images/Links|Links]]
 
-\`\`\`markdown
+[This is a link](https://www.example.com)
 
-### Bug Report
+##### [[Main Topic/Subtopic 2/Images/Links/Horizontal Rule|Horizontal Rule]]
 
-**Description**: A brief description of the bug.
+---
 
-**Steps to Reproduce**:
-1. Step one
-2. Step two
-3. Step three
+###### [[Main Topic/Subtopic 2/Images/Links/Horizontal Rule/Final Section|Final Section]]
 
-**Expected Result**: What you expected to happen.
-**Actual Result**: What actually happened.
-
-**Screenshot**: Attach a screenshot if applicable.
-\`\`\``
+This is the final paragraph in our sample Markdown. It demonstrates that we've covered headings from H1 to H6, and included various Markdown elements throughout the document.`

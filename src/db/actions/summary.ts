@@ -2,8 +2,15 @@ import { id, lookup, tx } from '@instantdb/react'
 
 import { db } from '@/db'
 import { parseMd } from '@/lib/markdown/parse-md'
-import { MdBlock } from '@/lib/markdown/types'
-import { createTopicTree, getDescription, getTrees } from '@/lib/markdown/utils'
+import {
+  assignIds,
+  createTopicTree,
+  flattenMdBlocks,
+  flattenTopicTree,
+  getDescription,
+  getTopics,
+  getTrees,
+} from '@/lib/markdown/utils'
 
 export function createSummary({
   md,
@@ -18,53 +25,78 @@ export function createSummary({
   const description = getDescription(md)
   const mdBlocks = parseMd(md)
   const trees = getTrees(mdBlocks)
-  const topicTree = createTopicTree(trees)
+  const allTopics = getTopics(trees)
+  const topicsWithParents = flattenTopicTree(createTopicTree(trees))
 
-  const topicTxs = topicTree.map((topic) => {
-    return tx.topics[lookup('name', topic.label.toLowerCase())].link({
-      summary: summaryId,
+  const createTopicTxs = allTopics.map((topic) => {
+    const name = topic.toLowerCase()
+    return tx.topics[lookup('name', name)].update({ label: topic }).link({
+      summaries: summaryId,
     })
   })
 
-  const createBlockTxns = (blocks: MdBlock[], parentId?: string) => {
-    return blocks.map((block) => {
-      const blockId = id()
-      // const blockTx = tx.blocks[blockId]
-      //   .update({
-      //     text: block.text,
-      //     type: block.type,
-      //     order: block.order,
-      //   })
-      //   .link({
-      //     summary: summaryId,
-      //     tree: lookup('path', block.tree.toLowerCase()),
-      //     ...(parentId && { parent: parentId }),
-      //   })
+  const linkTopicTxs = topicsWithParents.map((topic) => {
+    return (
+      tx.topics[lookup('name', topic.label.toLowerCase())]
+        // .update({
+        //   label: topic.label,
+        //   name: topic.label.toLowerCase(),
+        // })
+        .link({
+          summaries: summaryId,
+          users: userId,
+          ...(topic.parent
+            ? { parents: lookup('name', topic.parent.toLowerCase()) }
+            : {}),
+        })
+    )
+  })
 
-      if (block.children.length > 0) {
-        return createBlockTxns(block.children, blockId)
-      }
-
-      return blockTx
-    })
-  }
-
-  // path: id
-  const treeMap = new Map<string, string>()
+  const mdBlocksWithId = flattenMdBlocks(assignIds(mdBlocks))
 
   const treeTxs = trees.map((tree) => {
     const treeId = id()
-    treeMap.set(tree, treeId)
+    const topics = getTopics([tree]).map((topic) =>
+      lookup('name', topic.toLowerCase())
+    )
+
     return tx.trees[treeId]
       .update({ path: tree.toLowerCase() })
-      .link({ summary: summaryId })
+      .link({ summary: summaryId, user: userId, topics })
   })
 
+  const blockTxs = mdBlocksWithId.map((block) => {
+    const { id, text, tree, order, type, parentId } = block
+
+    return tx.blocks[id]
+      .update({
+        text,
+        order,
+        type: type === 'heading' ? 'tree' : 'block',
+      })
+      .link({
+        summary: summaryId,
+        user: userId,
+        ...(parentId ? { parent: parentId } : {}),
+        ...(tree.length > 0
+          ? { tree: lookup('path', tree.toLowerCase()) }
+          : {}),
+      })
+  })
+
+  // TODO: not really sure if this is correct or guaranteed, but setting up the
+  // trees first prevents a not-null error in blocks. I assume because of the
+  // tree lookup
+  db.transact(createTopicTxs)
+  db.transact(treeTxs)
   db.transact([
-    tx.summaries[summaryId].update({
-      for: url,
-      description,
-    }),
-    ...treeTxs,
+    tx.summaries[summaryId]
+      .update({
+        for: url,
+        description,
+      })
+      .link({ user: userId }),
+    ...blockTxs,
   ])
+  db.transact(linkTopicTxs)
 }

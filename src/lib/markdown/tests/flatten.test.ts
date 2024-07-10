@@ -1,7 +1,13 @@
 import { describe, expect, test, vi } from 'vitest'
 
 import { FlatMdBlock, MdBlock } from '../types'
-import { assignIds, flattenMdBlocks } from '../utils'
+import {
+  type FlatTreeNode,
+  assignIds,
+  createTopicTree,
+  flattenMdBlocks,
+  flattenTopicTree,
+} from '../utils'
 
 // Mock the id() function from InstantDB
 vi.mock('@instantdb/react', () => ({
@@ -91,5 +97,47 @@ describe('flattenMdBlocks', () => {
 
   test('handles empty input', () => {
     expect(flattenMdBlocks([])).toEqual([])
+  })
+})
+
+describe('flattenTopicTree', () => {
+  test('flattens nested topic tree structure', () => {
+    const trees = [
+      'Topic 1/Subtopic 1/Subsubtopic 1',
+      'Topic 1/Subtopic 2',
+      'Topic 2/Subtopic 3',
+      'Topic 3',
+    ]
+
+    const topicTree = createTopicTree(trees)
+    const result = flattenTopicTree(topicTree)
+
+    const expectedOutput: FlatTreeNode[] = [
+      { label: 'Topic 1', parent: null },
+      { label: 'Subtopic 1', parent: 'Topic 1' },
+      { label: 'Subsubtopic 1', parent: 'Subtopic 1' },
+      { label: 'Subtopic 2', parent: 'Topic 1' },
+      { label: 'Topic 2', parent: null },
+      { label: 'Subtopic 3', parent: 'Topic 2' },
+      { label: 'Topic 3', parent: null },
+    ]
+
+    expect(result).toEqual(expectedOutput)
+  })
+
+  test('handles empty input', () => {
+    expect(flattenTopicTree([])).toEqual([])
+  })
+
+  test('handles single-level topics', () => {
+    const trees = ['Topic A', 'Topic B', 'Topic C']
+    const topicTree = createTopicTree(trees)
+    const result = flattenTopicTree(topicTree)
+
+    expect(result).toEqual([
+      { label: 'Topic A', parent: null },
+      { label: 'Topic B', parent: null },
+      { label: 'Topic C', parent: null },
+    ])
   })
 })
