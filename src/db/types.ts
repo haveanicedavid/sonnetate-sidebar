@@ -22,13 +22,13 @@ export interface Block {
 
 export interface Summary {
   id: string
-  blocks: Block[]
-  topics: Topic[]
-  trees: Tree[]
+  blocks?: Block[]
+  topicName: string
+  trees?: Tree[]
   createdAt: number
   for: string
   description: string
-  user: User
+  user?: User
 }
 
 export interface Topic {

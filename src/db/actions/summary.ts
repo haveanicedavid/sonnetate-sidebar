@@ -5,8 +5,7 @@ import { parseMd } from '@/lib/markdown/parse-md'
 import {
   assignIds,
   createTopicTree,
-  flattenMdBlocks,
-  flattenTopicTree,
+  flattenMdBlocks, // flattenTopicTree,
   getDescription,
   getTopics,
   getTrees,
@@ -16,10 +15,12 @@ export function createSummary({
   md,
   url,
   userId,
+  isShared = false,
 }: {
   md: string
   url: string
   userId: string
+  isShared?: boolean
 }) {
   const summaryId = id()
   const description = getDescription(md)
@@ -27,11 +28,13 @@ export function createSummary({
   const trees = getTrees(mdBlocks)
   const topicTree = createTopicTree(trees)
   const summaryTopic = topicTree[0].label
-  const topicsWithParents = flattenTopicTree(topicTree)
+  // const topicsWithParents = flattenTopicTree(topicTree)
 
   const createTopicTxs = getTopics(trees).map((topic) => {
     const name = topic.toLowerCase()
-    return tx.topics[lookup('name', name)].update({ label: topic })
+    return tx.topics[lookup('name', name)]
+      .update({ label: topic })
+      .link({ users: userId })
   })
 
   const mdBlocksWithId = flattenMdBlocks(assignIds(mdBlocks))
@@ -54,7 +57,7 @@ export function createSummary({
       lookup('name', topic.toLowerCase())
     )
 
-    return tx.trees[treeId].update({name: tree.toLowerCase()}).link({
+    return tx.trees[treeId].update({ name: tree.toLowerCase() }).link({
       summary: summaryId,
       user: userId,
       topics,
@@ -75,27 +78,31 @@ export function createSummary({
         summary: summaryId,
         user: userId,
         ...(parentId ? { parent: parentId } : {}),
-        ...(tree.length > 0
-          ? { tree: treeMap[tree] }
-          : {}),
+        ...(tree.length > 0 ? { tree: treeMap[tree] } : {}),
       })
   })
 
   // TODO: not really sure if this is correct or guaranteed, but setting up the
   // trees first prevents a not-null error in blocks. I assume because of the
   // tree lookup
-  db.transact(createTopicTxs)
-  db.transact([ ...createPathTxns, ...treeTxs  ])
+  // db.transact(createTopicTxs)
+  // db.transact([...createPathTxns, ...treeTxs])
   db.transact([
+    ...createTopicTxs,
+    ...createPathTxns,
+    ...treeTxs,
     tx.summaries[summaryId]
       .update({
-        for: url,
         description,
+        isShared,
+        for: url,
+        createdAt: new Date().getTime(),
+        topicName: summaryTopic.toLowerCase(),
       })
       .link({
         user: userId,
-        topic: lookup('name', summaryTopic.toLowerCase()),
       }),
+    ...blockTxs,
   ])
-  db.transact(blockTxs)
+  // db.transact(blockTxs)
 }

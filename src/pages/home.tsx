@@ -1,35 +1,82 @@
-import { id, tx } from '@instantdb/react'
 import { Save, Share } from 'lucide-react'
 import { useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import remarkWikiLink from 'remark-wiki-link'
 
+import { HorizontalSummaryList } from '@/components/horizontal-summary-list'
 import { LoadingScreen } from '@/components/loading-screen'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
-import { Textarea } from '@/components/ui/textarea'
+import { Card, CardContent } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { db } from '@/db'
 import { createSummary } from '@/db/actions/summary'
 import { useUserAtom } from '@/db/ui-store'
 import { streamSummarization } from '@/lib/ai/messages'
+import { useCurrentUrl } from '@/lib/hooks/use-current-tab'
 import { MARKDOWN_STUB } from '@/lib/markdown/stub'
+import { useNavigate } from 'react-router-dom'
+
+const MOCK_SUMMARIES = [
+  {
+    id: '1',
+    title: 'The Future of AI',
+    description:
+      'An exploration of artificial intelligence and its potential impact on society.',
+  },
+  {
+    id: '2',
+    title: 'Climate Change Solutions',
+    description:
+      'Innovative approaches to combating global warming and its effects.',
+  },
+  {
+    id: '3',
+    title: 'Space Exploration in 2023',
+    description:
+      'Recent advancements and future plans for human space exploration.',
+  },
+  // Add more mock summaries as needed
+]
 
 export function HomePage() {
+  const url = useCurrentUrl()
+  const navigate = useNavigate()
+
   const [userInput, setUserInput] = useState('')
   const [summary, setSummary] = useState(MARKDOWN_STUB)
+  const [canSave, setCanSave] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [currentUrl, setCurrentUrl] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [user] = useUserAtom()
 
   if (!user?.id) return <LoadingScreen />
+
+  const { data } = db.useQuery({
+    summaries: {
+      $: {
+        where: {
+          for: url || 'https://www.sonnetate.com',
+          'user.id': user.id,
+        },
+      },
+    },
+  })
+
+    console.log("🪚 summaries:", data);
+  const uiSummaries = data?.summaries.map((summary) => {
+    return {
+      id: summary.id,
+      title: summary.topicName,
+      description: summary.description
+    }
+  })
 
   const handleSummarize = async (prompt?: string) => {
     setIsLoading(true)
@@ -37,15 +84,10 @@ export function HomePage() {
     setError(null)
 
     try {
-      const [tab] = await chrome.tabs.query({
-        active: true,
-        currentWindow: true,
-      })
-      if (tab.url) {
-        setCurrentUrl(tab.url)
+      if (url) {
         for await (const chunk of streamSummarization({
           prompt,
-          url: tab.url,
+          url,
           apiKey: user?.apiKey,
         })) {
           setSummary((prev) => prev + chunk)
@@ -63,57 +105,98 @@ export function HomePage() {
   const handleSave = async (md: string) => {
     setError(null)
     try {
-      createSummary({ md, url: currentUrl, userId: user.id })
+      createSummary({
+        md,
+        url: url || 'https://www.sonnetate.com',
+        userId: user.id,
+      })
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err))
-    } finally {
-      setIsLoading(false)
     }
   }
 
-  const handleShare = () => {
-    // Implement share functionality
-    console.log('Share clicked')
+  const handleShare = (md: string) => {
+    setError(null)
+    try {
+      createSummary({
+        md,
+        isShared: true,
+        url: url || 'https://www.sonnetate.com',
+        userId: user.id,
+      })
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err))
+    }
+  }
+
+  const handleViewSummary = (id: string) => {
+    setCanSave(false)
+    navigate(`/summaries/${id}`)
+    // Implement view summary functionality
+    console.log('View summary clicked for id:', id)
   }
 
   return (
     <TooltipProvider>
-      <div className="flex flex-col h-full">
-        <div className="flex-grow overflow-auto p-4">
-          <Button
-            onClick={() => handleSummarize()}
-            className="w-full mb-4"
-            disabled={isLoading}
-          >
-            {isLoading ? 'Summarizing...' : 'Summarize'}
-          </Button>
+      <div className="flex flex-col h-full p-4">
+        {uiSummaries && (
+          <div className="h-40 mb-8">
+            <HorizontalSummaryList
+              summaries={uiSummaries}
+              onViewSummary={handleViewSummary}
+            />
+          </div>
+        )}
 
+        <div className="flex-grow overflow-auto">
           {error && (
-            <Card className="p-4 mt-4 bg-red-100 border-red-300">
+            <Card className="p-4 mb-4 bg-red-100 border-red-300">
               <p className="text-red-800">{error}</p>
             </Card>
           )}
 
-          {summary && (
-            <Card className="p-4 mt-4 markdown relative">
-              <ReactMarkdown
-                remarkPlugins={[
-                  remarkGfm,
-                  [remarkWikiLink, { aliasDivider: '|' }],
-                ]}
-              >
-                {summary}
-              </ReactMarkdown>
+          <Card className="markdown relative overflow-hidden h-full">
+            <CardContent className="p-4 overflow-auto h-full">
+              {summary ? (
+                <>
+                  <ReactMarkdown
+                    remarkPlugins={[
+                      remarkGfm,
+                      [
+                        remarkWikiLink,
+                        {
+                          aliasDivider: '|',
+                          hrefTemplate: (permalink: string) =>
+                            `#/topics/${permalink.replace(/\//g, '__')}`,
+                        },
+                      ],
+                    ]}
+                  >
+                    {summary}
+                  </ReactMarkdown>
+                </>
+              ) : (
+                <div className="flex items-center justify-center h-full">
+                  <div className="text-center">
+                    <h6 className="text-lg font-medium text-gray-500 mb-2">
+                      Ready to summarize
+                    </h6>
+                    <p className="text-sm text-gray-400">
+                      Enter a prompt or click 'Summarize' to begin
+                    </p>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+            {summary && (
               <div className="absolute bottom-2 right-2 flex space-x-2">
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
                       size="icon"
                       variant="ghost"
-                      onClick={(e) => {
-                        e.preventDefault()
-                        handleSave(summary)
-                      }}
+                      onClick={() => handleSave(summary)}
+                      // disabled={isLoading || !canSave}
                       disabled={isLoading}
                     >
                       <Save className="h-4 w-4" />
@@ -128,7 +211,8 @@ export function HomePage() {
                     <Button
                       size="icon"
                       variant="ghost"
-                      onClick={handleShare}
+                      onClick={() => handleShare(summary)}
+                      // disabled={isLoading || !canSave}
                       disabled={isLoading}
                     >
                       <Share className="h-4 w-4" />
@@ -139,33 +223,28 @@ export function HomePage() {
                   </TooltipContent>
                 </Tooltip>
               </div>
-            </Card>
-          )}
+            )}
+          </Card>
         </div>
 
-        <div className="p-4">
-          <div className="flex items-center justify-center mb-4">
-            <Separator className="flex-grow" />
-            <span className="px-2 text-sm text-gray-500">or</span>
-            <Separator className="flex-grow" />
-          </div>
-
-          <div>
-            <Textarea
-              value={userInput}
-              onChange={(e) => setUserInput(e.target.value)}
-              placeholder="Type your prompt here..."
-              className="min-h-[100px] mb-2"
-              disabled={isLoading}
-            />
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isLoading}
-              onClick={() => handleSummarize(userInput)}
-            >
-              {isLoading ? 'Processing...' : 'Send'}
-            </Button>
+        <div className="mt-4">
+          <div className="flex space-x-2 items-center">
+            <div className="flex-grow relative">
+              <Input
+                value={userInput}
+                onChange={(e) => setUserInput(e.target.value)}
+                placeholder="Type your prompt, or just... →"
+                className="pr-24"
+                disabled={isLoading}
+              />
+              <Button
+                onClick={() => handleSummarize(userInput)}
+                className="absolute right-0 top-0 bottom-0 rounded-l-none"
+                disabled={isLoading}
+              >
+                {isLoading ? 'Processing...' : 'Summarize'}
+              </Button>
+            </div>
           </div>
         </div>
       </div>

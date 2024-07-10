@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Sonnetate - AI powered annotations",
+  "name": "Sonnetate - AI powered sensemaking annotations",
   "version": "1.0",
   "description": "PKM inspired, AI fueled, annotations for the web",
   "side_panel": {

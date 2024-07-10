@@ -4,12 +4,15 @@ import { db } from '@/db'
 
 import { LoadingScreen } from './components/loading-screen'
 import { useUserAtom } from './db/ui-store'
+import { useWatchCurrentTab } from './lib/hooks/use-current-tab'
 import { Auth } from './pages/auth'
 import { UserInfo } from './pages/user-info'
 import { Routes } from './routes'
 
 // TODO: fugly
 function App() {
+  useWatchCurrentTab()
+
   const [user, setUser] = useUserAtom()
   const {
     isLoading: isLoadingAuth,
@@ -47,7 +50,7 @@ function App() {
   }
 
   if (authUser) {
-    return user ? <Routes /> : <UserInfo authId={authUser.id} />
+    return user?.id ? <Routes /> : <UserInfo authId={authUser.id} />
   }
 
   return <Auth />
