@@ -25,44 +25,41 @@ export function createSummary({
   const description = getDescription(md)
   const mdBlocks = parseMd(md)
   const trees = getTrees(mdBlocks)
-  const allTopics = getTopics(trees)
-  const topicsWithParents = flattenTopicTree(createTopicTree(trees))
+  const topicTree = createTopicTree(trees)
+  const summaryTopic = topicTree[0].label
+  const topicsWithParents = flattenTopicTree(topicTree)
 
-  const createTopicTxs = allTopics.map((topic) => {
+  const createTopicTxs = getTopics(trees).map((topic) => {
     const name = topic.toLowerCase()
-    return tx.topics[lookup('name', name)].update({ label: topic }).link({
-      summaries: summaryId,
-    })
-  })
-
-  const linkTopicTxs = topicsWithParents.map((topic) => {
-    return (
-      tx.topics[lookup('name', topic.label.toLowerCase())]
-        // .update({
-        //   label: topic.label,
-        //   name: topic.label.toLowerCase(),
-        // })
-        .link({
-          summaries: summaryId,
-          users: userId,
-          ...(topic.parent
-            ? { parents: lookup('name', topic.parent.toLowerCase()) }
-            : {}),
-        })
-    )
+    return tx.topics[lookup('name', name)].update({ label: topic })
   })
 
   const mdBlocksWithId = flattenMdBlocks(assignIds(mdBlocks))
 
+  const createPathTxns = trees.map((tree) => {
+    const pathName = tree.toLowerCase()
+    return tx.paths[lookup('name', pathName)].update({
+      // TODO: there's something weird with instant where passing the actual
+      // name throws an error, but passing a random key works. So I'm just
+      // passing createdAt even if it's not needed
+      createdAt: new Date().getTime(),
+    })
+  })
+
+  const treeMap: { [path: string]: string } = {}
   const treeTxs = trees.map((tree) => {
     const treeId = id()
+    treeMap[tree] = treeId
     const topics = getTopics([tree]).map((topic) =>
       lookup('name', topic.toLowerCase())
     )
 
-    return tx.trees[treeId]
-      .update({ path: tree.toLowerCase() })
-      .link({ summary: summaryId, user: userId, topics })
+    return tx.trees[treeId].update({name: tree.toLowerCase()}).link({
+      summary: summaryId,
+      user: userId,
+      topics,
+      path: lookup('name', tree.toLowerCase()),
+    })
   })
 
   const blockTxs = mdBlocksWithId.map((block) => {
@@ -79,7 +76,7 @@ export function createSummary({
         user: userId,
         ...(parentId ? { parent: parentId } : {}),
         ...(tree.length > 0
-          ? { tree: lookup('path', tree.toLowerCase()) }
+          ? { tree: treeMap[tree] }
           : {}),
       })
   })
@@ -88,15 +85,17 @@ export function createSummary({
   // trees first prevents a not-null error in blocks. I assume because of the
   // tree lookup
   db.transact(createTopicTxs)
-  db.transact(treeTxs)
+  db.transact([ ...createPathTxns, ...treeTxs  ])
   db.transact([
     tx.summaries[summaryId]
       .update({
         for: url,
         description,
       })
-      .link({ user: userId }),
-    ...blockTxs,
+      .link({
+        user: userId,
+        topic: lookup('name', summaryTopic.toLowerCase()),
+      }),
   ])
-  db.transact(linkTopicTxs)
+  db.transact(blockTxs)
 }
