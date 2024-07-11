@@ -20,11 +20,11 @@ import { db } from '@/db'
 import { createSummary } from '@/db/actions/summary'
 import { useUser } from '@/db/ui-store'
 import { streamTransformedMarkdown } from '@/lib/ai/messages'
-import { useCurrentUrl } from '@/lib/hooks/use-current-tab'
+import { useCurrentTab } from '@/lib/hooks/use-current-tab'
 import { MARKDOWN_STUB_WITH_HIERARCHY } from '@/lib/markdown/stub'
 
 export function HomePage() {
-  const url = useCurrentUrl()
+  const { url } = useCurrentTab()
   const navigate = useNavigate()
 
   const [userInput, setUserInput] = useState('')

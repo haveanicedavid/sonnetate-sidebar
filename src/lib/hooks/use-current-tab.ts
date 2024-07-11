@@ -1,22 +1,18 @@
 import { atom, useAtom } from 'jotai'
 import { useCallback, useEffect } from 'react'
 
-interface Tab {
-  id?: number
-  url?: string
-  title?: string
-}
-
-// const tabAtom = atom<Tab>({ id: undefined, url: undefined, title: undefined })
 const tabUrlAtom = atom<string | null>(null)
+const tabTitleAtom = atom<string | null>(null)
 
-export function useCurrentUrl() {
-  const [currentTab] = useAtom(tabUrlAtom)
-  return currentTab
+export function useCurrentTab() {
+  const [url] = useAtom(tabUrlAtom)
+  const [title] = useAtom(tabTitleAtom)
+  return { url, title }
 }
 
 export function useWatchCurrentTab() {
-  const [, setCurrentTab] = useAtom(tabUrlAtom)
+  const [, setUrl] = useAtom(tabUrlAtom)
+  const [, setTitle] = useAtom(tabTitleAtom)
 
   const updateCurrentTab = useCallback(() => {
     if (!chrome?.tabs?.query) return
@@ -28,30 +24,35 @@ export function useWatchCurrentTab() {
       }
 
       const [tab] = tabs
-      if (tab && tab.url) {
-        setCurrentTab(tab.url)
+      if (tab) {
+        if (tab.url) setUrl(tab.url)
+        if (tab.title) setTitle(tab.title)
       }
     })
-  }, [setCurrentTab])
+  }, [setUrl, setTitle])
 
   useEffect(() => {
     if (!chrome?.tabs?.query) return
-    // Initial update
+
     updateCurrentTab()
 
-    // Set up an interval to periodically check for updates
-    const intervalId = setInterval(updateCurrentTab, 5000)
+    const intervalId = setInterval(updateCurrentTab, 3000)
 
-    // Listen for tab changes
     const tabUpdatedListener = () => {
       updateCurrentTab()
     }
 
+    const tabActivatedListener = () => {
+      updateCurrentTab()
+    }
+
     chrome.tabs.onUpdated.addListener(tabUpdatedListener)
+    chrome.tabs.onActivated.addListener(tabActivatedListener)
 
     return () => {
       clearInterval(intervalId)
       chrome.tabs.onUpdated.removeListener(tabUpdatedListener)
+      chrome.tabs.onActivated.removeListener(tabActivatedListener)
     }
   }, [updateCurrentTab])
 }
