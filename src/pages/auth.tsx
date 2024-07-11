@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { EmailForm } from '@/components/email-code-form'
 import { MagicCodeForm } from '@/components/magic-code-form'
 
-export function Auth(): JSX.Element {
+export function AuthPage() {
   const [sentEmail, setSentEmail] = useState('')
 
   return (

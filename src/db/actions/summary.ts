@@ -1,11 +1,10 @@
 import { id, lookup, tx } from '@instantdb/react'
 
 import { db } from '@/db'
+import { assignMdBlockIds, flattenMdBlocks } from '@/lib/markdown/md-blocks'
 import { parseMd } from '@/lib/markdown/parse-md'
 import {
-  assignIds,
   createTopicTree,
-  flattenMdBlocks, // flattenTopicTree,
   getDescription,
   getTopics,
   getTrees,
@@ -25,7 +24,6 @@ export function createSummary({
   const summaryId = id()
   const description = getDescription(md)
   const mdBlocks = parseMd(md)
-  console.log('🪚 mdBlocks:', mdBlocks)
   const trees = getTrees(mdBlocks)
   const topicTree = createTopicTree(trees)
   const summaryTopic = topicTree[0].label
@@ -38,7 +36,7 @@ export function createSummary({
       .link({ users: userId })
   })
 
-  const withIds = assignIds(mdBlocks)
+  const withIds = assignMdBlockIds(mdBlocks)
   const rootBlock = withIds[0]
   console.log('🪚 rootBlock:', rootBlock)
   const flatBlocksWithId = flattenMdBlocks(withIds)

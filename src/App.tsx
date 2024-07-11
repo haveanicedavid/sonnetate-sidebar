@@ -3,17 +3,18 @@ import { useEffect } from 'react'
 import { db } from '@/db'
 
 import { LoadingScreen } from './components/loading-screen'
-import { useUserAtom } from './db/ui-store'
+import { useUser } from './db/ui-store'
 import { useWatchCurrentTab } from './lib/hooks/use-current-tab'
-import { Auth } from './pages/auth'
-import { UserInfo } from './pages/user-info'
+import { AuthPage } from './pages/auth'
+import { UserInfoPage } from './pages/user-info'
 import { Routes } from './routes'
 
-// TODO: fugly
+// Logic here is a big obfuscated because I need both an AuthUser and a user
+// from the users table
 function App() {
   useWatchCurrentTab()
 
-  const [user, setUser] = useUserAtom()
+  const [user, setUser] = useUser()
   const {
     isLoading: isLoadingAuth,
     user: authUser,
@@ -32,6 +33,7 @@ function App() {
   const appUser = userData?.users[0]
 
   useEffect(() => {
+    // setup jotai user... context alternative
     if (appUser?.id) {
       setUser(appUser)
     }
@@ -50,10 +52,11 @@ function App() {
   }
 
   if (authUser) {
-    return user?.id ? <Routes /> : <UserInfo authId={authUser.id} />
+    // check that jotai has user before rendering routes. UserInfoPage doesn't need
+    return user?.id ? <Routes /> : <UserInfoPage authId={authUser.id} />
   }
 
-  return <Auth />
+  return <AuthPage />
 }
 
 export default App

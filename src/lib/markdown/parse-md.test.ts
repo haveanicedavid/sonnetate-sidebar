@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 
-import { parseMd } from '../parse-md'
+import { parseMd } from './parse-md'
 
 test('parses headings with wikilinks, paragraphs, and lowercase tree field', () => {
   const markdown = `# [[Header 1]]

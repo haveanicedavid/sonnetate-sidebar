@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/tooltip'
 import { db } from '@/db'
 import { createSummary } from '@/db/actions/summary'
-import { useUserAtom } from '@/db/ui-store'
+import { useUser } from '@/db/ui-store'
 import { streamTransformedMarkdown } from '@/lib/ai/messages'
 import { useCurrentUrl } from '@/lib/hooks/use-current-tab'
 import { MARKDOWN_STUB_WITH_HIERARCHY } from '@/lib/markdown/stub'
@@ -33,7 +33,7 @@ export function HomePage() {
   const [canSave, setCanSave] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [user] = useUserAtom()
+  const [user] = useUser()
 
   if (!user?.id) return <LoadingScreen />
 

@@ -14,7 +14,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { createUser } from '@/db/actions'
+import { createUser } from '@/db/actions/user'
 
 const formSchema = z.object({
   handle: z
@@ -33,7 +33,7 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>
 
-export function UserInfo({ authId }: { authId: string }) {
+export function UserInfoPage({ authId }: { authId: string }) {
   const [error, setError] = useState<string | null>(null)
 
   const form = useForm<FormValues>({

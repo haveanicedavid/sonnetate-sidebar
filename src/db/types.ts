@@ -1,61 +1,47 @@
-type BlockType = 'block' | 'tree'
-
-export type DbSchema = {
-  blocks: Block
-  summaries: Summary
-  topics: Topic
-  trees: Tree
-  users: User
-}
-
 export interface Block {
   id: string
-  children: Block[]
+  children?: Block[]
   order: number
-  parent: Block
-  summary: Summary
+  parent?: Block
   text: string
-  type: BlockType
-  tree: Tree
-  user: User
-}
-
-export interface Summary {
-  id: string
-  rootBlock?: Block
-  topicName: string
-  trees?: Tree[]
-  createdAt: number
-  for: string
-  description: string
-  isShared?: boolean
+  tree?: Tree
+  type: 'block' | 'tree' | 'topic' | 'url'
   user?: User
 }
 
 export interface Topic {
   id: string
-  name: string
+  children?: Topic[] | null
+  createdAt: number
   label: string
-  parents: Topic[] | null
-  children: Topic[] | null
-  trees: Tree[]
-  summaries: Summary[]
-  users: User[]
+  name: string
+  parents?: Topic[]
+  trees?: Tree[]
+  users?: User[]
+  blocks?: Block[]
 }
 
 export interface Tree {
   id: string
-  topics: Topic[]
-  blocks: Block[]
-  user: User
+  isPublic?: boolean
+  path: string
+  topic?: Topic
+  blocks?: Block[]
+  user?: User
 }
 
 export interface User {
   id: string
-  // blocks: Block[]
-  handle: string
   apiKey: string
-  // summaries: Summary[]
-  // topics: Topic[]
-  // trees: Tree[]
+  blocks?: Block[]
+  handle: string
+  topics?: Topic[]
+  trees?: Tree[]
+}
+
+export type DbSchema = {
+  blocks: Block
+  topics: Topic
+  trees: Tree
+  users: User
 }

@@ -113,7 +113,7 @@ export function AppLayout({ exploreNotifications = 0 }: LayoutProps) {
             </TooltipContent>
           </Tooltip>
         </header>
-        <main className="flex-grow overflow-auto p-2">
+        <main className="flex-grow overflow-auto">
           <Outlet />
         </main>
       </div>
