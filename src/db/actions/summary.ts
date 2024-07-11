@@ -2,13 +2,9 @@ import { id, lookup, tx } from '@instantdb/react'
 
 import { db } from '@/db'
 import { assignMdBlockIds, flattenMdBlocks } from '@/lib/markdown/md-blocks'
+import { createTopicTree } from '@/lib/markdown/md-trees'
 import { parseMd } from '@/lib/markdown/parse-md'
-import {
-  createTopicTree,
-  getDescription,
-  getTopics,
-  getTrees,
-} from '@/lib/markdown/utils'
+import { getDescription, getTopics, getTrees } from '@/lib/markdown/utils'
 
 export function createSummary({
   md,

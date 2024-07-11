@@ -14,9 +14,9 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { db } from '@/db'
-import { Block } from '@/db/types'
-import { createMarkdownFromBlocks } from '@/lib/markdown/utils'
 import { shareSummary } from '@/db/actions/summary'
+import { Block } from '@/db/types'
+import { createMarkdownFromBlocks } from '@/lib/markdown/md-blocks'
 
 export function SummaryPage() {
   const { id } = useParams<{ id: string }>()

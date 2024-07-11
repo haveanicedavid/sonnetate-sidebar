@@ -133,7 +133,7 @@ export function HomePage() {
             </Card>
           )}
 
-          <Card className="markdown relative overflow-hidden h-full">
+          <Card className="markdown relative overflow-hidden h-full dark:border-slate-700">
             <CardContent className="p-4 overflow-auto h-full">
               {summary ? (
                 <>
