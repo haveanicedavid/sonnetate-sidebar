@@ -17,6 +17,7 @@ export interface Topic {
   name: string
   parents?: Topic[]
   trees?: Tree[]
+  type: 'topic' | 'page'
   users?: User[]
   blocks?: Block[]
 }

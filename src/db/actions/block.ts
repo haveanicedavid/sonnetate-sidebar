@@ -1,21 +1,11 @@
-import { tx, id as uuid } from '@instantdb/react'
+import { id, tx } from '@instantdb/react'
 
 import { db } from '@/db'
 
-export function createBlock({
-  id,
-  handle,
-  apiKey,
-}: {
-  id?: string
-  handle: string
-  apiKey: string
-}) {
-  const _id = id || uuid()
+export function createUrlBlock({ url, title }: { url: string; title: string }) {
+  const urlId = id()
   db.transact([
-    tx.blocks[_id].update({
-      handle,
-      apiKey,
+    tx.blocks[urlId].update({
     }),
   ])
 }

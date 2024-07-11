@@ -1,28 +1,28 @@
 import { id } from '@instantdb/react'
 
-export interface TreeNode {
+export interface MdTreeNode {
   treeId: string
   parentTreeId: string | null
   label: string
-  children: TreeNode[]
+  children: MdTreeNode[]
 }
 
-export interface FlatTreeNode {
+export interface MdFlatTreeNode {
   treeId: string
   parentTreeId: string | null
   label: string
 }
 
-export function createTopicTree(trees: string[]): TreeNode[] {
-  const root: TreeNode[] = []
+export function createTopicTree(trees: string[]): MdTreeNode[] {
+  const root: MdTreeNode[] = []
 
   function addNode(
     parts: string[],
     parentTreeId: string | null = null
-  ): TreeNode {
+  ): MdTreeNode {
     const label = parts[0]
     const treeId = id()
-    const node: TreeNode = { treeId, parentTreeId, label, children: [] }
+    const node: MdTreeNode = { treeId, parentTreeId, label, children: [] }
 
     if (parts.length > 1) {
       node.children.push(addNode(parts.slice(1), treeId))
@@ -53,10 +53,10 @@ export function createTopicTree(trees: string[]): TreeNode[] {
   return root
 }
 
-export function flattenTopicTree(tree: TreeNode[]): FlatTreeNode[] {
-  const flatNodes: FlatTreeNode[] = []
+export function flattenTopicTree(tree: MdTreeNode[]): MdFlatTreeNode[] {
+  const flatNodes: MdFlatTreeNode[] = []
 
-  function flatten(node: TreeNode) {
+  function flatten(node: MdTreeNode) {
     const { children, ...flatNode } = node
     flatNodes.push(flatNode)
 

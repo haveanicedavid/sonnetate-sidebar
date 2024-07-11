@@ -2,14 +2,9 @@ import { id, lookup, tx } from '@instantdb/react'
 
 import { db } from '@/db'
 import { parseMd } from '@/lib/markdown/parse-md'
-import {
-  assignMdBlockIds,
-  createTopicTree,
-  flattenMdBlocks, // flattenTopicTree,
-  getDescription,
-  getTopics,
-  getTrees,
-} from '@/lib/markdown/utils'
+import { assignMdBlockIds } from '@/lib/markdown/md-blocks'
+import { createTopicTree } from '@/lib/markdown/md-trees'
+import { getDescription, getTrees } from '@/lib/markdown/utils'
 
 export function buildTree({
   isPublic = false,
