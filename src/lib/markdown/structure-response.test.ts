@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-import { transformMarkdownToStructured } from './parse-response'
+import { transformMarkdownToStructured } from './structure-response'
 
 describe('transformMarkdownToStructured', () => {
   test('transforms regular markdown to structured markdown with wikilinks', () => {

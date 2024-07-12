@@ -1,4 +1,4 @@
-import type { MdBlock, MdBlockType } from './types'
+import type { MdBlockType } from './types'
 
 export function getBlockType(text: string): MdBlockType {
   const firstLine = text.split('\n')[0]
@@ -20,6 +20,10 @@ export function getHeadingLevel(text: string): number {
   return match ? match[1].length : 0
 }
 
+/**
+ * extract the description / paragraph under first heading from a markdown string
+ * Could grab from `MdBlock` in future
+ */
 export function getDescription(markdown: string): string {
   const lines = markdown.split('\n')
   const firstHeaderIndex = lines.findIndex((line) => line.startsWith('#'))
@@ -38,33 +42,4 @@ export function getDescription(markdown: string): string {
   }
 
   return contentAfterHeader.slice(0, nextHeaderIndex).join('\n').trim()
-}
-
-export function getTrees(parsedMd: MdBlock[]): string[] {
-  const trees = new Set<string>()
-
-  function traverse(blocks: MdBlock[]) {
-    for (const block of blocks) {
-      if (block.tree !== '') {
-        trees.add(block.tree)
-      }
-      traverse(block.children)
-    }
-  }
-
-  traverse(parsedMd)
-  return Array.from(trees).sort()
-}
-
-export function getTopics(paths: string[]): string[] {
-  const topics = new Set<string>()
-
-  for (const path of paths) {
-    const parts = path.split('/')
-    for (const part of parts) {
-      topics.add(part.trim())
-    }
-  }
-
-  return Array.from(topics).sort()
 }

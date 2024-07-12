@@ -17,7 +17,7 @@ type LayoutProps = {
   exploreNotifications?: number
 }
 
-export function AppLayout({ exploreNotifications = 10 }: LayoutProps) {
+export function AppLayout({ exploreNotifications = 0 }: LayoutProps) {
   const handleLogout = () => {
     db.auth.signOut()
   }

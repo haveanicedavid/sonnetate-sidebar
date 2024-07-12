@@ -1,17 +1,26 @@
-import { expect, test } from 'vitest'
+import { beforeEach, expect, test, vi } from 'vitest'
 
 import { parseMd } from './parse-md'
 
-test('parses headings with wikilinks, paragraphs, and lowercase tree field', () => {
+let counter: number
+
+beforeEach(() => {
+  counter = 0
+  vi.mock('@instantdb/react', () => ({
+    id: vi.fn(() => `id${++counter}`),
+  }))
+})
+
+test('parses headings with wikilinks and includes distinct treeId and blockId', () => {
   const markdown = `# [[Header 1]]
 
 Paragraph 1
 
-## [[Header 1/Header 2|Header 2]]
+## [[Header 1/Header 2|Alias 2]]
 
 Paragraph 2
 
-### [[Header 1/Header 2/Header 3|Header 3]]
+### [[Header 1/Header 2/Header 3|Alias 3]]
 
 Paragraph 3
 `
@@ -20,38 +29,65 @@ Paragraph 3
 
   expect(result).toEqual([
     {
+      id: 'id1',
       text: '# [[Header 1]]',
       type: 'heading',
-      tree: '',
+      tree: {
+        path: 'Header 1',
+        topic: 'Header 1',
+        parentId: null,
+        id: 'id2',
+      },
+      parentId: 'root',
       children: [
         {
+          id: 'id3',
           text: 'Paragraph 1',
           type: 'paragraph',
-          tree: 'Header 1',
+          tree: null,
+          parentId: 'id1',
           children: [],
           order: 0,
         },
         {
-          text: '## [[Header 1/Header 2|Header 2]]',
+          id: 'id4',
+          text: '## [[Header 1/Header 2|Alias 2]]',
           type: 'heading',
-          tree: 'Header 1',
+          tree: {
+            path: 'Header 1/Header 2',
+            topic: 'Alias 2',
+            parentId: 'id2',
+            id: 'id5',
+          },
+          parentId: 'id1',
           children: [
             {
+              id: 'id6',
               text: 'Paragraph 2',
               type: 'paragraph',
-              tree: 'Header 1/Header 2',
+              tree: null,
+              parentId: 'id4',
               children: [],
               order: 0,
             },
             {
-              text: '### [[Header 1/Header 2/Header 3|Header 3]]',
+              id: 'id7',
+              text: '### [[Header 1/Header 2/Header 3|Alias 3]]',
               type: 'heading',
-              tree: 'Header 1/Header 2',
+              tree: {
+                path: 'Header 1/Header 2/Header 3',
+                topic: 'Alias 3',
+                parentId: 'id5',
+                id: 'id8',
+              },
+              parentId: 'id4',
               children: [
                 {
+                  id: 'id9',
                   text: 'Paragraph 3',
                   type: 'paragraph',
-                  tree: 'Header 1/Header 2/Header 3',
+                  tree: null,
+                  parentId: 'id7',
                   children: [],
                   order: 0,
                 },
@@ -67,82 +103,99 @@ Paragraph 3
   ])
 })
 
-test('parses lists with wikilink headings and lowercase tree field', () => {
-  const markdown = `
-# [[List Examples]]
+test('parses multiple top-level headings', () => {
+  const markdown = `# [[Header 1]]
 
-## [[List Examples/Unordered List|Unordered List]]
+Content 1
 
-- Item 1
-- Item 2
-  - Nested Item 1
-  - Nested Item 2
+# [[Header 2]]
 
-## [[List Examples/Ordered List|Ordered List]]
-
-1. First
-2. Second
-   1. Nested First
-   2. Nested Second
-
-## [[List Examples/Task List|Task List]]
-
-- [ ] Todo 1
-- [x] Done 1
+Content 2
 `
 
   const result = parseMd(markdown)
 
   expect(result).toEqual([
     {
-      text: '# [[List Examples]]',
+      id: 'id1',
+      text: '# [[Header 1]]',
       type: 'heading',
-      tree: '',
+      tree: {
+        path: 'Header 1',
+        topic: 'Header 1',
+        parentId: null,
+        id: 'id2',
+      },
+      parentId: 'root',
       children: [
         {
-          text: '## [[List Examples/Unordered List|Unordered List]]',
-          type: 'heading',
-          tree: 'List Examples',
-          children: [
-            {
-              text: '- Item 1\n- Item 2\n  - Nested Item 1\n  - Nested Item 2',
-              type: 'unordered-list',
-              tree: 'List Examples/Unordered List',
-              children: [],
-              order: 0,
-            },
-          ],
+          id: 'id3',
+          text: 'Content 1',
+          type: 'paragraph',
+          tree: null,
+          parentId: 'id1',
+          children: [],
           order: 0,
         },
+      ],
+      order: 0,
+    },
+    {
+      id: 'id4',
+      text: '# [[Header 2]]',
+      type: 'heading',
+      tree: {
+        path: 'Header 2',
+        topic: 'Header 2',
+        parentId: null,
+        id: 'id5',
+      },
+      parentId: 'root',
+      children: [
         {
-          text: '## [[List Examples/Ordered List|Ordered List]]',
-          type: 'heading',
-          tree: 'List Examples',
-          children: [
-            {
-              text: '1. First\n2. Second\n   1. Nested First\n   2. Nested Second',
-              type: 'ordered-list',
-              tree: 'List Examples/Ordered List',
-              children: [],
-              order: 0,
-            },
-          ],
-          order: 1,
+          id: 'id6',
+          text: 'Content 2',
+          type: 'paragraph',
+          tree: null,
+          parentId: 'id4',
+          children: [],
+          order: 0,
         },
+      ],
+      order: 1,
+    },
+  ])
+})
+
+test('parses headings without wikilinks', () => {
+  const markdown = `# Regular Header
+
+Content
+`
+
+  const result = parseMd(markdown)
+
+  expect(result).toEqual([
+    {
+      id: 'id1',
+      text: '# Regular Header',
+      type: 'heading',
+      tree: {
+        path: '',
+        topic: '',
+        parentId: null,
+        id: 'id2',
+      },
+      parentId: 'root',
+      children: [
         {
-          text: '## [[List Examples/Task List|Task List]]',
-          type: 'heading',
-          tree: 'List Examples',
-          children: [
-            {
-              text: '- [ ] Todo 1\n- [x] Done 1',
-              type: 'task-list',
-              tree: 'List Examples/Task List',
-              children: [],
-              order: 0,
-            },
-          ],
-          order: 2,
+          id: 'id3',
+          text: 'Content',
+          type: 'paragraph',
+          tree: null,
+          parentId: 'id1',
+          children: [],
+          order: 0,
         },
       ],
       order: 0,
@@ -150,17 +203,18 @@ test('parses lists with wikilink headings and lowercase tree field', () => {
   ])
 })
 
-test('parses blockquotes and code blocks with wikilink headings and lowercase tree field', () => {
-  const markdown = `
-# [[Quotes and Code]]
+test('parses lists and code blocks', () => {
+  const markdown = `# [[Main]]
 
-> This is a blockquote
-> It can span multiple lines
+## [[Main/Lists|Lists]]
+
+- Item 1
+- Item 2
+
+## [[Main/Code|Code]]
 
 \`\`\`javascript
-function hello() {
-  console.log("Hello, world!");
-}
+console.log('Hello, world!');
 \`\`\`
 `
 
@@ -168,22 +222,63 @@ function hello() {
 
   expect(result).toEqual([
     {
-      text: '# [[Quotes and Code]]',
+      id: 'id1',
+      text: '# [[Main]]',
       type: 'heading',
-      tree: '',
+      tree: {
+        path: 'Main',
+        topic: 'Main',
+        parentId: null,
+        id: 'id2',
+      },
+      parentId: 'root',
       children: [
         {
-          text: '> This is a blockquote\n> It can span multiple lines',
-          type: 'blockquote',
-          tree: 'Quotes and Code',
-          children: [],
+          id: 'id3',
+          text: '## [[Main/Lists|Lists]]',
+          type: 'heading',
+          tree: {
+            path: 'Main/Lists',
+            topic: 'Lists',
+            parentId: 'id2',
+            id: 'id4',
+          },
+          parentId: 'id1',
+          children: [
+            {
+              id: 'id5',
+              text: '- Item 1\n- Item 2',
+              type: 'unordered-list',
+              tree: null,
+              parentId: 'id3',
+              children: [],
+              order: 0,
+            },
+          ],
           order: 0,
         },
         {
-          text: '```javascript\nfunction hello() {\n  console.log("Hello, world!");\n}\n```',
-          type: 'codeblock',
-          tree: 'Quotes and Code',
-          children: [],
+          id: 'id6',
+          text: '## [[Main/Code|Code]]',
+          type: 'heading',
+          tree: {
+            path: 'Main/Code',
+            topic: 'Code',
+            parentId: 'id2',
+            id: 'id7',
+          },
+          parentId: 'id1',
+          children: [
+            {
+              id: 'id8',
+              text: '```javascript\nconsole.log(\'Hello, world!\');\n```',
+              type: 'codeblock',
+              tree: null,
+              parentId: 'id6',
+              children: [],
+              order: 0,
+            },
+          ],
           order: 1,
         },
       ],
@@ -192,58 +287,10 @@ function hello() {
   ])
 })
 
-test('parses images with wikilink headings and lowercase tree field', () => {
-  const markdown = `
-# [[Images]]
-
-![Alt text](https://example.com/image.jpg)
-
-Paragraph with ![inline image](https://example.com/inline.png) inside.
-
-## [[Images/Nested Images|Nested Images]]
-
-Another image here.
-`
+test('handles empty input', () => {
+  const markdown = ''
 
   const result = parseMd(markdown)
 
-  expect(result).toEqual([
-    {
-      text: '# [[Images]]',
-      type: 'heading',
-      tree: '',
-      children: [
-        {
-          text: '![Alt text](https://example.com/image.jpg)',
-          type: 'image',
-          tree: 'Images',
-          children: [],
-          order: 0,
-        },
-        {
-          text: 'Paragraph with ![inline image](https://example.com/inline.png) inside.',
-          type: 'paragraph',
-          tree: 'Images',
-          children: [],
-          order: 1,
-        },
-        {
-          text: '## [[Images/Nested Images|Nested Images]]',
-          type: 'heading',
-          tree: 'Images',
-          children: [
-            {
-              text: 'Another image here.',
-              type: 'paragraph',
-              tree: 'Images/Nested Images',
-              children: [],
-              order: 0,
-            },
-          ],
-          order: 2,
-        },
-      ],
-      order: 0,
-    },
-  ])
+  expect(result).toEqual([])
 })

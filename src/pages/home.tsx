@@ -98,7 +98,7 @@ export function HomePage() {
     try {
       createSummary({
         md,
-        isShared: true,
+        isPublic: true,
         url: url || 'https://www.sonnetate.com',
         userId: user.id,
       })

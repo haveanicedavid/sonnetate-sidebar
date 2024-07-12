@@ -8,18 +8,19 @@ export type MdBlockType =
   | 'codeblock'
   | 'image'
 
+interface TreeInfo {
+  path: string
+  topic: string
+  parentId: string | null
+  id: string
+}
+
 export interface MdBlock {
+  id: string
   text: string
   type: MdBlockType
-  tree: string
+  tree: TreeInfo | null
+  parentId: string | null
   children: MdBlock[]
   order: number
 }
-
-export interface MdBlockWithId extends MdBlock {
-  id: string
-  parentId: string | null
-  children: MdBlockWithId[]
-}
-
-export interface FlatMdBlock extends Omit<MdBlockWithId, 'children'> {}

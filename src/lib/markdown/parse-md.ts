@@ -1,94 +1,130 @@
+import { id } from '@instantdb/react'
 import { groupBy } from 'remeda'
 
 import type { MdBlock, MdBlockType } from './types'
 import { getBlockType, getHeadingLevel } from './utils'
 
+interface TreeInfo {
+  path: string
+  topic: string
+  parentId: string | null
+  id: string
+}
+
 interface Chunk {
+  id: string
   text: string
   type: MdBlockType
-  parentIndex: number
+  parentId: string
   docIndex: number
-  tree: string
+  tree: TreeInfo | null
 }
 
 interface OrderedChunk extends Chunk {
   order: number
 }
 
-type ChildMap = { [headerId: number]: number[] }
+type ChildMap = { [headerId: string]: string[] }
 
-type OrderedChunkByIndex = { [docIndex: number]: OrderedChunk }
+type OrderedChunkById = { [id: string]: OrderedChunk }
 
-function extractWikilinkContent(text: string): string {
+function extractWikilinkContent(text: string): { path: string; topic: string } {
   const match = text.match(/\[\[(.*?)\]\]/)
   if (match) {
     const content = match[1]
     const parts = content.split('|')
-    return parts[0] // Return the lowercase path part, ignoring the alias if present
+    const path = parts[0]
+    const pathParts = path.split('/')
+    const topic = parts[1] || pathParts[pathParts.length - 1]
+    return { path, topic }
   }
-  return ''
+  return { path: '', topic: '' }
 }
 
 export function parseMd(markdown: string): MdBlock[] {
-  // Trim leading and trailing whitespace, and split by double newlines
-  const textWithDocIndex: { text: string; docIndex: number }[] = markdown
-    .trim()
+  const trimmedMarkdown = markdown.trim()
+
+  if (trimmedMarkdown === '') {
+    return []
+  }
+
+  const textWithDocIndex: { text: string; docIndex: number }[] = trimmedMarkdown
     .split(/\n{2,}/)
     .map((text, index) => ({ text: text.trim(), docIndex: index }))
 
-  const headerIndexByDepth: { [depth: number]: number } = {
-    0: -1,
-    1: -1,
-    2: -1,
-    3: -1,
-    4: -1,
-    5: -1,
-    6: -1,
+  const headerIdByDepth: { [depth: number]: string } = {
+    0: 'root',
+    1: 'root',
+    2: 'root',
+    3: 'root',
+    4: 'root',
+    5: 'root',
+    6: 'root',
   }
 
-  const childrenByParentIndex: ChildMap = {}
-  const orderedBlocksByIndex: OrderedChunkByIndex = {}
+  const treeIdByDepth: { [depth: number]: string } = {
+    0: 'root',
+    1: 'root',
+    2: 'root',
+    3: 'root',
+    4: 'root',
+    5: 'root',
+    6: 'root',
+  }
+
+  const childrenByParentId: ChildMap = {}
+  const orderedBlocksById: OrderedChunkById = {}
 
   let currDepth = 0
-  let currTree: string[] = []
 
   const basicBlocks: Chunk[] = textWithDocIndex.map(({ text, docIndex }) => {
     const type = getBlockType(text)
-    let parentIndex = headerIndexByDepth[currDepth]
-    let tree = currTree.join('/')
+    const blockId = id()
+    let parentId = headerIdByDepth[currDepth]
+    let tree: TreeInfo | null = null
 
     if (type === 'heading') {
       const headingDepth = getHeadingLevel(text)
-      parentIndex = headerIndexByDepth[headingDepth - 1]
+      parentId = headerIdByDepth[headingDepth - 1]
       currDepth = headingDepth
 
-      const wikilinkContent = extractWikilinkContent(text)
-      const pathParts = wikilinkContent.split('/')
-      currTree = pathParts.slice(0, headingDepth)
+      const { path, topic } = extractWikilinkContent(text)
+      const treeId = id()
+      tree = {
+        path,
+        topic,
+        parentId: headingDepth === 1 ? null : treeIdByDepth[headingDepth - 1],
+        id: treeId,
+      }
 
-      tree = currTree.slice(0, -1).join('/')
-
-      for (const depth in headerIndexByDepth) {
+      for (const depth in headerIdByDepth) {
         if (parseInt(depth) >= headingDepth) {
-          headerIndexByDepth[depth] = docIndex
+          headerIdByDepth[depth] = blockId
+        }
+      }
+
+      for (const depth in treeIdByDepth) {
+        if (parseInt(depth) >= headingDepth) {
+          treeIdByDepth[depth] = treeId
         }
       }
     }
 
-    childrenByParentIndex[parentIndex] = childrenByParentIndex[parentIndex]
-      ? [...childrenByParentIndex[parentIndex], docIndex]
-      : [docIndex]
+    childrenByParentId[parentId] = childrenByParentId[parentId]
+      ? [...childrenByParentId[parentId], blockId]
+      : [blockId]
 
     return {
+      id: blockId,
       text,
       type,
+      parentId,
       docIndex,
-      parentIndex,
       tree,
     }
   })
 
-  const grouped = groupBy(basicBlocks, (block) => block.parentIndex)
+  const grouped = groupBy(basicBlocks, (block) => block.parentId)
   const blocksNoChildren: OrderedChunk[] = []
   for (const parentId in grouped) {
     grouped[parentId].forEach((block, i) => {
@@ -96,26 +132,28 @@ export function parseMd(markdown: string): MdBlock[] {
         ...block,
         order: i,
       }
-      orderedBlocksByIndex[block.docIndex] = orderedBlock
+      orderedBlocksById[block.id] = orderedBlock
       blocksNoChildren.push(orderedBlock)
     })
   }
 
   blocksNoChildren.sort((a, b) => a.docIndex - b.docIndex)
 
-  function buildNestedStructure(parentIndex: number): MdBlock[] {
-    const children = childrenByParentIndex[parentIndex] || []
-    return children.map((childIndex) => {
-      const block = orderedBlocksByIndex[childIndex]
+  function buildNestedStructure(parentId: string): MdBlock[] {
+    const children = childrenByParentId[parentId] || []
+    return children.map((childId) => {
+      const block = orderedBlocksById[childId]
       return {
+        id: block.id,
         text: block.text,
         type: block.type,
         tree: block.tree,
-        children: buildNestedStructure(childIndex),
+        parentId: block.parentId,
+        children: buildNestedStructure(childId),
         order: block.order,
       }
     })
   }
 
-  return buildNestedStructure(-1)
+  return buildNestedStructure('root')
 }
