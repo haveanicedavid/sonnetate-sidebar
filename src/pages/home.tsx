@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { HorizontalSummaryList } from '@/components/horizontal-summary-list'
 import { LoadingScreen } from '@/components/loading-screen'
+import { MarkdownContent } from '@/components/markdown-content'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -20,7 +21,6 @@ import { useUser } from '@/db/ui-store'
 import { streamTransformedMarkdown } from '@/lib/ai/messages'
 import { useCurrentTab } from '@/lib/hooks/use-current-tab'
 import { MARKDOWN_STUB_WITH_HIERARCHY } from '@/lib/markdown/stub'
-import { MarkdownContent } from '@/components/markdown-content'
 
 export function HomePage() {
   const { url, title: pageTitle } = useCurrentTab()
@@ -39,7 +39,7 @@ export function HomePage() {
     summaries: {
       $: {
         where: {
-          for: url || 'https://www.sonnetate.com',
+          url: url || 'https://www.sonnetate.com',
           'user.id': user.id,
         },
       },
@@ -49,7 +49,7 @@ export function HomePage() {
   const uiSummaries = (data?.summaries || []).map((summary) => {
     return {
       id: summary.id,
-      title: summary.pageTitle,
+      title: summary.title,
       description: summary.description,
     }
   })
@@ -84,7 +84,7 @@ export function HomePage() {
       createSummary({
         md,
         isPublic,
-        pageTitle : pageTitle || 'Untitled',
+        pageTitle: pageTitle || 'Untitled',
         url: url || 'https://www.sonnetate.com',
         userId: user.id,
       })
@@ -119,9 +119,7 @@ export function HomePage() {
           <Card className="markdown relative overflow-hidden h-full">
             <CardContent className="p-4 overflow-auto h-full">
               {summary ? (
-                <>
-                  <MarkdownContent content={summary} />
-                </>
+                <MarkdownContent content={summary} />
               ) : (
                 <div className="flex items-center justify-center h-full">
                   <div className="text-center">

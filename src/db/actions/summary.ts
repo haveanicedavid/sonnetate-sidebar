@@ -71,12 +71,13 @@ export function createSummary({
         domainPath: path,
         pageTitle,
         prompt,
-        rootBlockId: mdBlocks[0].id,
+        title: trees[0].topic,
         isPublic,
         url,
       })
       .link({
         user: userId,
+        rootBlock: mdBlocks[0].id,
       }),
     ...topicTxs,
     ...treeTxs,

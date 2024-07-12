@@ -3,7 +3,7 @@ import { flattenParsedMd } from './flatten-md-blocks'
 import type { MdBlock } from './types'
 
 describe('flattenParsedMd', () => {
-  test('flattens parsed markdown structure, extracts topics, and uses null for root parentId', () => {
+  test('flattens parsed markdown structure, extracts topics, uses null for root parentId, and lowercases paths', () => {
     const parsedMd: MdBlock[] = [
       {
         id: 'id1',
@@ -94,14 +94,14 @@ describe('flattenParsedMd', () => {
       ],
       trees: [
         {
-          path: 'Header 1',
+          path: 'header 1',
           topic: 'Header 1',
           parentId: null,
           id: 'tree1',
           blockId: 'id1',
         },
         {
-          path: 'Header 1/Subheader',
+          path: 'header 1/subheader',
           topic: 'Subheader',
           parentId: 'tree1',
           id: 'tree2',

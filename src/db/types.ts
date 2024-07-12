@@ -11,14 +11,15 @@ export interface Block {
 
 export interface Summary {
   id: string
-  description: string
   // TODO: move these to DB object or create topics for them?
+  description: string
   domainName: string
   domainPath: string
   isPublic: boolean
   pageTitle: string
   prompt?: string
   rootBlockId: string
+  title: string
   url: string
   user: User
 }

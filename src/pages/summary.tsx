@@ -1,10 +1,8 @@
 import { Share } from 'lucide-react'
-import ReactMarkdown from 'react-markdown'
 import { useParams } from 'react-router-dom'
-import remarkGfm from 'remark-gfm'
-import remarkWikiLink from 'remark-wiki-link'
 
 import { LoadingScreen } from '@/components/loading-screen'
+import { MarkdownContent } from '@/components/markdown-content'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import {
@@ -67,22 +65,7 @@ export function SummaryPage() {
       <div className="container mx-auto px-4 py-8 relative min-h-screen">
         <Card className="markdown overflow-hidden">
           <CardContent className="p-6 overflow-auto max-h-[calc(100vh-12rem)]">
-            <ReactMarkdown
-              remarkPlugins={[
-                remarkGfm,
-                [
-                  remarkWikiLink,
-                  {
-                    aliasDivider: '|',
-                    hrefTemplate: (permalink: string) =>
-                      `#/topics/${permalink.replace(/\//g, '__')}`,
-                  },
-                ],
-              ]}
-              className="prose prose-sm sm:prose lg:prose-lg max-w-none"
-            >
-              {mdString}
-            </ReactMarkdown>
+            <MarkdownContent content={mdString} />
           </CardContent>
         </Card>
         <div className="fixed bottom-8 right-8">
