@@ -1,6 +1,6 @@
 /* Isolate markdown styles */
 .markdown-content {
-  @apply text-base leading-7;
+  @apply text-base leading-7 text-foreground dark:text-zinc-300;
 }
 
 .markdown-content > * + * {
@@ -13,7 +13,7 @@
 .markdown-content h4, 
 .markdown-content h5, 
 .markdown-content h6 {
-  @apply font-semibold tracking-tight;
+  @apply font-semibold tracking-tight text-foreground dark:text-white;
 }
 
 .markdown-content h1 {
@@ -37,7 +37,7 @@
 }
 
 .markdown-content h6 {
-  @apply mt-8 mb-4 scroll-m-20 text-base text-muted-foreground;
+  @apply mt-8 mb-4 scroll-m-20 text-base text-muted-foreground dark:text-zinc-400;
 }
 
 .markdown-content h1 a, 
@@ -46,7 +46,7 @@
 .markdown-content h4 a, 
 .markdown-content h5 a, 
 .markdown-content h6 a {
-  @apply font-semibold text-foreground no-underline hover:underline;
+  @apply font-semibold text-foreground no-underline hover:text-muted-foreground transition-colors;
 }
 
 .markdown-content p {
@@ -58,7 +58,7 @@
 }
 
 .markdown-content blockquote {
-  @apply mt-6 border-l-2 border-border pl-6 italic;
+  @apply mt-6 border-l-2 border-border pl-6 italic text-muted-foreground dark:text-zinc-400;
 }
 
 .markdown-content ul, 
@@ -79,7 +79,7 @@
 }
 
 .markdown-content li::marker {
-  @apply text-muted-foreground;
+  @apply text-muted-foreground dark:text-zinc-500;
 }
 
 .markdown-content li > ul, 
@@ -92,7 +92,7 @@
 }
 
 .markdown-content thead {
-  @apply bg-muted;
+  @apply bg-muted dark:bg-zinc-800;
 }
 
 .markdown-content th {
@@ -108,11 +108,11 @@
 }
 
 .markdown-content code:not(pre code) {
-  @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
+  @apply relative rounded bg-muted dark:bg-zinc-800 px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
 }
 
 .markdown-content pre {
-  @apply mt-6 mb-4 overflow-x-auto rounded-lg bg-muted p-4;
+  @apply mt-6 mb-4 overflow-x-auto rounded-lg bg-muted dark:bg-zinc-800 p-4;
 }
 
 .markdown-content pre code {

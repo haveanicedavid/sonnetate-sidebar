@@ -25,7 +25,7 @@ export function AppLayout({ exploreNotifications = 0 }: LayoutProps) {
   return (
     <TooltipProvider>
       <div className="flex flex-col h-screen">
-        <header className="flex justify-between items-center px-2 py-1 bg-gray-100 border-b border-gray-200 dark:bg-gray-900 dark:border-gray-800">
+        <header className="flex justify-between items-center px-2 py-1 border-b">
           <div className="flex space-x-1">
             <Tooltip>
               <TooltipTrigger asChild>
@@ -85,7 +85,7 @@ export function AppLayout({ exploreNotifications = 0 }: LayoutProps) {
             </Tooltip>
           </div>
         </header>
-        <main className="flex-grow overflow-auto p-2">
+        <main className="flex-grow overflow-auto bg-muted/40">
           <Outlet />
         </main>
       </div>
