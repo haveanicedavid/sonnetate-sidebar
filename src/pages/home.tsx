@@ -24,13 +24,12 @@ import { useCurrentTab } from '@/lib/hooks/use-current-tab'
 import { MARKDOWN_STUB_WITH_HIERARCHY } from '@/lib/markdown/stub'
 
 export function HomePage() {
-  const { url } = useCurrentTab()
+  const { url, title: pageTitle } = useCurrentTab()
   const navigate = useNavigate()
 
   const [userInput, setUserInput] = useState('')
   const [summary, setSummary] = useState(MARKDOWN_STUB_WITH_HIERARCHY)
   // const [summary, setSummary] = useState('')
-  const [canSave, setCanSave] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [user] = useUser()
@@ -51,7 +50,7 @@ export function HomePage() {
   const uiSummaries = (data?.summaries || []).map((summary) => {
     return {
       id: summary.id,
-      title: summary.topicName,
+      title: summary.pageTitle,
       description: summary.description,
     }
   })
@@ -80,25 +79,13 @@ export function HomePage() {
     }
   }
 
-  const handleSave = async (md: string) => {
+  const handleSave = async (md: string, isPublic?: boolean) => {
     setError(null)
     try {
       createSummary({
         md,
-        url: url || 'https://www.sonnetate.com',
-        userId: user.id,
-      })
-    } catch (err) {
-      setError(err instanceof Error ? err.message : String(err))
-    }
-  }
-
-  const handleShare = (md: string) => {
-    setError(null)
-    try {
-      createSummary({
-        md,
-        isPublic: true,
+        isPublic,
+        pageTitle : pageTitle || 'Untitled',
         url: url || 'https://www.sonnetate.com',
         userId: user.id,
       })
@@ -108,10 +95,7 @@ export function HomePage() {
   }
 
   const handleViewSummary = (id: string) => {
-    setCanSave(false)
     navigate(`/summaries/${id}`)
-    // Implement view summary functionality
-    console.log('View summary clicked for id:', id)
   }
 
   return (
@@ -189,7 +173,7 @@ export function HomePage() {
                     <Button
                       size="icon"
                       variant="ghost"
-                      onClick={() => handleShare(summary)}
+                      onClick={() => handleSave(summary, true)}
                       // disabled={isLoading || !canSave}
                       disabled={isLoading}
                     >

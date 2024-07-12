@@ -8,7 +8,7 @@ export type MdBlockType =
   | 'codeblock'
   | 'image'
 
-interface TreeInfo {
+export interface TreeInfo {
   path: string
   topic: string
   parentId: string | null
@@ -23,4 +23,12 @@ export interface MdBlock {
   parentId: string | null
   children: MdBlock[]
   order: number
+}
+
+export type BlockSeed = Omit<MdBlock, 'children' | 'tree'> & {
+  treeId: string | null
+}
+
+export interface TreeSeed extends TreeInfo {
+  blockId: string
 }

@@ -13,7 +13,7 @@ export function getUrlDomainAndPath(urlString: string): {
 
     return {
       domain,
-      path: url.pathname,
+      path: url.pathname === '/' ? '' : url.pathname,
     }
   } catch (error) {
     console.error('Invalid URL:', error)

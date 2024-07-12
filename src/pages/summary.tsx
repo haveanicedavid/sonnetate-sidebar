@@ -16,7 +16,7 @@ import {
 import { db } from '@/db'
 import { shareSummary } from '@/db/actions/summary'
 import { Block } from '@/db/types'
-import { createMarkdownFromBlocks } from '@/lib/markdown/md-blocks'
+import { blocksToMd } from '@/lib/markdown/blocks-to-md'
 
 export function SummaryPage() {
   const { id } = useParams<{ id: string }>()
@@ -47,15 +47,14 @@ export function SummaryPage() {
   let mdString = ''
 
   if (rootBlock) {
-    mdString = createMarkdownFromBlocks(rootBlock)
+    mdString = blocksToMd(rootBlock)
   }
 
   if (!data || !rootBlock) {
     return <LoadingScreen />
   }
 
-  // This is a placeholder. Replace with actual logic to determine if the summary is shared.
-  const isShared = summary?.isShared
+  const isPublic = summary?.isPublic
 
   const handleShare = () => {
     if (summary?.id) {
@@ -93,13 +92,13 @@ export function SummaryPage() {
                 size="icon"
                 variant="secondary"
                 onClick={handleShare}
-                disabled={isShared}
+                disabled={isPublic}
               >
                 <Share className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>{isShared ? 'Already shared' : 'Share summary'}</p>
+              <p>{isPublic ? 'Already shared' : 'Share summary'}</p>
             </TooltipContent>
           </Tooltip>
         </div>
