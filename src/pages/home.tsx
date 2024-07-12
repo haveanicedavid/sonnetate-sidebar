@@ -2,8 +2,6 @@ import { Save, Share } from 'lucide-react'
 import { useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { useNavigate } from 'react-router-dom'
-import remarkGfm from 'remark-gfm'
-import remarkWikiLink from 'remark-wiki-link'
 
 import { HorizontalSummaryList } from '@/components/horizontal-summary-list'
 import { LoadingScreen } from '@/components/loading-screen'
@@ -22,6 +20,7 @@ import { useUser } from '@/db/ui-store'
 import { streamTransformedMarkdown } from '@/lib/ai/messages'
 import { useCurrentTab } from '@/lib/hooks/use-current-tab'
 import { MARKDOWN_STUB_WITH_HIERARCHY } from '@/lib/markdown/stub'
+import { MarkdownContent } from '@/components/markdown-content'
 
 export function HomePage() {
   const { url, title: pageTitle } = useCurrentTab()
@@ -117,25 +116,11 @@ export function HomePage() {
             </Card>
           )}
 
-          <Card className="markdown relative overflow-hidden h-full dark:border-slate-700">
+          <Card className="markdown relative overflow-hidden h-full">
             <CardContent className="p-4 overflow-auto h-full">
               {summary ? (
                 <>
-                  <ReactMarkdown
-                    remarkPlugins={[
-                      remarkGfm,
-                      [
-                        remarkWikiLink,
-                        {
-                          aliasDivider: '|',
-                          hrefTemplate: (permalink: string) =>
-                            `#/topics/${permalink.replace(/\//g, '__')}`,
-                        },
-                      ],
-                    ]}
-                  >
-                    {summary}
-                  </ReactMarkdown>
+                  <MarkdownContent content={summary} />
                 </>
               ) : (
                 <div className="flex items-center justify-center h-full">
