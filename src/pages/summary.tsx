@@ -32,7 +32,9 @@ export function SummaryPage() {
           children: {
             children: {
               children: {
-                children: {},
+                children: {
+                  children: {}
+                },
               },
             },
           },
@@ -42,6 +44,7 @@ export function SummaryPage() {
   })
   const summary = data?.summaries[0]
   const rootBlock = summary?.rootBlock[0] as Block
+
   let mdString = ''
 
   if (rootBlock) {

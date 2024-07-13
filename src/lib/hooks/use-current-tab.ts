@@ -1,8 +1,8 @@
 import { atom, useAtom } from 'jotai'
 import { useCallback, useEffect } from 'react'
 
-const tabUrlAtom = atom<string | null>(null)
-const tabTitleAtom = atom<string | null>(null)
+const tabUrlAtom = atom<string>('https://sonnetate.vercel.app/')
+const tabTitleAtom = atom<string>('sonnetate')
 
 export function useCurrentTab() {
   const [url] = useAtom(tabUrlAtom)
