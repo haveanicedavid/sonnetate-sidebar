@@ -56,7 +56,7 @@ function Navigation() {
       </Tooltip>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Link to="/explore">
+          <Link to="/feed">
             <Button
               variant="ghost"
               size="sm"

@@ -1,4 +1,3 @@
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import {
   Card,
   CardContent,
@@ -6,6 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 
 type Summary = {
   id: string
@@ -36,7 +36,7 @@ export function HorizontalSummaryList({
                 <CardTitle className="text-lg">{item.title}</CardTitle>
               </CardHeader>
               <CardContent className="p-4 pt-0">
-                <CardDescription className="text-sm whitespace-normal">
+                <CardDescription className="whitespace-normal text-sm">
                   {item.description.length > 100
                     ? `${item.description.substring(0, 100)}...`
                     : item.description}
