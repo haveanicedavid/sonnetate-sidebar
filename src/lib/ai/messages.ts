@@ -90,10 +90,6 @@ export async function* streamTransformedMarkdown({
 
   for await (const event of stream) {
     const transformedContent = transformer.transformStreamEvent(event)
-    if (transformedContent) {
-      // Process the transformedContent (e.g., append to a string, write to a file, etc.)
-      console.log('transformedContent', transformedContent)
-    }
     yield transformedContent
   }
 

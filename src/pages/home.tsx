@@ -1,6 +1,6 @@
+import { id } from '@instantdb/react'
 import { Save, Share } from 'lucide-react'
-import { useState } from 'react'
-import ReactMarkdown from 'react-markdown'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { HorizontalSummaryList } from '@/components/horizontal-summary-list'
@@ -25,8 +25,14 @@ import { MARKDOWN_STUB_WITH_HIERARCHY } from '@/lib/markdown/stub'
 export function HomePage() {
   const { url, title: pageTitle } = useCurrentTab()
   const navigate = useNavigate()
+  useEffect(() => {
+    if (!url) return
+    setNewSummaryId(id())
+  }, [url])
 
   const [userInput, setUserInput] = useState('')
+  // TODO: in prod this shouldn't have an ID
+  const [newSummaryId, setNewSummaryId] = useState(id())
   const [summary, setSummary] = useState(MARKDOWN_STUB_WITH_HIERARCHY)
   // const [summary, setSummary] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -34,6 +40,7 @@ export function HomePage() {
   const [user] = useUser()
 
   if (!user?.id) return <LoadingScreen />
+
 
   const { data } = db.useQuery({
     summaries: {
@@ -46,15 +53,9 @@ export function HomePage() {
     },
   })
 
-  const uiSummaries = (data?.summaries || []).map((summary) => {
-    return {
-      id: summary.id,
-      title: summary.title,
-      description: summary.description,
-    }
-  })
-
   const handleSummarize = async (prompt?: string) => {
+    const newId = id()
+    setNewSummaryId(newId)
     setIsLoading(true)
     setSummary('')
     setError(null)
@@ -80,10 +81,15 @@ export function HomePage() {
 
   const handleSave = async (md: string, isPublic?: boolean) => {
     setError(null)
+    if (!newSummaryId) {
+      setError('No summary to save')
+      return
+    }
     try {
       createSummary({
         md,
         isPublic,
+        id: newSummaryId,
         pageTitle: pageTitle || 'Untitled',
         url: url || 'https://www.sonnetate.com',
         userId: user.id,
@@ -96,6 +102,19 @@ export function HomePage() {
   const handleViewSummary = (id: string) => {
     navigate(`/summaries/${id}`)
   }
+
+  const summaries = data?.summaries || []
+  const uiSummaries = summaries.map((summary) => {
+    return {
+      id: summary.id,
+      title: summary.title,
+      description: summary.description,
+    }
+  })
+
+  const fetchedSummary = summaries.find((s) => s.id === newSummaryId)
+  const summarySaved = Boolean(fetchedSummary)
+  const summaryShared = Boolean(fetchedSummary?.isPublic)
 
   return (
     <TooltipProvider>
@@ -141,8 +160,7 @@ export function HomePage() {
                       size="icon"
                       variant="ghost"
                       onClick={() => handleSave(summary)}
-                      // disabled={isLoading || !canSave}
-                      disabled={isLoading}
+                      disabled={isLoading || summarySaved}
                     >
                       <Save className="h-4 w-4" />
                     </Button>
@@ -157,8 +175,7 @@ export function HomePage() {
                       size="icon"
                       variant="ghost"
                       onClick={() => handleSave(summary, true)}
-                      // disabled={isLoading || !canSave}
-                      disabled={isLoading}
+                      disabled={isLoading || summaryShared}
                     >
                       <Share className="h-4 w-4" />
                     </Button>

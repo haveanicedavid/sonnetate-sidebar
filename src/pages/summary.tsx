@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/tooltip'
 import { db } from '@/db'
 import { shareSummary } from '@/db/actions/summary'
-import { Block } from '@/db/types'
 import { blocksToMd } from '@/lib/markdown/blocks-to-md'
 
 export function SummaryPage() {
@@ -43,7 +42,7 @@ export function SummaryPage() {
     },
   })
   const summary = data?.summaries[0]
-  const rootBlock = summary?.rootBlock[0] as Block
+  const rootBlock = summary?.rootBlock[0]
 
   let mdString = ''
 

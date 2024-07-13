@@ -1,4 +1,3 @@
-import React from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import remarkWikiLink from 'remark-wiki-link'
@@ -32,10 +31,10 @@ export function MarkdownContent({
         ]}
         components={{
           a(props) {
-            const isHeaderLink = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(
-              props.node?.tagName || 'no'
-            )
-            if (isHeaderLink) {
+            const href = props.node?.properties?.href
+            const isInternalLink =
+              typeof href === 'string' && href.startsWith('#/')
+            if (isInternalLink) {
               return <a {...props} />
             }
             return <a target="_blank" rel="noopener noreferrer" {...props} />
