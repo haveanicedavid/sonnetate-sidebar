@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/tooltip'
 import { db } from '@/db'
 import { shareSummary } from '@/db/actions/summary'
-import { blocksToMd } from '@/lib/markdown/blocks-to-md'
+import { blockToMd } from '@/lib/markdown/blocks-to-md'
 
 export function SummaryPage() {
   const { id } = useParams<{ id: string }>()
@@ -47,7 +47,7 @@ export function SummaryPage() {
   let mdString = ''
 
   if (rootBlock) {
-    mdString = blocksToMd(rootBlock)
+    mdString = blockToMd(rootBlock)
   }
 
   if (!data || !rootBlock) {

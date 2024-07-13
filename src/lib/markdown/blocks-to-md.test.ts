@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-import { blocksToMd } from './blocks-to-md'
+import { blockToMd } from './blocks-to-md'
 import type { MdBlock } from './types'
 
 describe('createMarkdownFromBlocks', () => {
@@ -63,7 +63,7 @@ describe('createMarkdownFromBlocks', () => {
       ],
     }
 
-    const result = blocksToMd(rootBlock)
+    const result = blockToMd(rootBlock)
 
     const expectedMarkdown = `# Root Header
 
@@ -89,7 +89,7 @@ Last paragraph`
       children: [],
     }
 
-    const result = blocksToMd(singleBlock)
+    const result = blockToMd(singleBlock)
 
     expect(result).toBe('Single paragraph')
   })
@@ -138,7 +138,7 @@ Last paragraph`
       ],
     }
 
-    const result = blocksToMd(rootBlock)
+    const result = blockToMd(rootBlock)
 
     const expectedMarkdown = `# Root
 

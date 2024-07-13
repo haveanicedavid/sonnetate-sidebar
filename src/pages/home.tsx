@@ -15,6 +15,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { useToast } from '@/components/ui/use-toast'
 import { db } from '@/db'
 import { createSummary } from '@/db/actions/summary'
 import { useUser } from '@/db/ui-store'
@@ -24,6 +25,7 @@ import { MARKDOWN_STUB_WITH_HIERARCHY } from '@/lib/markdown/stub'
 
 export function HomePage() {
   const { url, title: pageTitle } = useCurrentTab()
+  const { toast } = useToast()
   const navigate = useNavigate()
   useEffect(() => {
     if (!url) return
@@ -95,6 +97,8 @@ export function HomePage() {
       })
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err))
+    } finally {
+      toast({ description: `Summary ${isPublic ? 'shared' : 'saved'}` })
     }
   }
 
@@ -157,7 +161,7 @@ export function HomePage() {
                   <TooltipTrigger asChild>
                     <Button
                       size="icon"
-                      variant="ghost"
+                      variant="outline"
                       onClick={() => handleSave(summary)}
                       disabled={isLoading || summarySaved}
                     >
@@ -172,7 +176,7 @@ export function HomePage() {
                   <TooltipTrigger asChild>
                     <Button
                       size="icon"
-                      variant="ghost"
+                      variant="outline"
                       onClick={() => handleSave(summary, true)}
                       disabled={isLoading || summaryShared}
                     >

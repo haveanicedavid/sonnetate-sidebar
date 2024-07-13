@@ -2,7 +2,7 @@ import type { Block } from '@/db/types'
 
 import type { MdBlock } from './types'
 
-export function blocksToMd(rootBlock: MdBlock | Block): string {
+export function blockToMd(rootBlock: MdBlock | Block): string {
   function buildMarkdown(block: MdBlock | Block): string {
     let markdown = block?.text || ''
 

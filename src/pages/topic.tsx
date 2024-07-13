@@ -12,14 +12,14 @@ import {
 } from '@/components/ui/breadcrumb'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { db } from '@/db'
-import { blocksToMd } from '@/lib/markdown/blocks-to-md'
+import { blockToMd } from '@/lib/markdown/blocks-to-md'
 
 function TopicCard({ content }: { content: string }) {
   const [isExpanded, setIsExpanded] = useState(false)
 
   return (
     <div
-      className="-mt-8 overflow-auto transition-all duration-300 ease-out"
+      className="-mt-4 overflow-auto transition-all duration-300 ease-out"
       style={{ maxHeight: isExpanded ? '470px' : '100px' }}
       onMouseEnter={() => setIsExpanded(true)}
       onMouseLeave={() => setIsExpanded(false)}
@@ -103,7 +103,7 @@ export function TopicPage() {
       if (!acc[pageName]) acc[pageName] = []
       acc[pageName].push({
         id: tree.id,
-        content: blocksToMd(tree.block[0]),
+        content: blockToMd(tree.block[0]),
       })
       return acc
     },
