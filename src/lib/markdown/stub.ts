@@ -1,6 +1,6 @@
 export const MARKDOWN_STUB_WITH_HIERARCHY = `# [[Main Topic]]
 
-This is a paragraph under the main topic. It contains some **bold text**, *italic text*, and even some \`inline code\`. This paragraph showcases basic Markdown formatting.
+This is a paragraph under the main topic. It contains some **bold text**, *italic text*, a [link](http://sonnetate.vercel.app) and even some \`inline code\`. This paragraph showcases basic Markdown formatting.
 
 ## [[Main Topic/Subtopic 1|Subtopic 1]]
 

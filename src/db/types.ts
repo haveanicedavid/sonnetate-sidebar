@@ -1,11 +1,11 @@
 export interface Block {
   id: string
-  children?: Block[]
   order: number
-  parent?: Block
   text: string
   tree?: Tree
   type: string
+  children?: Block[]
+  parent?: Block
   user?: User
 }
 
@@ -16,10 +16,10 @@ export interface Summary {
   isPublic: boolean
   pageTitle: string
   prompt?: string
-  rootBlock: Block
   site: Site[]
   title: string
   url: string
+  rootBlock: Block[]
   user: User
 }
 
@@ -35,13 +35,13 @@ interface Topic {
 
 interface Tree {
   id: string
-  block?: Block[]
-  children?: Tree[]
   context: string
   dayCreated: number
   isPublic?: boolean
-  parents?: Tree[]
   path: string
+  block?: Block[]
+  children?: Tree[]
+  parents?: Tree[]
   summary?: Summary[]
   topic?: Topic
   user?: User
@@ -59,12 +59,12 @@ interface Site {
 export interface User {
   id: string
   apiKey: string
-  blocks?: Block[]
   handle: string
+  blocks?: Block[]
+  sites?: Site[]
   summaries?: Summary[]
   topics?: Topic[]
   trees?: Tree[]
-  sites?: Site[]
 }
 
 export type DbSchema = {
