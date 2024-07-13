@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 type Theme = 'dark' | 'light' | 'system'
 
 const storageKey = 'sonnetate-ui-theme'
-const defaultTheme = localStorage.getItem(storageKey) as Theme || 'system'
+const defaultTheme = (localStorage.getItem(storageKey) as Theme) || 'system'
 
 const themeAtom = atom<Theme>(defaultTheme)
 
@@ -34,4 +34,3 @@ export function useTheme() {
   }
   return { theme, setTheme }
 }
-

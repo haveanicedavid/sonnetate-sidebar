@@ -19,7 +19,7 @@ function TopicCard({ content }: { content: string }) {
 
   return (
     <div
-      className="overflow-auto transition-all duration-300 ease-out -mt-8"
+      className="-mt-8 overflow-auto transition-all duration-300 ease-out"
       style={{ maxHeight: isExpanded ? '470px' : '100px' }}
       onMouseEnter={() => setIsExpanded(true)}
       onMouseLeave={() => setIsExpanded(false)}
@@ -114,12 +114,14 @@ export function TopicPage() {
     <div className="h-full overflow-y-auto">
       <div className="p-4">
         <TopicBreadcrumbs path={path} />
-        <div className="space-y-4 mt-4">
+        <div className="mt-4 space-y-4">
           {groupedCards &&
             Object.entries(groupedCards).map(([pageName, cards]) => (
               <Card key={pageName} className="overflow-hidden">
-                <CardHeader className="pt-2 pb-0">
-                  <CardTitle className="text-sm text-right">{pageName}</CardTitle>
+                <CardHeader className="pb-0 pt-2">
+                  <CardTitle className="text-right text-sm">
+                    {pageName}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="p-3 pt-0">
                   <div className="space-y-2">

@@ -45,7 +45,7 @@ function App() {
 
   if (authError || userError) {
     return (
-      <div className="h-screen flex justify-center items-center bg-gray-50 p-4">
+      <div className="flex h-screen items-center justify-center bg-gray-50 p-4">
         Uh oh! {authError?.message || userError?.message}
       </div>
     )

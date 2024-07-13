@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest'
+
 import { getUrlComponents } from './url'
 
 describe('getUrlComponents', () => {
@@ -8,7 +9,7 @@ describe('getUrlComponents', () => {
       baseUrl: 'https://www.example.com',
       domain: 'example.com',
       name: 'example',
-      path: '/path/to/page'
+      path: '/path/to/page',
     })
   })
 
@@ -18,7 +19,7 @@ describe('getUrlComponents', () => {
       baseUrl: 'http://example.org',
       domain: 'example.org',
       name: 'example',
-      path: '/path'
+      path: '/path',
     })
   })
 
@@ -28,7 +29,7 @@ describe('getUrlComponents', () => {
       baseUrl: 'https://example.net',
       domain: 'example.net',
       name: 'example',
-      path: ''
+      path: '',
     })
   })
 
@@ -38,7 +39,7 @@ describe('getUrlComponents', () => {
       baseUrl: 'https://example.co.uk',
       domain: 'example.co.uk',
       name: 'example',
-      path: '/path'
+      path: '/path',
     })
   })
 
@@ -48,7 +49,7 @@ describe('getUrlComponents', () => {
       baseUrl: 'https://blog.example.com',
       domain: 'blog.example.com',
       name: 'blog.example',
-      path: '/post'
+      path: '/post',
     })
   })
 
@@ -58,7 +59,7 @@ describe('getUrlComponents', () => {
       baseUrl: 'https://sub1.sub2.example.com',
       domain: 'sub1.sub2.example.com',
       name: 'sub1.sub2.example',
-      path: '/page'
+      path: '/page',
     })
   })
 
@@ -68,7 +69,7 @@ describe('getUrlComponents', () => {
       baseUrl: 'https://blog.example.co.uk',
       domain: 'blog.example.co.uk',
       name: 'blog.example',
-      path: '/post'
+      path: '/post',
     })
   })
 
@@ -78,7 +79,7 @@ describe('getUrlComponents', () => {
       baseUrl: '',
       domain: '',
       name: '',
-      path: ''
+      path: '',
     })
   })
 })

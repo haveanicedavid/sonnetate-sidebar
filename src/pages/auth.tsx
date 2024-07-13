@@ -7,7 +7,7 @@ export function AuthPage() {
   const [sentEmail, setSentEmail] = useState('')
 
   return (
-    <div className="flex justify-center items-start min-h-screen bg-gray-50 p-4">
+    <div className="flex min-h-screen items-start justify-center bg-gray-50 p-4">
       <div className="w-full max-w-sm">
         {!sentEmail ? (
           <EmailForm setSentEmail={setSentEmail} />

@@ -52,7 +52,7 @@ export function EmailForm({ setSentEmail }: EmailFormProps): JSX.Element {
 
   return (
     <>
-      <h2 className="text-2xl font-bold text-center mb-6">Let's log you in!</h2>
+      <h2 className="mb-6 text-center text-2xl font-bold">Let's log you in!</h2>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
@@ -78,7 +78,7 @@ export function EmailForm({ setSentEmail }: EmailFormProps): JSX.Element {
               <AlertDescription className="text-xs">{error}</AlertDescription>
             </Alert>
           )}
-          <Button type="submit" className="w-full text-sm mt-6">
+          <Button type="submit" className="mt-6 w-full text-sm">
             Send Code
           </Button>
         </form>

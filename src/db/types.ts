@@ -23,7 +23,6 @@ export interface Summary {
   user: User
 }
 
-
 interface Topic {
   id: string
   label: string

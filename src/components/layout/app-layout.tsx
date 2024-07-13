@@ -24,8 +24,8 @@ export function AppLayout({ exploreNotifications = 0 }: LayoutProps) {
 
   return (
     <TooltipProvider>
-      <div className="flex flex-col h-screen">
-        <header className="flex justify-between items-center px-2 py-1 border-b">
+      <div className="flex h-screen flex-col">
+        <header className="flex items-center justify-between border-b px-2 py-1">
           <div className="flex space-x-1">
             <Tooltip>
               <TooltipTrigger asChild>
@@ -45,13 +45,13 @@ export function AppLayout({ exploreNotifications = 0 }: LayoutProps) {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-7 w-7 relative"
+                    className="relative h-7 w-7"
                   >
                     <Compass className="h-4 w-4" />
                     {exploreNotifications > 0 && (
                       <Badge
                         variant="destructive"
-                        className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px]"
+                        className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center p-0 text-[10px]"
                       >
                         {exploreNotifications > 99
                           ? '99+'

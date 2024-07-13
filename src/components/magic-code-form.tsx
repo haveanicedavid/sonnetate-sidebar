@@ -52,10 +52,10 @@ export function MagicCodeForm({ sentEmail }: MagicCodeFormProps): JSX.Element {
 
   return (
     <>
-      <h2 className="text-2xl font-bold text-center mb-6">
+      <h2 className="mb-6 text-center text-2xl font-bold">
         Enter the Magic Code
       </h2>
-      <p className="text-center text-sm text-gray-600 mb-4">
+      <p className="mb-4 text-center text-sm text-gray-600">
         We sent a code to {sentEmail}
       </p>
       <Form {...form}>
@@ -82,7 +82,7 @@ export function MagicCodeForm({ sentEmail }: MagicCodeFormProps): JSX.Element {
               <AlertDescription className="text-xs">{error}</AlertDescription>
             </Alert>
           )}
-          <Button type="submit" className="w-full text-sm mt-6">
+          <Button type="submit" className="mt-6 w-full text-sm">
             Verify
           </Button>
         </form>

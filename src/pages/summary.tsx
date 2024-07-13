@@ -32,7 +32,7 @@ export function SummaryPage() {
             children: {
               children: {
                 children: {
-                  children: {}
+                  children: {},
                 },
               },
             },
@@ -64,9 +64,9 @@ export function SummaryPage() {
 
   return (
     <TooltipProvider>
-      <div className="container mx-auto px-4 py-8 relative min-h-screen">
+      <div className="container relative mx-auto min-h-screen px-4 py-8">
         <Card className="markdown overflow-hidden">
-          <CardContent className="p-6 overflow-auto max-h-[calc(100vh-12rem)]">
+          <CardContent className="max-h-[calc(100vh-12rem)] overflow-auto p-6">
             <MarkdownContent content={mdString} />
           </CardContent>
         </Card>

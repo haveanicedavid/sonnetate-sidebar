@@ -271,7 +271,7 @@ console.log('Hello, world!');
           children: [
             {
               id: 'id8',
-              text: '```javascript\nconsole.log(\'Hello, world!\');\n```',
+              text: "```javascript\nconsole.log('Hello, world!');\n```",
               type: 'codeblock',
               tree: null,
               parentId: 'id6',

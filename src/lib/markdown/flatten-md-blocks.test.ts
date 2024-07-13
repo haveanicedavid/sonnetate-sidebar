@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest'
+
 import { flattenParsedMd } from './flatten-md-blocks'
 import type { MdBlock } from './types'
 

@@ -41,7 +41,6 @@ export function HomePage() {
 
   if (!user?.id) return <LoadingScreen />
 
-
   const { data } = db.useQuery({
     summaries: {
       $: {
@@ -118,9 +117,9 @@ export function HomePage() {
 
   return (
     <TooltipProvider>
-      <div className="flex flex-col h-full p-4">
+      <div className="flex h-full flex-col p-4">
         {uiSummaries?.length > 0 ? (
-          <div className="h-40 mb-8">
+          <div className="mb-8 h-40">
             <HorizontalSummaryList
               summaries={uiSummaries}
               onViewSummary={handleViewSummary}
@@ -130,19 +129,19 @@ export function HomePage() {
 
         <div className="flex-grow overflow-auto">
           {error && (
-            <Card className="p-4 mb-4 bg-red-100 border-red-300">
+            <Card className="mb-4 border-red-300 bg-red-100 p-4">
               <p className="text-red-800">{error}</p>
             </Card>
           )}
 
-          <Card className="markdown relative overflow-hidden h-full">
-            <CardContent className="p-4 overflow-auto h-full">
+          <Card className="markdown relative h-full overflow-hidden">
+            <CardContent className="h-full overflow-auto p-4">
               {summary ? (
                 <MarkdownContent content={summary} />
               ) : (
-                <div className="flex items-center justify-center h-full">
+                <div className="flex h-full items-center justify-center">
                   <div className="text-center">
-                    <h6 className="text-lg font-medium text-gray-500 mb-2">
+                    <h6 className="mb-2 text-lg font-medium text-gray-500">
                       Ready to summarize
                     </h6>
                     <p className="text-sm text-gray-400">
@@ -190,8 +189,8 @@ export function HomePage() {
         </div>
 
         <div className="mt-4">
-          <div className="flex space-x-2 items-center">
-            <div className="flex-grow relative">
+          <div className="flex items-center space-x-2">
+            <div className="relative flex-grow">
               <Input
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
@@ -201,7 +200,7 @@ export function HomePage() {
               />
               <Button
                 onClick={() => handleSummarize(userInput)}
-                className="absolute right-0 top-0 bottom-0 rounded-l-none"
+                className="absolute bottom-0 right-0 top-0 rounded-l-none"
                 disabled={isLoading}
               >
                 {isLoading ? 'Processing...' : 'Summarize'}

@@ -31,11 +31,11 @@ export function HorizontalSummaryList({
         {summaries.map((item) => (
           <Card
             key={item.id}
-            className="w-[250px] transition-all duration-300 ease-in-out hover:shadow-md hover:scale-[1.02]"
+            className="w-[250px] transition-all duration-300 ease-in-out hover:scale-[1.02] hover:shadow-md"
           >
             <CardHeader className="p-4">
-              <CardTitle className="text-lg truncate">{item.title}</CardTitle>
-              <CardDescription className="text-sm line-clamp-2">
+              <CardTitle className="truncate text-lg">{item.title}</CardTitle>
+              <CardDescription className="line-clamp-2 text-sm">
                 {item.description}
               </CardDescription>
             </CardHeader>

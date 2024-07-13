@@ -1,4 +1,4 @@
-import type { MdBlock, BlockSeed, TreeSeed } from './types'
+import type { BlockSeed, MdBlock, TreeSeed } from './types'
 
 interface FlattenedMd {
   blocks: BlockSeed[]
@@ -16,7 +16,7 @@ export function flattenParsedMd(parsedMd: MdBlock[]): FlattenedMd {
     const flattenedBlock: BlockSeed = {
       ...rest,
       parentId,
-      treeId: tree?.id || null
+      treeId: tree?.id || null,
     }
 
     blocks.push(flattenedBlock)
@@ -26,18 +26,18 @@ export function flattenParsedMd(parsedMd: MdBlock[]): FlattenedMd {
         ...tree,
         path: tree.path.toLowerCase(),
         blockId: block.id,
-        parentId: tree.parentId === 'root' ? null : tree.parentId
+        parentId: tree.parentId === 'root' ? null : tree.parentId,
       }
       trees.push(treeWithBlockId)
       topicsSet.add(tree.topic)
     }
 
     if (children) {
-      children.forEach(child => flattenBlock(child, block.id))
+      children.forEach((child) => flattenBlock(child, block.id))
     }
   }
 
-  parsedMd.forEach(block => flattenBlock(block))
+  parsedMd.forEach((block) => flattenBlock(block))
 
   const topics = Array.from(topicsSet)
 
