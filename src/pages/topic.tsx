@@ -1,18 +1,12 @@
 import { useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 import { LoadingScreen } from '@/components/loading-screen'
 import { MarkdownContent } from '@/components/markdown-content'
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-} from '@/components/ui/breadcrumb'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { db } from '@/db'
 import { blockToMd } from '@/lib/markdown/blocks-to-md'
+import { TopicBreadcrumbs } from '@/components/topic-breadcrumbs'
 
 function TopicCard({ content }: { content: string }) {
   const [isExpanded, setIsExpanded] = useState(false)
@@ -29,39 +23,6 @@ function TopicCard({ content }: { content: string }) {
   )
 }
 
-function TopicBreadcrumbs({ path }: { path: string }) {
-  const segments = path.split('/').filter(Boolean)
-  return (
-    <Breadcrumb>
-      <BreadcrumbList>
-        <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Link to="/topics">Topics</Link>
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        {' / '}
-        {segments.map((segment, index) => {
-          const url = `/topics/${segments.slice(0, index + 1).join('__')}`
-          const isLast = index === segments.length - 1
-          return (
-            <BreadcrumbItem key={url}>
-              {isLast ? (
-                <BreadcrumbPage>{segment}</BreadcrumbPage>
-              ) : (
-                <>
-                  <BreadcrumbLink asChild>
-                    <Link to={url}>{segment}</Link>
-                  </BreadcrumbLink>
-                  {' / '}
-                </>
-              )}
-            </BreadcrumbItem>
-          )
-        })}
-      </BreadcrumbList>
-    </Breadcrumb>
-  )
-}
 export function TopicPage() {
   const { topicSlug } = useParams<{ topicSlug: string }>()
   const path = topicSlug?.replace(/__/g, '/').replace(/_/g, ' ')
@@ -103,7 +64,7 @@ export function TopicPage() {
       if (!acc[pageName]) acc[pageName] = []
       acc[pageName].push({
         id: tree.id,
-        content: blockToMd(tree.block[0]),
+        content: blockToMd(tree.block[0], true),
       })
       return acc
     },

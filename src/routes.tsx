@@ -5,6 +5,7 @@ import { FeedPage } from './pages/feed'
 import { HomePage } from './pages/home'
 import { SummaryPage } from './pages/summary'
 import { TopicPage } from './pages/topic'
+import { TopicsPage } from './pages/topics'
 
 export function Routes() {
   return (
@@ -16,6 +17,7 @@ export function Routes() {
             <Route path=":id" element={<SummaryPage />} />
           </Route>
           <Route path="topics">
+            <Route index element={<TopicsPage />} />
             <Route path=":topicSlug" element={<TopicPage />} />
           </Route>
           <Route path="feed" element={<FeedPage />} />
