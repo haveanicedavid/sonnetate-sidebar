@@ -5,26 +5,26 @@ export interface Block {
   parent?: Block
   text: string
   tree?: Tree
-  type: 'block' | 'tree'
+  type: string
   user?: User
 }
 
 export interface Summary {
   id: string
-  // TODO: move these to DB object or create topics for them?
+  dayCreated: number
   description: string
-  domainName: string
-  domainPath: string
   isPublic: boolean
   pageTitle: string
   prompt?: string
-  rootBlockId: string
+  rootBlock: Block
+  site: Site[]
   title: string
   url: string
   user: User
 }
 
-export interface Topic {
+
+interface Topic {
   id: string
   label: string
   lastReferenced: number
@@ -33,18 +33,27 @@ export interface Topic {
   users?: User[]
 }
 
-/**
- * a type of reference to a topic
- */
-export interface Tree {
+interface Tree {
   id: string
-  block?: Block
+  block?: Block[]
   children?: Tree[]
+  context: string
+  dayCreated: number
   isPublic?: boolean
   parents?: Tree[]
   path: string
+  summary?: Summary[]
   topic?: Topic
   user?: User
+}
+
+interface Site {
+  id: string
+  name: string
+  domain: string
+  url: string
+  summaries: Summary[]
+  users: User[]
 }
 
 export interface User {
@@ -55,11 +64,13 @@ export interface User {
   summaries?: Summary[]
   topics?: Topic[]
   trees?: Tree[]
+  sites?: Site[]
 }
 
 export type DbSchema = {
   blocks: Block
   summaries: Summary
+  sites: Site
   topics: Topic
   trees: Tree
   users: User

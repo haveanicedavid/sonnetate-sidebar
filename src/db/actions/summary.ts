@@ -1,12 +1,14 @@
-import { id, lookup, tx } from '@instantdb/react'
+import { lookup, tx } from '@instantdb/react'
 
 import { db } from '@/db'
 import { flattenParsedMd } from '@/lib/markdown/flatten-md-blocks'
 import { parseMd } from '@/lib/markdown/parse-md'
 import { getDescription } from '@/lib/markdown/utils'
-import { getUrlDomainAndPath } from '@/lib/url'
+import { getDayTimestamp } from '@/lib/today-timestamp'
+import { getUrlComponents } from '@/lib/url'
 
 export function createSummary({
+  id: summaryId,
   isPublic = false,
   md,
   pageTitle,
@@ -14,6 +16,7 @@ export function createSummary({
   url,
   userId,
 }: {
+  id: string
   isPublic?: boolean
   md: string
   pageTitle: string
@@ -21,17 +24,23 @@ export function createSummary({
   url: string
   userId: string
 }) {
-  const summaryId = id()
+  const { domain, baseUrl, name: siteName } = getUrlComponents(url)
   const description = getDescription(md)
   const mdBlocks = parseMd(md)
   const { trees, blocks, topics } = flattenParsedMd(mdBlocks)
-  const { path, domain } = getUrlDomainAndPath(url)
+  const now = new Date()
+  const dayCreated = getDayTimestamp(now)
+
+  const siteTx = tx.sites[lookup('url', baseUrl)].update({
+    domain,
+    name: siteName,
+  })
 
   const topicTxs = topics.map((topic) => {
     const name = topic.toLowerCase()
     return tx.topics[lookup('name', name)].update({
       label: name,
-      lastReferenced: new Date().getTime(),
+      lastReferenced: now.getTime(),
       users: userId,
     })
   })
@@ -40,12 +49,15 @@ export function createSummary({
     return tx.trees[id]
       .update({
         isPublic,
+        context: description,
+        dayCreated,
         path,
       })
       .link({
         topic: lookup('name', topic.toLowerCase()),
         user: userId,
         block: blockId,
+        summary: summaryId,
         ...(parentId ? { parents: parentId } : {}),
       })
   })
@@ -64,13 +76,12 @@ export function createSummary({
   })
 
   db.transact([
+    siteTx,
     tx.summaries[summaryId]
       .update({
         description,
-        domainName: domain,
-        domainPath: path,
         pageTitle,
-        prompt,
+        prompt: prompt || 'Summarize this page',
         title: trees[0].topic,
         isPublic,
         url,
@@ -78,6 +89,7 @@ export function createSummary({
       .link({
         user: userId,
         rootBlock: mdBlocks[0].id,
+        site: lookup('url', baseUrl),
       }),
     ...topicTxs,
     ...treeTxs,
