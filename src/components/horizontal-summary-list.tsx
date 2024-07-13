@@ -1,6 +1,4 @@
-import { ChevronRight } from 'lucide-react'
-
-import { Button } from '@/components/ui/button'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import {
   Card,
   CardContent,
@@ -8,7 +6,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 
 type Summary = {
   id: string
@@ -18,41 +15,38 @@ type Summary = {
 
 type HorizontalSummaryListProps = {
   summaries: Summary[]
-  onViewSummary: (id: string) => void
+  onSummaryClick: (id: string) => void
 }
 
 export function HorizontalSummaryList({
   summaries,
-  onViewSummary,
+  onSummaryClick,
 }: HorizontalSummaryListProps) {
   return (
-    <ScrollArea className="w-full whitespace-nowrap rounded-md border">
-      <div className="flex w-max space-x-4 p-4">
-        {summaries.map((item) => (
-          <Card
-            key={item.id}
-            className="w-[250px] transition-all duration-300 ease-in-out hover:scale-[1.02] hover:shadow-md"
-          >
-            <CardHeader className="p-4">
-              <CardTitle className="truncate text-lg">{item.title}</CardTitle>
-              <CardDescription className="line-clamp-2 text-sm">
-                {item.description}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="p-4 pt-0">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-xs"
-                onClick={() => onViewSummary(item.id)}
-              >
-                View Summary <ChevronRight className="ml-1 h-4 w-4" />
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-      <ScrollBar orientation="horizontal" />
-    </ScrollArea>
+    <div className="w-full">
+      <ScrollArea className="w-full whitespace-normal">
+        <div className="flex w-max space-x-4 p-4 pb-2">
+          {summaries.map((item) => (
+            <Card
+              key={item.id}
+              className="w-[300px] cursor-pointer transition-all duration-300 ease-in-out hover:scale-[1.02] hover:shadow-md"
+              onClick={() => onSummaryClick(item.id)}
+            >
+              <CardHeader className="p-4">
+                <CardTitle className="text-lg">{item.title}</CardTitle>
+              </CardHeader>
+              <CardContent className="p-4 pt-0">
+                <CardDescription className="text-sm whitespace-normal">
+                  {item.description.length > 100
+                    ? `${item.description.substring(0, 100)}...`
+                    : item.description}
+                </CardDescription>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
+    </div>
   )
 }

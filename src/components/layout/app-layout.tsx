@@ -8,7 +8,7 @@ export function AppLayout() {
     <TooltipProvider>
       <div className="flex h-screen flex-col">
         <Header />
-        <main className="flex-grow overflow-auto bg-muted/20">
+        <main className="flex-grow overflow-auto dark:bg-muted/40 bg-muted/40">
           <Outlet />
         </main>
         <Toaster />
