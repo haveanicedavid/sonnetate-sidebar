@@ -1,7 +1,9 @@
+import { LoadingSpinner } from './ui/loading-spinner'
+
 export function LoadingScreen() {
   return (
-    <div className="h-screen flex justify-center items-center bg-gray-50 p-4">
-      Loading...
+    <div className="h-full w-full flex justify-center items-center bg-background p-4">
+      <LoadingSpinner />
     </div>
   )
 }
