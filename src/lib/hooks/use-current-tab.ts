@@ -23,10 +23,19 @@ export function useWatchCurrentTab() {
         return
       }
 
-      const [tab] = tabs
-      if (tab) {
-        if (tab.url) setUrl(tab.url)
-        if (tab.title) setTitle(tab.title)
+      const tab = tabs[0]
+      if (tab?.id) {
+        chrome.tabs.get(tab.id, (currentTab) => {
+          if (chrome.runtime.lastError) {
+            console.error(chrome.runtime.lastError)
+            return
+          }
+
+          if (currentTab) {
+            setUrl(currentTab.url || '')
+            setTitle(currentTab.title || '')
+          }
+        })
       }
     })
   }, [setUrl, setTitle])
@@ -36,23 +45,22 @@ export function useWatchCurrentTab() {
 
     updateCurrentTab()
 
-    const intervalId = setInterval(updateCurrentTab, 3000)
+    const handleTabUpdated = (_tabId: number, changeInfo: chrome.tabs.TabChangeInfo) => {
+      if (changeInfo.status === 'complete') {
+        updateCurrentTab()
+      }
+    }
 
-    const tabUpdatedListener = () => {
+    const handleTabActivated = () => {
       updateCurrentTab()
     }
 
-    const tabActivatedListener = () => {
-      updateCurrentTab()
-    }
-
-    chrome.tabs.onUpdated.addListener(tabUpdatedListener)
-    chrome.tabs.onActivated.addListener(tabActivatedListener)
+    chrome.tabs.onUpdated.addListener(handleTabUpdated)
+    chrome.tabs.onActivated.addListener(handleTabActivated)
 
     return () => {
-      clearInterval(intervalId)
-      chrome.tabs.onUpdated.removeListener(tabUpdatedListener)
-      chrome.tabs.onActivated.removeListener(tabActivatedListener)
+      chrome.tabs.onUpdated.removeListener(handleTabUpdated)
+      chrome.tabs.onActivated.removeListener(handleTabActivated)
     }
   }, [updateCurrentTab])
 }
