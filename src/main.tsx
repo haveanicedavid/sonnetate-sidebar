@@ -1,3 +1,4 @@
+import { Provider as JotaiProvider } from 'jotai'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { HashRouter } from 'react-router-dom'
@@ -7,8 +8,10 @@ import './styles/globals.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <HashRouter>
-      <App />
-    </HashRouter>
+    <JotaiProvider>
+      <HashRouter>
+        <App />
+      </HashRouter>
+    </JotaiProvider>
   </React.StrictMode>
 )
