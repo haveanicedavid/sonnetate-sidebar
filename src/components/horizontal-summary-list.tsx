@@ -1,11 +1,12 @@
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
+
+import { MarkdownContent } from './markdown-content'
 
 type Summary = {
   id: string
@@ -25,7 +26,7 @@ export function HorizontalSummaryList({
   return (
     <div className="w-full">
       <ScrollArea className="w-full whitespace-normal">
-        <div className="flex w-max space-x-4 p-4 pb-2">
+        <div className="flex w-max space-x-4 p-4">
           {summaries.map((item) => (
             <Card
               key={item.id}
@@ -36,11 +37,12 @@ export function HorizontalSummaryList({
                 <CardTitle className="text-lg">{item.title}</CardTitle>
               </CardHeader>
               <CardContent className="p-4 pt-0">
-                <CardDescription className="whitespace-normal text-sm">
-                  {item.description.length > 100
-                    ? `${item.description.substring(0, 100)}...`
-                    : item.description}
-                </CardDescription>
+                <div className="h-[100px] overflow-hidden">
+                  <MarkdownContent
+                    content={item.description}
+                    className="text-sm"
+                  />
+                </div>
               </CardContent>
             </Card>
           ))}

@@ -45,7 +45,10 @@ export function useWatchCurrentTab() {
 
     updateCurrentTab()
 
-    const handleTabUpdated = (_tabId: number, changeInfo: chrome.tabs.TabChangeInfo) => {
+    const handleTabUpdated = (
+      _tabId: number,
+      changeInfo: chrome.tabs.TabChangeInfo
+    ) => {
       if (changeInfo.status === 'complete') {
         updateCurrentTab()
       }

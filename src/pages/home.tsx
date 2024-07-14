@@ -1,20 +1,13 @@
 import { id } from '@instantdb/react'
-import { Save, Share } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { HorizontalSummaryList } from '@/components/horizontal-summary-list'
 import { LoadingScreen } from '@/components/loading-screen'
 import { MarkdownContent } from '@/components/markdown-content'
+import { SummaryInput } from '@/components/summary-input'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
 import { useToast } from '@/components/ui/use-toast'
 import { db } from '@/db'
 import { createSummary } from '@/db/actions/summary'
@@ -62,8 +55,8 @@ export function HomePage() {
     try {
       if (url) {
         for await (const chunk of streamTransformedMarkdown({
-          prompt: userInput,
           url,
+          prompt: userInput,
           apiKey: user?.apiKey,
         })) {
           setSummary((prev) => prev + chunk)
@@ -116,7 +109,6 @@ export function HomePage() {
   const summaryShared = Boolean(fetchedSummary?.isPublic)
 
   return (
-    <TooltipProvider>
       <div className="flex h-full flex-col">
         {uiSummaries.length > 0 && (
           <HorizontalSummaryList
@@ -125,7 +117,7 @@ export function HomePage() {
           />
         )}
 
-        <div className="flex-grow overflow-auto p-4">
+        <div className="flex-grow overflow-auto p-4 pt-2">
           {error && (
             <Card className="mb-4 border-red-300 bg-red-100 p-4">
               <p className="text-red-800">{error}</p>
@@ -135,150 +127,72 @@ export function HomePage() {
           <SummaryContent
             summary={summary}
             isLoading={isLoading}
-            summarySaved={summarySaved}
-            summaryShared={summaryShared}
-            onSave={handleSave}
+            onSummarize={handleSummarize}
+            hasUserInput={userInput.length > 0}
           />
         </div>
 
-        <div className="p-2">
+        <div className="p-4 pt-2">
           <SummaryInput
             userInput={userInput}
             isLoading={isLoading}
+            summarySaved={summarySaved}
+            summaryShared={summaryShared}
             onInputChange={setUserInput}
             onSummarize={handleSummarize}
+            onSave={handleSave}
+            hasSummary={summary.length > 0}
           />
         </div>
       </div>
-    </TooltipProvider>
-  )
-}
-
-type SummaryActionsProps = {
-  isLoading: boolean
-  summarySaved: boolean
-  summaryShared: boolean
-  onSave: (isPublic?: boolean) => void
-}
-
-function SummaryActions({
-  isLoading,
-  summarySaved,
-  summaryShared,
-  onSave,
-}: SummaryActionsProps) {
-  return (
-    <div className="absolute right-2 top-2 z-10 flex space-x-2">
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            size="icon"
-            variant="outline"
-            onClick={() => onSave()}
-            disabled={isLoading || summarySaved}
-          >
-            <Save className="h-4 w-4" />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>Save summary</p>
-        </TooltipContent>
-      </Tooltip>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            size="icon"
-            variant="outline"
-            onClick={() => onSave(true)}
-            disabled={isLoading || summaryShared}
-          >
-            <Share className="h-4 w-4" />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>Share summary</p>
-        </TooltipContent>
-      </Tooltip>
-    </div>
   )
 }
 
 type SummaryContentProps = {
   summary: string
   isLoading: boolean
-  summarySaved: boolean
-  summaryShared: boolean
-  onSave: (isPublic?: boolean) => void
+  onSummarize: () => void
+  hasUserInput: boolean
 }
 
 function SummaryContent({
   summary,
   isLoading,
-  summarySaved,
-  summaryShared,
-  onSave,
+  onSummarize,
+  hasUserInput,
 }: SummaryContentProps) {
   return (
-    <Card className="markdown relative h-full overflow-visible">
-      <SummaryActions
-        isLoading={isLoading}
-        summarySaved={summarySaved}
-        summaryShared={summaryShared}
-        onSave={onSave}
-      />
-      <CardContent className="h-full overflow-auto p-4">
-        {summary ? (
-          <MarkdownContent content={summary} />
-        ) : (
-          <div className="flex h-full items-center justify-center">
+    <Card className="markdown relative h-full overflow-hidden">
+      <CardContent className="flex h-full flex-col items-center justify-center p-4">
+        <div className="w-full max-h-full overflow-auto py-4">
+          {summary ? (
+            <MarkdownContent content={summary} />
+          ) : isLoading ? (
             <div className="text-center">
               <h6 className="mb-2 text-lg font-medium text-gray-500">
-                {isLoading ? 'Generating summary...' : 'Ready to summarize'}
+                Generating summary...
+              </h6>
+              <p className="text-sm text-gray-400">Please wait</p>
+            </div>
+          ) : hasUserInput ? (
+            <div className="text-center">
+              <h6 className="mb-2 text-lg font-medium text-gray-500">
+                Ready to summarize
               </h6>
               <p className="text-sm text-gray-400">
-                {isLoading
-                  ? 'Please wait'
-                  : "Enter a prompt or click 'Summarize' to begin"}
+                Type your prompt in the input below and click 'Send' or press
+                Enter to generate a summary
               </p>
             </div>
-          </div>
-        )}
+          ) : (
+            <div className="text-center">
+              <Button size="lg" onClick={onSummarize} className="text-lg">
+                Summarize
+              </Button>
+            </div>
+          )}
+        </div>
       </CardContent>
     </Card>
-  )
-}
-
-type SummaryInputProps = {
-  userInput: string
-  isLoading: boolean
-  onInputChange: (value: string) => void
-  onSummarize: () => void
-}
-
-function SummaryInput({
-  userInput,
-  isLoading,
-  onInputChange,
-  onSummarize,
-}: SummaryInputProps) {
-  return (
-    <div className="flex items-center space-x-2">
-      <div className="relative flex-grow">
-        <Input
-          value={userInput}
-          onChange={(e) => onInputChange(e.target.value)}
-          placeholder="Type your prompt, or just... →"
-          className="pr-24"
-          disabled={isLoading}
-        />
-        <Button
-          onClick={onSummarize}
-          className="absolute bottom-0 right-0 top-0 rounded-l-none"
-          disabled={isLoading}
-        >
-          {isLoading ? 'Processing...' : 'Summarize'}
-        </Button>
-      </div>
-    </div>
   )
 }

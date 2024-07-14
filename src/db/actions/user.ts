@@ -2,7 +2,7 @@ import { tx } from '@instantdb/react'
 
 import { db } from '@/db'
 
-export function createUser({
+export function createOrUpdateUser({
   id,
   handle,
   apiKey,
@@ -18,3 +18,4 @@ export function createUser({
     }),
   ])
 }
+

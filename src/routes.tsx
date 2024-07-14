@@ -6,6 +6,7 @@ import { HomePage } from './pages/home'
 import { SummaryPage } from './pages/summary'
 import { TopicPage } from './pages/topic'
 import { TopicsPage } from './pages/topics'
+import { SettingsPage } from './pages/settings'
 
 export function Routes() {
   return (
@@ -13,6 +14,8 @@ export function Routes() {
       <Route element={<AppLayout />}>
         <Route path="/">
           <Route index element={<HomePage />} />
+          <Route path="feed" element={<FeedPage />} />
+          <Route path="settings" element={<SettingsPage />} />
           <Route path="summaries">
             <Route path=":id" element={<SummaryPage />} />
           </Route>
@@ -20,7 +23,6 @@ export function Routes() {
             <Route index element={<TopicsPage />} />
             <Route path=":topicSlug" element={<TopicPage />} />
           </Route>
-          <Route path="feed" element={<FeedPage />} />
         </Route>
         <Route path="*" element={<HomePage />} />
       </Route>

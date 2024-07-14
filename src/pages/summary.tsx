@@ -1,6 +1,7 @@
 import { Share } from 'lucide-react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
+import { HorizontalSummaryList } from '@/components/horizontal-summary-list'
 import { LoadingScreen } from '@/components/loading-screen'
 import { MarkdownContent } from '@/components/markdown-content'
 import { Button } from '@/components/ui/button'
@@ -13,17 +14,21 @@ import {
 } from '@/components/ui/tooltip'
 import { db } from '@/db'
 import { shareSummary } from '@/db/actions/summary'
+import { useUser } from '@/db/ui-store'
 import { blockToMd } from '@/lib/markdown/blocks-to-md'
 
 export function SummaryPage() {
   const { id } = useParams<{ id: string }>()
-  if (!id) return <LoadingScreen />
+  const navigate = useNavigate()
+  const [user] = useUser()
+
+  if (!id || !user?.id) return <LoadingScreen />
 
   const { data } = db.useQuery({
     summaries: {
       $: {
         where: {
-          id,
+          'user.id': user.id,
         },
       },
       rootBlock: {
@@ -41,35 +46,55 @@ export function SummaryPage() {
       },
     },
   })
-  const summary = data?.summaries[0]
-  const rootBlock = summary?.rootBlock[0]
 
-  let mdString = ''
-
-  if (rootBlock) {
-    mdString = blockToMd(rootBlock)
-  }
-
-  if (!data || !rootBlock) {
+  if (!data) {
     return <LoadingScreen />
   }
 
-  const isPublic = summary?.isPublic
+  const summaries = data.summaries
+  const currentSummary = summaries.find((s) => s.id === id)
+  const rootBlock = currentSummary?.rootBlock[0]
+
+  if (!currentSummary || !rootBlock) {
+    return <LoadingScreen />
+  }
+
+  const mdString = blockToMd(rootBlock)
+  const isPublic = currentSummary.isPublic
 
   const handleShare = () => {
-    if (summary?.id) {
-      shareSummary(summary.id)
+    if (currentSummary.id) {
+      shareSummary(currentSummary.id)
     }
   }
 
+  const handleViewSummary = (summaryId: string) => {
+    navigate(`/summaries/${summaryId}`)
+  }
+
+  const uiSummaries = summaries.map((summary) => ({
+    id: summary.id,
+    title: summary.title,
+    description: summary.description,
+  }))
+
   return (
     <TooltipProvider>
-      <div className="container relative mx-auto min-h-screen px-4 py-8">
-        <Card className="markdown overflow-hidden">
-          <CardContent className="max-h-[calc(100vh-12rem)] overflow-auto p-6">
-            <MarkdownContent content={mdString} />
-          </CardContent>
-        </Card>
+      <div className="flex h-full flex-col">
+        <HorizontalSummaryList
+          summaries={uiSummaries}
+          onSummaryClick={handleViewSummary}
+          activeSummaryId={id}
+        />
+
+        <div className="flex-grow overflow-auto p-4 pt-2">
+          <Card className="markdown relative h-full overflow-visible">
+            <CardContent className="h-full overflow-auto p-4">
+              <MarkdownContent content={mdString} />
+            </CardContent>
+          </Card>
+        </div>
+
         <div className="fixed bottom-8 right-8">
           <Tooltip>
             <TooltipTrigger asChild>
