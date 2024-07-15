@@ -46,3 +46,17 @@ export function getUrlComponents(urlString: string): {
     }
   }
 }
+
+/**
+ * @example treeSlugToPath('foo__bar_baz') => 'foo/bar baz'
+ */
+export function treeSlugToPath(slug?: string) {
+  return slug?.replace(/__/g, '/').replace(/_/g, ' ')
+}
+
+/**
+ * @example treePathToSlug('foo/bar baz') => 'foo__bar_baz'
+ */
+export function treePathToSlug(path?: string) {
+  return path?.replace(/\s/g, '_').replace(/\//g, '__')
+}
