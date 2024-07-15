@@ -23,18 +23,12 @@ export function HomePage() {
   const [userInput, setUserInput] = useState('')
   const [newSummaryId, setNewSummaryId] = useState(id())
   const [summary, setSummary] = useState(MARKDOWN_STUB_WITH_HIERARCHY)
+  // const [summary, setSummary] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [user] = useUser()
 
-  useEffect(() => {
-    if (!url) return
-    setNewSummaryId(id())
-  }, [url])
-
-  if (!user?.id) return <LoadingScreen />
-
-  const { data } = db.useQuery({
+  const { data, isLoading: isLoadingData } = db.useQuery({
     summaries: {
       $: {
         where: {
@@ -44,6 +38,12 @@ export function HomePage() {
       },
     },
   })
+
+  useEffect(() => {
+    if (!url) return
+    setNewSummaryId(id())
+    setSummary('')
+  }, [url])
 
   async function handleSummarize() {
     const newId = id()
@@ -68,6 +68,7 @@ export function HomePage() {
       setError(err instanceof Error ? err.message : String(err))
     } finally {
       setIsLoading(false)
+      setUserInput('')
     }
   }
 
@@ -89,7 +90,10 @@ export function HomePage() {
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err))
     } finally {
-      toast({ description: `Summary ${isPublic ? 'shared' : 'saved'}` })
+      toast({
+        description: `Summary ${isPublic ? 'shared' : 'saved'}`,
+        duration: 3000,
+      })
     }
   }
 
@@ -108,43 +112,45 @@ export function HomePage() {
   const summarySaved = Boolean(fetchedSummary)
   const summaryShared = Boolean(fetchedSummary?.isPublic)
 
+  if (isLoadingData) return <LoadingScreen />
+
   return (
-      <div className="flex h-full flex-col">
-        {uiSummaries.length > 0 && (
-          <HorizontalSummaryList
-            summaries={uiSummaries}
-            onSummaryClick={handleViewSummary}
-          />
+    <div className="flex h-full flex-col">
+      {uiSummaries.length > 0 && (
+        <HorizontalSummaryList
+          summaries={uiSummaries}
+          onSummaryClick={handleViewSummary}
+        />
+      )}
+
+      <div className="flex-grow overflow-auto p-4 pt-2">
+        {error && (
+          <Card className="mb-4 border-red-300 bg-red-100 p-4">
+            <p className="text-red-800">{error}</p>
+          </Card>
         )}
 
-        <div className="flex-grow overflow-auto p-4 pt-2">
-          {error && (
-            <Card className="mb-4 border-red-300 bg-red-100 p-4">
-              <p className="text-red-800">{error}</p>
-            </Card>
-          )}
-
-          <SummaryContent
-            summary={summary}
-            isLoading={isLoading}
-            onSummarize={handleSummarize}
-            hasUserInput={userInput.length > 0}
-          />
-        </div>
-
-        <div className="p-4 pt-2">
-          <SummaryInput
-            userInput={userInput}
-            isLoading={isLoading}
-            summarySaved={summarySaved}
-            summaryShared={summaryShared}
-            onInputChange={setUserInput}
-            onSummarize={handleSummarize}
-            onSave={handleSave}
-            hasSummary={summary.length > 0}
-          />
-        </div>
+        <SummaryContent
+          summary={summary}
+          isLoading={isLoading}
+          onSummarize={handleSummarize}
+          hasUserInput={userInput.length > 0}
+        />
       </div>
+
+      <div className="p-4 pt-2">
+        <SummaryInput
+          userInput={userInput}
+          isLoading={isLoading}
+          summarySaved={summarySaved}
+          summaryShared={summaryShared}
+          onInputChange={setUserInput}
+          onSummarize={handleSummarize}
+          onSave={handleSave}
+          hasSummary={summary.length > 0}
+        />
+      </div>
+    </div>
   )
 }
 
@@ -164,7 +170,7 @@ function SummaryContent({
   return (
     <Card className="markdown relative h-full overflow-hidden">
       <CardContent className="flex h-full flex-col items-center justify-center p-4">
-        <div className="w-full max-h-full overflow-auto py-4">
+        <div className="max-h-full w-full overflow-auto py-4">
           {summary ? (
             <MarkdownContent content={summary} />
           ) : isLoading ? (

@@ -15,12 +15,14 @@ import {
 import { db } from '@/db'
 import { shareSummary } from '@/db/actions/summary'
 import { useUser } from '@/db/ui-store'
+import { useCurrentTab } from '@/lib/hooks/use-current-tab'
 import { blockToMd } from '@/lib/markdown/blocks-to-md'
 
 export function SummaryPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const [user] = useUser()
+  const { url } = useCurrentTab()
 
   if (!id || !user?.id) return <LoadingScreen />
 
@@ -29,6 +31,7 @@ export function SummaryPage() {
       $: {
         where: {
           'user.id': user.id,
+          url,
         },
       },
       rootBlock: {
@@ -72,19 +75,21 @@ export function SummaryPage() {
     navigate(`/summaries/${summaryId}`)
   }
 
-  const uiSummaries = summaries.map((summary) => ({
-    id: summary.id,
-    title: summary.title,
-    description: summary.description,
-  }))
+  const uiSummaries = summaries
+    .filter((s) => s.id !== currentSummary.id)
+    .map((summary) => ({
+      id: summary.id,
+      title: summary.title,
+      description: summary.description,
+    }))
 
   return (
     <TooltipProvider>
       <div className="flex h-full flex-col">
+        <h4 className="text-sm font-semibold">Summary</h4>
         <HorizontalSummaryList
           summaries={uiSummaries}
           onSummaryClick={handleViewSummary}
-          activeSummaryId={id}
         />
 
         <div className="flex-grow overflow-auto p-4 pt-2">

@@ -56,7 +56,7 @@ function Navigation() {
       </Tooltip>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Link to="/feed">
+          <Link to="/summaries">
             <Button
               variant="ghost"
               size="sm"
@@ -70,7 +70,7 @@ function Navigation() {
           </Link>
         </TooltipTrigger>
         <TooltipContent>
-          <p>Explore</p>
+          <p>Explore saved summaries</p>
         </TooltipContent>
       </Tooltip>
     </div>

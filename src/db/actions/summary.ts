@@ -1,10 +1,10 @@
 import { lookup, tx } from '@instantdb/react'
 
 import { db } from '@/db'
+import { getDayTimestamp } from '@/lib/date'
 import { flattenParsedMd } from '@/lib/markdown/flatten-md-blocks'
 import { parseMd } from '@/lib/markdown/parse-md'
 import { getDescription } from '@/lib/markdown/utils'
-import { getDayTimestamp } from '@/lib/today-timestamp'
 import { getUrlComponents } from '@/lib/url'
 
 export function createSummary({
@@ -15,6 +15,7 @@ export function createSummary({
   prompt,
   url,
   userId,
+  createdOn,
 }: {
   id: string
   isPublic?: boolean
@@ -23,13 +24,14 @@ export function createSummary({
   prompt?: string
   url: string
   userId: string
+  createdOn?: number // for stub data
 }) {
   const { domain, baseUrl, name: siteName } = getUrlComponents(url)
   const description = getDescription(md)
   const mdBlocks = parseMd(md)
   const { trees, blocks, topics } = flattenParsedMd(mdBlocks)
   const now = new Date()
-  const dayCreated = getDayTimestamp(now)
+  const dayCreated = createdOn || getDayTimestamp(now)
 
   const siteTx = tx.sites[lookup('url', baseUrl)].update({
     domain,
@@ -84,6 +86,7 @@ export function createSummary({
         prompt: prompt || 'Summarize this page',
         title: trees[0].topic,
         isPublic,
+        dayCreated,
         url,
       })
       .link({

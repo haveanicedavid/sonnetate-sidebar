@@ -26,6 +26,7 @@ function TopicCard({ content }: { content: string }) {
 export function TopicPage() {
   const { topicSlug } = useParams<{ topicSlug: string }>()
   const path = topicSlug?.replace(/__/g, '/').replace(/_/g, ' ')
+  console.log("🪚 path:", path);
 
   if (!path) return <LoadingScreen />
 
@@ -57,6 +58,8 @@ export function TopicPage() {
 
   if (isLoading) return <LoadingScreen />
   if (error) return <div>Error: {error.message}</div>
+  const trees = data?.trees || []
+  console.log("🪚 trees: in topic page", trees);
 
   const groupedCards = data?.trees.reduce(
     (acc, tree) => {

@@ -1,8 +1,14 @@
 import { Save, Share } from 'lucide-react'
+import { FormEvent } from 'react'
 
 import { Button } from './ui/button'
 import { Input } from './ui/input'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from './ui/tooltip'
 
 type SummaryInputProps = {
   userInput: string
@@ -25,68 +31,74 @@ export function SummaryInput({
   onSummarize,
   onSave,
 }: SummaryInputProps) {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if (userInput && !isLoading) {
+      onSummarize()
+    }
+  }
+
   return (
-    <div className="flex items-center space-x-2">
+    <form onSubmit={handleSubmit} className="flex items-center space-x-2">
       <div className="relative flex-grow">
-        <form onSubmit={() => onSummarize}>
-          <Input
-            value={userInput}
-            onChange={(e) => onInputChange(e.target.value)}
-            placeholder="Type your prompt, or just... →"
-            className={hasSummary ? 'pr-36' : userInput ? 'pr-24' : 'pr-2'}
-            disabled={isLoading}
-          />
-          <div className="absolute bottom-0 right-0 top-0 flex items-center space-x-1 pr-0">
-            {hasSummary && (
-              <TooltipProvider>
-                <Tooltip delayDuration={100}>
-                  <TooltipTrigger asChild>
-                    <Button
-                      size="icon"
-                      className="h-8 w-8 p-0"
-                      variant="ghost"
-                      onClick={() => onSave()}
-                      disabled={isLoading || summarySaved}
-                    >
-                      <Save className="h-4 w-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Save summary</p>
-                  </TooltipContent>
-                </Tooltip>
-                <Tooltip delayDuration={100}>
-                  <TooltipTrigger asChild>
-                    <Button
-                      className="h-8 w-8 p-0"
-                      variant="ghost"
-                      onClick={() => onSave(true)}
-                      disabled={isLoading || summaryShared}
-                    >
-                      <Share className="h-4 w-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Share summary</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            )}
-            {userInput && (
-              <Button
-                type="submit"
-                onClick={onSummarize}
-                disabled={isLoading}
-                className="h-10 px-3 text-sm transition-all duration-300 ease-in-out"
-              >
-                <span className="block overflow-hidden whitespace-nowrap">
-                  {isLoading ? 'Processing...' : 'Send'}
-                </span>
-              </Button>
-            )}
-          </div>
-        </form>
+        <Input
+          value={userInput}
+          onChange={(e) => onInputChange(e.target.value)}
+          placeholder="Type your prompt, or just... →"
+          className={hasSummary ? 'pr-36' : userInput ? 'pr-24' : 'pr-2'}
+          disabled={isLoading}
+        />
+        <div className="absolute bottom-0 right-0 top-0 flex items-center space-x-1 pr-0">
+          {hasSummary && (
+            <TooltipProvider>
+              <Tooltip delayDuration={100}>
+                <TooltipTrigger asChild>
+                  <Button
+                    type="button"
+                    size="icon"
+                    className="h-8 w-8 p-0"
+                    variant="ghost"
+                    onClick={() => onSave()}
+                    disabled={isLoading || summarySaved}
+                  >
+                    <Save className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Save summary</p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip delayDuration={100}>
+                <TooltipTrigger asChild>
+                  <Button
+                    type="button"
+                    className="h-8 w-8 p-0"
+                    variant="ghost"
+                    onClick={() => onSave(true)}
+                    disabled={isLoading || summaryShared}
+                  >
+                    <Share className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Share summary</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
+          {userInput && (
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="h-10 px-3 text-sm transition-all duration-300 ease-in-out"
+            >
+              <span className="block overflow-hidden whitespace-nowrap">
+                {isLoading ? 'Processing...' : 'Send'}
+              </span>
+            </Button>
+          )}
+        </div>
       </div>
-    </div>
+    </form>
   )
 }
