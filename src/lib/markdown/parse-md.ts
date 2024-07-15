@@ -2,7 +2,12 @@ import { id } from '@instantdb/react'
 import { groupBy } from 'remeda'
 
 import type { MdBlock, MdBlockType } from './types'
-import { getBlockType, getHeadingLevel } from './utils'
+import {
+  ensureHeadingSeparation,
+  extractWikilinkContent,
+  getBlockType,
+  getHeadingLevel,
+} from './utils'
 
 interface TreeInfo {
   path: string
@@ -28,54 +33,17 @@ type ChildMap = { [headerId: string]: string[] }
 
 type OrderedChunkById = { [id: string]: OrderedChunk }
 
-function extractWikilinkContent(text: string): { path: string; topic: string } {
-  const match = text.match(/\[\[(.*?)\]\]/)
-  if (match) {
-    const content = match[1]
-    const parts = content.split('|')
-    const path = parts[0]
-    const pathParts = path.split('/')
-    const topic = parts[1] || pathParts[pathParts.length - 1]
-    return { path, topic }
-  }
-  return { path: '', topic: '' }
-}
-
 export function parseMd(markdown: string): MdBlock[] {
-  const trimmedMarkdown = markdown.trim()
+  const markdownWithSpacingEnsured = ensureHeadingSeparation(markdown.trim())
 
-  if (trimmedMarkdown === '') {
+  if (markdownWithSpacingEnsured === '') {
     return []
   }
 
-  const lines = trimmedMarkdown.split('\n')
-  const textWithDocIndex: { text: string; docIndex: number }[] = []
-  let currentBlock = ''
-  let currentDocIndex = 0
-
-  lines.forEach((line, index) => {
-    if (line.trim() === '') {
-      if (currentBlock.trim() !== '') {
-        textWithDocIndex.push({ text: currentBlock.trim(), docIndex: currentDocIndex })
-        currentBlock = ''
-        currentDocIndex = index + 1
-      }
-    } else {
-      if (currentBlock === '' || getBlockType(line) === 'heading') {
-        if (currentBlock !== '') {
-          textWithDocIndex.push({ text: currentBlock.trim(), docIndex: currentDocIndex })
-        }
-        currentBlock = line
-        currentDocIndex = index
-      } else {
-        currentBlock += '\n' + line
-      }
-    }
-  })
-
-  if (currentBlock.trim() !== '') {
-    textWithDocIndex.push({ text: currentBlock.trim(), docIndex: currentDocIndex })
-  }
+  const textWithDocIndex: { text: string; docIndex: number }[] =
+    markdownWithSpacingEnsured
+      .split(/\n{2,}/)
+      .map((text, index) => ({ text: text.trim(), docIndex: index }))
 
   const headerIdByDepth: { [depth: number]: string } = {
     0: 'root',

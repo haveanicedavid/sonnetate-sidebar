@@ -44,7 +44,7 @@ export function SummaryInput({
         <Input
           value={userInput}
           onChange={(e) => onInputChange(e.target.value)}
-          placeholder="Type your prompt, or just... →"
+          placeholder="Ask this page a question"
           className={hasSummary ? 'pr-36' : userInput ? 'pr-24' : 'pr-2'}
           disabled={isLoading}
         />

@@ -13,9 +13,7 @@ beforeEach(() => {
 
 test('parses headings with wikilinks and includes distinct treeId and blockId', () => {
   const markdown = `# [[Header 1]]
-
 Paragraph 1
-
 ## [[Header 1/Header 2|Alias 2]]
 
 Paragraph 2

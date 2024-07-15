@@ -1,6 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk'
 
-import {  createSystemPrompt } from './prompts'
+import { createMessageContent, createSystemPrompt } from './prompts'
 import { StreamingMarkdownTransformer } from './response-transformer'
 
 /**
@@ -25,10 +25,6 @@ export async function* streamTransformedMarkdown({
   })
   const transformer = new StreamingMarkdownTransformer()
 
-  const content = prompt
-    ? `look at the webpage ${url} and use it for the following prompt. Make sure you use it for the first heading you respond with. {{${prompt}}}`
-    : `summarize the following webpage: ${url}`
-
   const stream = await anthropic.messages.create({
     model: 'claude-3-sonnet-20240229',
     max_tokens: 1000,
@@ -37,7 +33,7 @@ export async function* streamTransformedMarkdown({
     messages: [
       {
         role: 'user',
-        content,
+        content: createMessageContent({ url, prompt }),
       },
     ],
     stream: true,

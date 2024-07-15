@@ -1,6 +1,11 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, it, test } from 'vitest'
 
-import { getBlockType, getDescription, getHeadingLevel } from './utils'
+import {
+  ensureHeadingSeparation,
+  getBlockType,
+  getDescription,
+  getHeadingLevel,
+} from './utils'
 
 test('getBlockType correctly identifies block types', () => {
   expect(getBlockType('# Heading')).toBe('heading')
@@ -65,5 +70,103 @@ without any headers`
 This is the only content`
 
     expect(getDescription(markdown)).toBe('This is the only content')
+  })
+})
+
+describe('ensureHeadingSeparation', () => {
+  it('should add single empty lines before and after headings', () => {
+    const input = `# Heading 1
+Content under heading 1
+## Heading 2
+Content under heading 2`
+
+    const expected = `# Heading 1
+
+Content under heading 1
+
+## Heading 2
+
+Content under heading 2`
+
+    expect(ensureHeadingSeparation(input)).toBe(expected)
+  })
+
+  it('should add only one empty line between consecutive headings', () => {
+    const input = `# Heading 1
+## Heading 2
+### Heading 3`
+
+    const expected = `# Heading 1
+
+## Heading 2
+
+### Heading 3`
+
+    expect(ensureHeadingSeparation(input)).toBe(expected)
+  })
+
+  it('should preserve existing empty lines', () => {
+    const input = `# Heading 1
+
+Content under heading 1
+
+## Heading 2
+Content under heading 2
+
+# Heading 3`
+
+    const expected = `# Heading 1
+
+Content under heading 1
+
+## Heading 2
+
+Content under heading 2
+
+# Heading 3`
+
+    expect(ensureHeadingSeparation(input)).toBe(expected)
+  })
+
+  it('should handle mixed content types', () => {
+    const input = `# Heading 1
+- List item 1
+- List item 2
+## Heading 2
+Paragraph
+\`\`\`
+Code block
+\`\`\`
+### Heading 3`
+
+    const expected = `# Heading 1
+
+- List item 1
+- List item 2
+
+## Heading 2
+
+Paragraph
+\`\`\`
+Code block
+\`\`\`
+
+### Heading 3`
+
+    expect(ensureHeadingSeparation(input)).toBe(expected)
+  })
+
+  it('should not add extra newlines at the start or end of the document', () => {
+    const input = `# Heading 1
+Content
+# Heading 2`
+
+    const expected = `# Heading 1
+
+Content
+
+# Heading 2`
+
+    expect(ensureHeadingSeparation(input)).toBe(expected)
   })
 })
