@@ -1,21 +1,17 @@
 export const MARKDOWN_STUB_WITH_HIERARCHY = `# [[Main Topic]]
-
 This is a paragraph under the main topic. It contains some **bold text**, *italic text*, a [link](http://sonnetate.vercel.app) and even some \`inline code\`. This paragraph showcases basic Markdown formatting.
 
 ## [[Main Topic/Subtopic 1|Subtopic 1]]
-
 - This is an unordered list item
 - Another unordered list item
 - A third unordered list item
 
 ### [[Main Topic/Subtopic 1/Nested Topic|Nested Topic]]
-
 1. This is an ordered list item
 2. Another ordered list item
 3. A third ordered list item
 
 #### [[Main Topic/Subtopic 1/Nested Topic/Deep Nested Topic|Deep Nested Topic]]
-
 > This is a blockquote. It can contain multiple lines and even other Markdown elements.
 > 
 > - Like this unordered list

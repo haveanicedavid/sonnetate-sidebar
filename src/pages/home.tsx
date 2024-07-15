@@ -14,7 +14,8 @@ import { createSummary } from '@/db/actions/summary'
 import { useUser } from '@/db/ui-store'
 import { streamTransformedMarkdown } from '@/lib/ai/messages'
 import { useCurrentTab } from '@/lib/hooks/use-current-tab'
-import { MARKDOWN_STUB_WITH_HIERARCHY } from '@/lib/markdown/stub'
+
+// import { MARKDOWN_STUB_WITH_HIERARCHY } from '@/lib/markdown/stub'
 
 export function HomePage() {
   const { url, title: pageTitle } = useCurrentTab()
@@ -22,8 +23,8 @@ export function HomePage() {
   const navigate = useNavigate()
   const [userInput, setUserInput] = useState('')
   const [newSummaryId, setNewSummaryId] = useState(id())
-  const [summary, setSummary] = useState(MARKDOWN_STUB_WITH_HIERARCHY)
-  // const [summary, setSummary] = useState('')
+  // const [summary, setSummary] = useState(MARKDOWN_STUB_WITH_HIERARCHY)
+  const [summary, setSummary] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [user] = useUser()
@@ -37,7 +38,11 @@ export function HomePage() {
         },
       },
     },
+    topics: {},
   })
+
+  const summaries = data?.summaries || []
+  const topics = data?.topics || []
 
   useEffect(() => {
     if (!url) return
@@ -54,8 +59,10 @@ export function HomePage() {
 
     try {
       if (url) {
+        const tags = topics.map((t) => t.label).join(',')
         for await (const chunk of streamTransformedMarkdown({
           url,
+          tags: tags.length > 0 ? tags : undefined,
           prompt: userInput,
           apiKey: user?.apiKey,
         })) {
@@ -101,7 +108,6 @@ export function HomePage() {
     navigate(`/summaries/${id}`)
   }
 
-  const summaries = data?.summaries || []
   const uiSummaries = summaries.map((summary) => ({
     id: summary.id,
     title: summary.title,

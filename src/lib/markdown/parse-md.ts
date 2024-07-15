@@ -48,9 +48,34 @@ export function parseMd(markdown: string): MdBlock[] {
     return []
   }
 
-  const textWithDocIndex: { text: string; docIndex: number }[] = trimmedMarkdown
-    .split(/\n{2,}/)
-    .map((text, index) => ({ text: text.trim(), docIndex: index }))
+  const lines = trimmedMarkdown.split('\n')
+  const textWithDocIndex: { text: string; docIndex: number }[] = []
+  let currentBlock = ''
+  let currentDocIndex = 0
+
+  lines.forEach((line, index) => {
+    if (line.trim() === '') {
+      if (currentBlock.trim() !== '') {
+        textWithDocIndex.push({ text: currentBlock.trim(), docIndex: currentDocIndex })
+        currentBlock = ''
+        currentDocIndex = index + 1
+      }
+    } else {
+      if (currentBlock === '' || getBlockType(line) === 'heading') {
+        if (currentBlock !== '') {
+          textWithDocIndex.push({ text: currentBlock.trim(), docIndex: currentDocIndex })
+        }
+        currentBlock = line
+        currentDocIndex = index
+      } else {
+        currentBlock += '\n' + line
+      }
+    }
+  })
+
+  if (currentBlock.trim() !== '') {
+    textWithDocIndex.push({ text: currentBlock.trim(), docIndex: currentDocIndex })
+  }
 
   const headerIdByDepth: { [depth: number]: string } = {
     0: 'root',
