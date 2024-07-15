@@ -5,8 +5,8 @@ import { HomePage } from './pages/home'
 import { SettingsPage } from './pages/settings'
 import { SummariesPage } from './pages/summaries'
 import { SummaryPage } from './pages/summary'
-import { TopicPage } from './pages/topic'
 import { TopicsPage } from './pages/topics'
+import { TreePage } from './pages/tree'
 
 export function Routes() {
   return (
@@ -15,13 +15,13 @@ export function Routes() {
         <Route path="/">
           <Route index element={<HomePage />} />
           <Route path="settings" element={<SettingsPage />} />
+          <Route path="topics" element={<TopicsPage />} />
           <Route path="summaries">
             <Route index element={<SummariesPage />} />
             <Route path=":id" element={<SummaryPage />} />
           </Route>
-          <Route path="topics">
-            <Route index element={<TopicsPage />} />
-            <Route path=":topicSlug" element={<TopicPage />} />
+          <Route path="trees">
+            <Route path=":treeSlug" element={<TreePage />} />
           </Route>
         </Route>
         <Route path="*" element={<HomePage />} />

@@ -3,12 +3,13 @@ import { useParams } from 'react-router-dom'
 
 import { LoadingScreen } from '@/components/loading-screen'
 import { MarkdownContent } from '@/components/markdown-content'
+import { TopicBreadcrumbs } from '@/components/topic-breadcrumbs'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { db } from '@/db'
 import { blockToMd } from '@/lib/markdown/blocks-to-md'
-import { TopicBreadcrumbs } from '@/components/topic-breadcrumbs'
+import { treeSlugToPath } from '@/lib/url'
 
-function TopicCard({ content }: { content: string }) {
+function TreeCard({ content }: { content: string }) {
   const [isExpanded, setIsExpanded] = useState(false)
 
   return (
@@ -23,10 +24,9 @@ function TopicCard({ content }: { content: string }) {
   )
 }
 
-export function TopicPage() {
-  const { topicSlug } = useParams<{ topicSlug: string }>()
-  const path = topicSlug?.replace(/__/g, '/').replace(/_/g, ' ')
-  console.log("🪚 path:", path);
+export function TreePage() {
+  const { treeSlug } = useParams<{ treeSlug: string }>()
+  const path = treeSlugToPath(treeSlug)
 
   if (!path) return <LoadingScreen />
 
@@ -59,7 +59,7 @@ export function TopicPage() {
   if (isLoading) return <LoadingScreen />
   if (error) return <div>Error: {error.message}</div>
   const trees = data?.trees || []
-  console.log("🪚 trees: in topic page", trees);
+  console.log('🪚 trees: in topic page', trees)
 
   const groupedCards = data?.trees.reduce(
     (acc, tree) => {
@@ -90,7 +90,7 @@ export function TopicPage() {
                 <CardContent className="p-3 pt-0">
                   <div className="space-y-2">
                     {cards.map((card) => (
-                      <TopicCard key={card.id} content={card.content} />
+                      <TreeCard key={card.id} content={card.content} />
                     ))}
                   </div>
                 </CardContent>

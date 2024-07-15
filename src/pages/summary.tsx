@@ -88,7 +88,6 @@ export function SummaryPage() {
   return (
     <TooltipProvider>
       <div className="flex h-full flex-col">
-        <h4 className="text-sm font-semibold">Summary</h4>
         <HorizontalSummaryList
           summaries={uiSummaries}
           onSummaryClick={handleViewSummary}

@@ -23,7 +23,7 @@ export interface Summary {
   user: User
 }
 
-interface Topic {
+export interface Topic {
   id: string
   label: string
   lastReferenced: number

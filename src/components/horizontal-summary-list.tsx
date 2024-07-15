@@ -26,7 +26,7 @@ export function HorizontalSummaryList({
   return (
     <div className="w-full">
       <ScrollArea className="w-full whitespace-normal">
-        <div className="flex w-max space-x-4 p-4">
+        <div className="flex w-max space-x-4">
           {summaries.map((item) => (
             <Card
               key={item.id}

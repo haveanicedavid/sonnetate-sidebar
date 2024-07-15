@@ -41,7 +41,7 @@ export function createSummary({
   const topicTxs = topics.map((topic) => {
     const name = topic.toLowerCase()
     return tx.topics[lookup('name', name)].update({
-      label: name,
+      label: topic,
       lastReferenced: now.getTime(),
       users: userId,
     })

@@ -22,7 +22,7 @@ export function SummariesPage() {
   const summaries = data?.summaries || []
 
   const handleCardClick = (id: string) => {
-    navigate(`summaries/${id}`)
+    navigate(`/summaries/${id}`)
   }
 
   return (

@@ -39,7 +39,7 @@ export function TopicBreadcrumbs({ path }: { path: string }) {
         </BreadcrumbItem>
         {' / '}
         {segments.map((segment, index) => {
-          const url = `/topics/${segments.slice(0, index + 1).join('__')}`
+          const url = `/trees/${segments.slice(0, index + 1).join('__')}`
           const isLast = index === segments.length - 1
           return (
             <BreadcrumbItem key={url}>
