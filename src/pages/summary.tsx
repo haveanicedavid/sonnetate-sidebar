@@ -30,8 +30,10 @@ export function SummaryPage() {
     summaries: {
       $: {
         where: {
-          'user.id': user.id,
-          url,
+          or: [
+            { 'user.id': user.id, url },
+            { 'user.id': user.id, id }
+          ],
         },
       },
       rootBlock: {
