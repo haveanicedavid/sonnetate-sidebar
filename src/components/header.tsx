@@ -1,4 +1,4 @@
-import { Compass, Home, LogOut, Moon, Settings, Sun, User } from 'lucide-react'
+import { Home, LogOut, Moon, Settings, Sun, User } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 
 import {
@@ -8,11 +8,13 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from '@/components/ui/navigation-menu'
 import { db } from '@/db'
 import { useTheme } from '@/lib/hooks/use-theme'
 import { cn } from '@/lib/utils'
@@ -21,12 +23,10 @@ import { Button } from './ui/button'
 
 export function Header() {
   return (
-    <TooltipProvider>
-      <header className="flex items-center justify-between border-b px-3 py-1">
-        <Navigation />
-        <UserActions />
-      </header>
-    </TooltipProvider>
+    <header className="flex items-center justify-between border-b px-3 py-1">
+      <Navigation />
+      <UserActions />
+    </header>
   )
 }
 
@@ -34,46 +34,66 @@ function Navigation() {
   const location = useLocation()
 
   return (
-    <div className="flex space-x-2">
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Link to="/">
-            <Button
-              variant="ghost"
-              size="sm"
-              className={cn(
-                'h-8 w-8 p-0',
-                location.pathname === '/' && 'bg-accent'
-              )}
-            >
-              <Home className="h-4 w-4" />
-            </Button>
-          </Link>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>Home</p>
-        </TooltipContent>
-      </Tooltip>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Link to="/summaries">
-            <Button
-              variant="ghost"
-              size="sm"
-              className={cn(
-                'h-8 w-8 p-0',
-                location.pathname === '/explore' && 'bg-accent'
-              )}
-            >
-              <Compass className="h-4 w-4" />
-            </Button>
-          </Link>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>Explore saved summaries</p>
-        </TooltipContent>
-      </Tooltip>
-    </div>
+    <NavigationMenu>
+      <NavigationMenuList className="space-x-2">
+        <NavigationMenuItem>
+          <NavigationMenuLink asChild>
+            <Link to="/">
+              <Button
+                variant="ghost"
+                size="sm"
+                className={cn(
+                  'h-8 w-8 p-0',
+                  location.pathname === '/' && 'bg-accent'
+                )}
+              >
+                <Home className="h-4 w-4" />
+                <span className="sr-only">Home</span>
+              </Button>
+            </Link>
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuTrigger className="h-8 px-2">
+            Explore
+          </NavigationMenuTrigger>
+          <NavigationMenuContent>
+            <ul className="grid w-[200px] gap-1 p-2">
+              <li>
+                <NavigationMenuLink asChild>
+                  <Link
+                    to="/topics"
+                    className="block select-none rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                  >
+                    Topics
+                  </Link>
+                </NavigationMenuLink>
+              </li>
+              <li>
+                <NavigationMenuLink asChild>
+                  <Link
+                    to="/summaries"
+                    className="block select-none rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                  >
+                    Summaries
+                  </Link>
+                </NavigationMenuLink>
+              </li>
+              <li>
+                <NavigationMenuLink asChild>
+                  <Link
+                    to="/sites"
+                    className="block select-none rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                  >
+                    Sites
+                  </Link>
+                </NavigationMenuLink>
+              </li>
+            </ul>
+          </NavigationMenuContent>
+        </NavigationMenuItem>
+      </NavigationMenuList>
+    </NavigationMenu>
   )
 }
 
