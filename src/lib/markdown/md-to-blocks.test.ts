@@ -212,7 +212,7 @@ test('parses lists and code blocks', () => {
 ## [[Main/Code|Code]]
 
 \`\`\`javascript
-console.log('Hello, world!');
+console.message('Hello, world!');
 \`\`\`
 `
 
@@ -269,7 +269,7 @@ console.log('Hello, world!');
           children: [
             {
               id: 'id8',
-              text: "```javascript\nconsole.log('Hello, world!');\n```",
+              text: "```javascript\nconsole.message('Hello, world!');\n```",
               type: 'codeblock',
               tree: null,
               parentId: 'id6',

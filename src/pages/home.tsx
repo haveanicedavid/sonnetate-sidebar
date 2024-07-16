@@ -123,10 +123,12 @@ export function HomePage() {
   return (
     <div className="flex h-full flex-col">
       {uiSummaries.length > 0 && (
-        <HorizontalSummaryList
-          summaries={uiSummaries}
-          onSummaryClick={handleViewSummary}
-        />
+        <div className="p-4 pb-0">
+          <HorizontalSummaryList
+            summaries={uiSummaries}
+            onSummaryClick={handleViewSummary}
+          />
+        </div>
       )}
 
       <div className="flex-grow overflow-auto p-4 pt-2">

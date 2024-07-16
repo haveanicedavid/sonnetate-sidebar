@@ -1,11 +1,12 @@
 import { ExternalLink } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import { Summary } from '@/db/types'
 
-import { Badge } from './ui/badge'
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 import { MarkdownContent } from './markdown-content'
+import { Badge } from './ui/badge'
+import { Button } from './ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 
 interface SummaryCardProps {
   summary: Summary
@@ -13,30 +14,33 @@ interface SummaryCardProps {
 }
 
 export function SummaryCard({ summary, showDomain }: SummaryCardProps) {
-  const navigate = useNavigate()
-  const { id, url, title, description, site, pageTitle } = summary
+  const { id, url, title, description, site: sites, pageTitle } = summary
+  const site = sites?.[0]
 
   return (
-    <Card
-      key={id}
-      className="flex cursor-pointer flex-col justify-between transition-all duration-300 ease-in-out hover:shadow-lg"
-      onClick={() => navigate(`/summaries/${id}`)}
-    >
+    <Card key={id} className="flex flex-col justify-between">
       <div>
         <CardHeader className="space-y-2 p-4 pb-2">
           <div className="flex items-start justify-between">
-            <div className="text-sm text-muted-foreground pr-4">{pageTitle}</div>
-            {showDomain && site?.[0].domain && (
-              <Badge variant="secondary">{site?.[0].domain}</Badge>
+            <div className="pr-4 text-sm text-muted-foreground">
+              {pageTitle}
+            </div>
+            {showDomain && site?.domain && (
+              <Link to={`/sites/${site.id}`}>
+                <Badge variant="secondary">{site.domain}</Badge>
+              </Link>
             )}
           </div>
           <CardTitle className="text-xl font-semibold">{title}</CardTitle>
         </CardHeader>
         <CardContent className="p-4 pt-2">
-          <MarkdownContent content={description}/>
+          <MarkdownContent content={description + ' [...]'} />
         </CardContent>
       </div>
-      <CardContent className="flex justify-end p-4">
+      <CardContent className="flex justify-between p-4">
+        <Button variant="secondary" asChild>
+          <Link to={`/summaries/${id}`}>View Summary</Link>
+        </Button>
         <a
           href={url}
           target="_blank"

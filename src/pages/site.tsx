@@ -9,7 +9,6 @@ import {
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
-  BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
 import { db } from '@/db'
 import { useUser } from '@/db/ui-store'
@@ -40,17 +39,17 @@ export function SitePage() {
 
   return (
     <div className="container mx-auto p-4">
-    <Breadcrumb className="pb-4">
-      <BreadcrumbList>
-        <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Link to="/sites">Sites</Link>
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        {' / '}
-        <BreadcrumbPage>{site.domain}</BreadcrumbPage>
-      </BreadcrumbList>
-    </Breadcrumb>
+      <Breadcrumb className="pb-4">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link to="/sites">Sites</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          {' / '}
+          <BreadcrumbPage>{site.domain}</BreadcrumbPage>
+        </BreadcrumbList>
+      </Breadcrumb>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {summaries.map((summary) => (
           <SummaryCard key={summary.id} summary={summary} />
@@ -59,4 +58,3 @@ export function SitePage() {
     </div>
   )
 }
-

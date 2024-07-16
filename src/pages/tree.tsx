@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 import { LoadingScreen } from '@/components/loading-screen'
 import { MarkdownContent } from '@/components/markdown-content'
@@ -14,7 +14,6 @@ import { db } from '@/db'
 import { Tree } from '@/db/types'
 import { useUser } from '@/db/ui-store'
 import { blockToMd } from '@/lib/markdown/blocks-to-md'
-import { mdToBlocks } from '@/lib/markdown/md-to-blocks'
 import { treeSlugToPath } from '@/lib/url'
 
 export function TreePage() {
@@ -64,12 +63,13 @@ export function TreePage() {
 
   const groupedCards = data?.trees.reduce(
     (acc, tree) => {
-      const pageName = tree.summary[0].site?.[0].domain || 'Untitled'
-      if (!acc[pageName]) acc[pageName] = []
-      acc[pageName].push(tree)
+      const domain = tree.summary[0].site?.[0].domain || 'Untitled'
+      const siteId = tree.summary[0].site?.[0].id
+      if (!acc[domain]) acc[domain] = { trees: [], siteId }
+      acc[domain].trees.push(tree)
       return acc
     },
-    {} as { [pageName: string]: Tree[] }
+    {} as { [domain: string]: { trees: Tree[]; siteId: string | undefined } }
   )
 
   return (
@@ -78,18 +78,24 @@ export function TreePage() {
         <TopicBreadcrumbs path={path} />
         <div className="mt-4 space-y-4">
           {groupedCards &&
-            Object.entries(groupedCards).map(([pageName, trees]) => (
-              <Card key={pageName}>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    {pageName}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <TreeCard trees={trees} />
-                </CardContent>
-              </Card>
-            ))}
+            Object.entries(groupedCards).map(
+              ([domain, { trees, siteId }], i) => (
+                <Card key={`${domain}-${i}`}>
+                  <CardHeader className="pb-4">
+                    <CardTitle className="text-md text-right font-medium">
+                      {siteId ? (
+                        <Link to={`/sites/${siteId}`}>{domain}</Link>
+                      ) : (
+                        domain
+                      )}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <TreeCard trees={trees} />
+                  </CardContent>
+                </Card>
+              )
+            )}
         </div>
       </div>
     </div>
@@ -100,8 +106,7 @@ type TreeCardProps = {
   trees: Tree[]
 }
 
-function TreeCard({ trees: tempTrees }: TreeCardProps) {
-  const trees = [...tempTrees, ...tempTrees, ...tempTrees, ...tempTrees]
+function TreeCard({ trees }: TreeCardProps) {
   if (trees.length === 0) return null
 
   if (trees.length === 1) {

@@ -30,7 +30,6 @@ export function createSummary({
   const description = getDescription(md)
   const mdBlocks = mdToBlocks(md)
   const { trees, blocks, topics } = flattenParsedMd(mdBlocks)
-  console.log('🪚 trees in createSummary:', trees)
   const now = new Date()
   const dayCreated = createdOn || getDayTimestamp(now)
 

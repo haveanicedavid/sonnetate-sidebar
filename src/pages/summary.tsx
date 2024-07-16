@@ -32,7 +32,7 @@ export function SummaryPage() {
         where: {
           or: [
             { 'user.id': user.id, url },
-            { 'user.id': user.id, id }
+            { 'user.id': user.id, id },
           ],
         },
       },
@@ -88,10 +88,12 @@ export function SummaryPage() {
   return (
     <TooltipProvider>
       <div className="flex h-full flex-col">
-        <HorizontalSummaryList
-          summaries={uiSummaries}
-          onSummaryClick={handleViewSummary}
-        />
+        <div className="p-4 pb-0">
+          <HorizontalSummaryList
+            summaries={uiSummaries}
+            onSummaryClick={handleViewSummary}
+          />
+        </div>
 
         <div className="flex-grow overflow-auto p-4 pt-2">
           <Card className="markdown relative h-full overflow-visible">
