@@ -12,7 +12,6 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from '@/components/ui/hover-card'
-import { db } from '@/db'
 
 import { LoadingScreen } from './loading-screen'
 
@@ -23,9 +22,9 @@ export function TopicBreadcrumbs({ path }: { path: string }) {
       <BreadcrumbList>
         <BreadcrumbItem>
           <HoverCard openDelay={400}>
-              <BreadcrumbLink asChild>
-                <Link to="/topics">Topics</Link>
-              </BreadcrumbLink>
+            <BreadcrumbLink asChild>
+              <Link to="/topics">Topics</Link>
+            </BreadcrumbLink>
           </HoverCard>
         </BreadcrumbItem>
         {' / '}
@@ -57,17 +56,20 @@ function TopicTreeHoverCard({
   segment: string
   url: string
 }) {
-  const { isLoading, data } = db.useQuery({
-    trees: {
-      $: {
-        where: {
-          'topic.name': segment,
-        },
-      },
-    },
-  })
+  // const [user] = useUser()
+  // const { isLoading, data } = db.useQuery({
+  //   trees: {
+  //     $: {
+  //       where: {
+  //         'topic.name': segment,
+  //         'user.id': user.id,
+  //       },
+  //     },
+  //   },
+  // })
 
   // const trees = data?.trees
+  const isLoading = false
 
   return (
     <HoverCard openDelay={400}>
