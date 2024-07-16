@@ -32,7 +32,7 @@ export interface Topic {
   users?: User[]
 }
 
-interface Tree {
+export interface Tree {
   id: string
   context: string
   dayCreated: number
@@ -46,10 +46,11 @@ interface Tree {
   user?: User
 }
 
-interface Site {
+export interface Site {
   id: string
   name: string
   domain: string
+  lastReferenced: number
   url: string
   summaries: Summary[]
   users: User[]

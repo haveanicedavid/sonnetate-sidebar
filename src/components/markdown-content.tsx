@@ -15,6 +15,7 @@ export function MarkdownContent({
   disableLinks?: boolean
   className?: string
 }) {
+  console.log("🪚 content: string:", content);
   return (
     <div className={cn(className, { 'disable-links': disableLinks })}>
       <ReactMarkdown
@@ -25,8 +26,10 @@ export function MarkdownContent({
             remarkWikiLink,
             {
               aliasDivider: '|',
-              hrefTemplate: (permalink: string) =>
-                `#/trees/${treePathToSlug(permalink)}`,
+              hrefTemplate: (permalink: string) => {
+                console.log("🪚 permalink:", permalink);
+                return `#/trees/${treePathToSlug(permalink)}`
+              },
             },
           ],
         ]}

@@ -44,19 +44,26 @@ export function getDescription(markdown: string): string {
   return contentAfterHeader.slice(0, nextHeaderIndex).join('\n').trim()
 }
 
-export function extractWikilinkContent(text: string): { path: string; topic: string } {
+export function extractWikilinkContent(text: string): {
+  path: string
+  topic: string
+} {
   const match = text.match(/\[\[(.*?)\]\]/)
   if (match) {
     const content = match[1]
     const parts = content.split('|')
-    const path = parts[0]
-    const pathParts = path.split('/')
+    const rawPath = parts[0]
+
+    // Split on one or more forward slashes and filter out empty strings
+    const pathParts = rawPath.split(/\/+/).filter(Boolean)
+
+    const path = pathParts.join('/')
     const topic = parts[1] || pathParts[pathParts.length - 1]
+
     return { path, topic }
   }
   return { path: '', topic: '' }
 }
-
 export function ensureHeadingSeparation(markdown: string): string {
   const lines = markdown.split('\n')
   const processedLines: string[] = []
@@ -66,7 +73,12 @@ export function ensureHeadingSeparation(markdown: string): string {
     const line = lines[i]
     const isHeading = getBlockType(line) === 'heading'
 
-    if (isHeading && !lastLineWasHeading && processedLines.length > 0 && processedLines[processedLines.length - 1] !== '') {
+    if (
+      isHeading &&
+      !lastLineWasHeading &&
+      processedLines.length > 0 &&
+      processedLines[processedLines.length - 1] !== ''
+    ) {
       processedLines.push('')
     }
 

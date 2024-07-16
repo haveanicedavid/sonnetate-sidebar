@@ -2,6 +2,7 @@ import { describe, expect, it, test } from 'vitest'
 
 import {
   ensureHeadingSeparation,
+  extractWikilinkContent,
   getBlockType,
   getDescription,
   getHeadingLevel,
@@ -168,5 +169,42 @@ Content
 # Heading 2`
 
     expect(ensureHeadingSeparation(input)).toBe(expected)
+  })
+})
+
+describe('extractWikilinkContent', () => {
+  test('handles normal path', () => {
+    const result = extractWikilinkContent('[[heading/subheading]]')
+    expect(result).toEqual({ path: 'heading/subheading', topic: 'subheading' })
+  })
+
+  test('handles path with multiple consecutive slashes', () => {
+    const result = extractWikilinkContent('[[heading////subheading]]')
+    expect(result).toEqual({ path: 'heading/subheading', topic: 'subheading' })
+  })
+
+  test('handles path with mixed single and multiple slashes', () => {
+    const result = extractWikilinkContent(
+      '[[heading/////subheading///sub-subheading]]'
+    )
+    expect(result).toEqual({
+      path: 'heading/subheading/sub-subheading',
+      topic: 'sub-subheading',
+    })
+  })
+
+  test('handles path with custom topic', () => {
+    const result = extractWikilinkContent(
+      '[[heading////subheading|Custom Topic]]'
+    )
+    expect(result).toEqual({
+      path: 'heading/subheading',
+      topic: 'Custom Topic',
+    })
+  })
+
+  test('returns empty strings for non-wikilink text', () => {
+    const result = extractWikilinkContent('Regular text')
+    expect(result).toEqual({ path: '', topic: '' })
   })
 })

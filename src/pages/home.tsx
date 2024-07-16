@@ -99,7 +99,7 @@ export function HomePage() {
     } finally {
       toast({
         description: `Summary ${isPublic ? 'shared' : 'saved'}`,
-        duration: 3000,
+        duration: 2500,
       })
     }
   }

@@ -3,7 +3,7 @@ import { lookup, tx } from '@instantdb/react'
 import { db } from '@/db'
 import { getDayTimestamp } from '@/lib/date'
 import { flattenParsedMd } from '@/lib/markdown/flatten-md-blocks'
-import { parseMd } from '@/lib/markdown/parse-md'
+import { mdToBlocks } from '@/lib/markdown/md-to-blocks'
 import { getDescription } from '@/lib/markdown/utils'
 import { getUrlComponents } from '@/lib/url'
 
@@ -28,15 +28,21 @@ export function createSummary({
 }) {
   const { domain, baseUrl, name: siteName } = getUrlComponents(url)
   const description = getDescription(md)
-  const mdBlocks = parseMd(md)
+  const mdBlocks = mdToBlocks(md)
   const { trees, blocks, topics } = flattenParsedMd(mdBlocks)
+  console.log('🪚 trees in createSummary:', trees)
   const now = new Date()
   const dayCreated = createdOn || getDayTimestamp(now)
 
-  const siteTx = tx.sites[lookup('url', baseUrl)].update({
-    domain,
-    name: siteName,
-  })
+  const siteTx = tx.sites[lookup('url', baseUrl)]
+    .update({
+      domain,
+      name: siteName,
+      lastReferenced: now.getTime(),
+    })
+    .link({
+      users: userId,
+    })
 
   const topicTxs = topics.map((topic) => {
     const name = topic.toLowerCase()

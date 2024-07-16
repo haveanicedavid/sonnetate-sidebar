@@ -3,9 +3,10 @@ import type { Block } from '@/db/types'
 import type { MdBlock } from './types'
 
 export function blockToMd(
-  rootBlock: MdBlock | Block,
+  rootBlock?: MdBlock | Block,
   removeTitle?: boolean
 ): string {
+  if (!rootBlock) return ''
   const _rootBlock = removeTitle ? { ...rootBlock, text: '' } : rootBlock
   function buildMarkdown(block: MdBlock | Block): string {
     let markdown = block?.text || ''

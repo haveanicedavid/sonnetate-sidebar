@@ -6,10 +6,10 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { format } from 'date-fns'
 import { ArrowUpDown } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { format } from 'date-fns'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -20,50 +20,44 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import type { Topic } from '@/db/types'
-import { treePathToSlug } from '@/lib/url'
+import { Site } from '@/db/types'
 
-type TopicsTableProps = {
-  topics: Topic[]
+type SiteTableProps = {
+  sites: Site[]
 }
 
-const columns: ColumnDef<Topic>[] = [
+const columns: ColumnDef<Site>[] = [
   {
-    accessorKey: 'label',
+    accessorKey: 'domain',
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Name
+          Domain
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
     },
   },
   {
-    accessorKey: 'trees',
+    accessorKey: 'summariesCount',
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Subtopics
+          Summaries
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
     },
     cell: ({ row }) => {
-      const topic = row.original
-      const trees = topic.trees?.[0]?.children || []
-      return <div className="text-center">{trees.length}</div>
-    },
-    sortingFn: (rowA, rowB) => {
-      const aLength = rowA.original.trees?.[0]?.children?.length || 0
-      const bLength = rowB.original.trees?.[0]?.children?.length || 0
-      return aLength - bLength
+      return (
+        <div className="text-center">{row.original.summaries?.length || 0}</div>
+      )
     },
   },
   {
@@ -73,7 +67,7 @@ const columns: ColumnDef<Topic>[] = [
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="text-right w-full justify-end"
+          className="w-full justify-end text-right"
         >
           Last Referenced
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -83,7 +77,11 @@ const columns: ColumnDef<Topic>[] = [
     cell: ({ row }) => {
       const lastReferenced = row.original.lastReferenced
       if (!lastReferenced) return <div className="text-right">Never</div>
-      return <div className="text-right">{format(new Date(lastReferenced), 'EEE MMM d h:mma')}</div>
+      return (
+        <div className="text-right">
+          {format(new Date(lastReferenced), 'EEE MMM d h:mma')}
+        </div>
+      )
     },
     sortingFn: (rowA, rowB) => {
       const aDate = rowA.original.lastReferenced
@@ -96,12 +94,12 @@ const columns: ColumnDef<Topic>[] = [
   },
 ]
 
-export function TopicsTable({ topics }: TopicsTableProps) {
+export function SiteTable({ sites }: SiteTableProps) {
   const [sorting, setSorting] = useState<SortingState>([])
   const navigate = useNavigate()
 
   const table = useReactTable({
-    data: topics,
+    data: sites,
     columns,
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
@@ -111,13 +109,13 @@ export function TopicsTable({ topics }: TopicsTableProps) {
     },
   })
 
-  const handleRowClick = (topic: Topic) => {
-    navigate(`/trees/${treePathToSlug(topic.name)}`)
+  const handleRowClick = (site: Site) => {
+    navigate(`/sites/${site.id}`)
   }
 
   return (
-    <div className="rounded-md border bg-background">
-      <Table>
+    <div className="rounded-md border">
+      <Table className="bg-background">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
@@ -153,7 +151,7 @@ export function TopicsTable({ topics }: TopicsTableProps) {
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                No topics found.
+                No sites found.
               </TableCell>
             </TableRow>
           )}

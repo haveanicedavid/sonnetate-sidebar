@@ -37,6 +37,7 @@ export function TopicsPage() {
       topic.trees[0].children &&
       topic.trees[0].children.length > 0
   )
+    console.log("🪚 filteredTopics:", filteredTopics);
 
   return (
     <div className="h-full overflow-y-auto">

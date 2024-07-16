@@ -1,6 +1,6 @@
 import { beforeEach, expect, test, vi } from 'vitest'
 
-import { parseMd } from './parse-md'
+import { mdToBlocks } from './md-to-blocks'
 
 let counter: number
 
@@ -23,7 +23,7 @@ Paragraph 2
 Paragraph 3
 `
 
-  const result = parseMd(markdown)
+  const result = mdToBlocks(markdown)
 
   expect(result).toEqual([
     {
@@ -111,7 +111,7 @@ Content 1
 Content 2
 `
 
-  const result = parseMd(markdown)
+  const result = mdToBlocks(markdown)
 
   expect(result).toEqual([
     {
@@ -171,7 +171,7 @@ test('parses headings without wikilinks', () => {
 Content
 `
 
-  const result = parseMd(markdown)
+  const result = mdToBlocks(markdown)
 
   expect(result).toEqual([
     {
@@ -216,7 +216,7 @@ console.log('Hello, world!');
 \`\`\`
 `
 
-  const result = parseMd(markdown)
+  const result = mdToBlocks(markdown)
 
   expect(result).toEqual([
     {
@@ -288,7 +288,7 @@ console.log('Hello, world!');
 test('handles empty input', () => {
   const markdown = ''
 
-  const result = parseMd(markdown)
+  const result = mdToBlocks(markdown)
 
   expect(result).toEqual([])
 })

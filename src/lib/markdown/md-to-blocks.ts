@@ -33,7 +33,7 @@ type ChildMap = { [headerId: string]: string[] }
 
 type OrderedChunkById = { [id: string]: OrderedChunk }
 
-export function parseMd(markdown: string): MdBlock[] {
+export function mdToBlocks(markdown: string): MdBlock[] {
   const markdownWithSpacingEnsured = ensureHeadingSeparation(markdown.trim())
 
   if (markdownWithSpacingEnsured === '') {
@@ -138,7 +138,14 @@ export function parseMd(markdown: string): MdBlock[] {
       const block = orderedBlocksById[childId]
       return {
         id: block.id,
-        text: block.text,
+        // TODO: this is hacky, but sometimes blocks are being created with
+        // double slashes in the wikilink which messes other stuff up. It's
+        // likely an issue with the transformer, but future app shouldn't use
+        // the string form of path at all, so this'll do for now
+        text:
+          block.type === 'heading'
+            ? block.text.replace(/\/+/g, '/')
+            : block.text,
         type: block.type,
         tree: block.tree,
         parentId: block.parentId,

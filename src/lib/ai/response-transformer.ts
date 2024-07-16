@@ -29,7 +29,6 @@ export class StreamingMarkdownTransformer {
       transformedText += this.processLine(lines[i]) + '\n'
     }
 
-    // Keep the last line in the buffer if it's not complete
     this.buffer = lines[lines.length - 1]
 
     return transformedText
@@ -56,10 +55,13 @@ export class StreamingMarkdownTransformer {
     const headerLevel = line.match(/^#+/)?.[0].length || 0
     const headerText = line.replace(/^#+\s*/, '').trim()
 
+    const sanitizedHeaderText = headerText.replace(/[/\\]/g, '-')
+
     this.headerStack.splice(headerLevel - 1)
-    this.headerStack[headerLevel - 1] = headerText
+    this.headerStack[headerLevel - 1] = sanitizedHeaderText
 
     const fullPath = this.headerStack.slice(0, headerLevel).join('/')
+
     return `${'#'.repeat(headerLevel)} [[${fullPath}|${headerText}]]`
   }
 

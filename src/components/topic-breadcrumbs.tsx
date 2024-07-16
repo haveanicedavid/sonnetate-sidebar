@@ -23,18 +23,9 @@ export function TopicBreadcrumbs({ path }: { path: string }) {
       <BreadcrumbList>
         <BreadcrumbItem>
           <HoverCard openDelay={400}>
-            <HoverCardTrigger asChild>
               <BreadcrumbLink asChild>
                 <Link to="/topics">Topics</Link>
               </BreadcrumbLink>
-            </HoverCardTrigger>
-            <HoverCardContent>
-              <div className="space-y-1">
-                <h4 className="text-sm font-semibold">Topics</h4>
-                <p className="text-sm">Browse all available topics</p>
-                {/* Add more content here if needed */}
-              </div>
-            </HoverCardContent>
           </HoverCard>
         </BreadcrumbItem>
         {' / '}
@@ -73,9 +64,6 @@ function TopicTreeHoverCard({
           'topic.name': segment,
         },
       },
-      children: {
-        children: { children: { children: { children: {} } } },
-      },
     },
   })
 
@@ -94,7 +82,7 @@ function TopicTreeHoverCard({
         ) : (
           <div className="space-y-1">
             <h4 className="text-sm font-semibold">{segment}</h4>
-            <p className="text-sm">Explore subtopics and related content</p>
+            <p className="text-sm">TODO: display other parents here</p>
             {/* Add more dynamic content here based on the segment */}
           </div>
         )}
