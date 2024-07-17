@@ -30,6 +30,8 @@ export interface Topic {
   name: string
   trees?: Tree[]
   users?: User[]
+  parents?: Topic[]
+  children?: Topic[]
 }
 
 export interface Tree {
@@ -40,9 +42,9 @@ export interface Tree {
   path: string
   block?: Block[]
   children?: Tree[]
-  parents?: Tree[]
+  parent?: Tree[]
   summary?: Summary[]
-  topic?: Topic
+  topic?: Topic[]
   user?: User
 }
 

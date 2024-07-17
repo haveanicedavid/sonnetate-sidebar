@@ -100,6 +100,7 @@ export function HomePage() {
       toast({
         description: `Summary ${isPublic ? 'shared' : 'saved'}`,
         duration: 2500,
+        type: 'background',
       })
     }
   }

@@ -43,13 +43,16 @@ export function createSummary({
       users: userId,
     })
 
-  const topicTxs = topics.map((topic) => {
-    const name = topic.toLowerCase()
-    return tx.topics[lookup('name', name)].update({
-      label: topic,
-      lastReferenced: now.getTime(),
-      users: userId,
-    })
+  const topicTxs = topics.map(({ name, parentName, label }) => {
+    return tx.topics[lookup('name', name)]
+      .update({
+        label,
+        lastReferenced: now.getTime(),
+      })
+      .link({
+        users: userId,
+        ...(parentName ? { parents: lookup('name', parentName) } : {}),
+      })
   })
 
   const treeTxs = trees.map(({ parentId, blockId, path, id, topic }) => {
@@ -65,7 +68,7 @@ export function createSummary({
         user: userId,
         block: blockId,
         summary: summaryId,
-        ...(parentId ? { parents: parentId } : {}),
+        ...(parentId ? { parent: parentId } : {}),
       })
   })
 

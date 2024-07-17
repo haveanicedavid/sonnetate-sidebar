@@ -12,6 +12,8 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from '@/components/ui/hover-card'
+import { db } from '@/db'
+import { useUser } from '@/db/ui-store'
 
 import { LoadingScreen } from './loading-screen'
 
@@ -56,20 +58,24 @@ function TopicTreeHoverCard({
   segment: string
   url: string
 }) {
-  // const [user] = useUser()
-  // const { isLoading, data } = db.useQuery({
-  //   trees: {
-  //     $: {
-  //       where: {
-  //         'topic.name': segment,
-  //         'user.id': user.id,
-  //       },
-  //     },
-  //   },
-  // })
+  const [user] = useUser()
+  const { isLoading, data } = db.useQuery({
+    trees: {
+      $: {
+        where: {
+          'topic.name': segment,
+          'user.id': user.id,
+        },
+      },
+      topic: {
+        children: {},
+      },
+    },
+  })
 
-  // const trees = data?.trees
-  const isLoading = false
+  const tree = data?.trees?.[0]
+  const siblings = tree?.topic?.[0].children?.filter((t) => t.id !== tree.id)
+  console.log('🪚 siblings:', siblings)
 
   return (
     <HoverCard openDelay={400}>
@@ -83,9 +89,9 @@ function TopicTreeHoverCard({
           <LoadingScreen />
         ) : (
           <div className="space-y-1">
-            <h4 className="text-sm font-semibold">{segment}</h4>
-            <p className="text-sm">TODO: display other parents here</p>
-            {/* Add more dynamic content here based on the segment */}
+            {siblings?.map((sibling) => (
+              <h4 className="text-sm">{sibling?.name}</h4>
+            ))}
           </div>
         )}
       </HoverCardContent>
