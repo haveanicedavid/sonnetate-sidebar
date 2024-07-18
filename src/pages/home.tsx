@@ -25,7 +25,7 @@ export function HomePage() {
   const [newSummaryId, setNewSummaryId] = useState(id())
   // const [summary, setSummary] = useState(MARKDOWN_STUB_WITH_HIERARCHY)
   const [summary, setSummary] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const [isSummarizing, setIsSummarizing] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [user] = useUser()
 
@@ -53,7 +53,7 @@ export function HomePage() {
   async function handleSummarize() {
     const newId = id()
     setNewSummaryId(newId)
-    setIsLoading(true)
+    setIsSummarizing(true)
     setSummary('')
     setError(null)
 
@@ -74,7 +74,7 @@ export function HomePage() {
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err))
     } finally {
-      setIsLoading(false)
+      setIsSummarizing(false)
       setUserInput('')
     }
   }
@@ -141,7 +141,7 @@ export function HomePage() {
 
         <SummaryContent
           summary={summary}
-          isLoading={isLoading}
+          isSummarizing={isSummarizing}
           onSummarize={handleSummarize}
           hasUserInput={userInput.length > 0}
         />
@@ -150,7 +150,7 @@ export function HomePage() {
       <div className="p-4 pt-2">
         <SummaryInput
           userInput={userInput}
-          isLoading={isLoading}
+          isLoading={isSummarizing}
           summarySaved={summarySaved}
           summaryShared={summaryShared}
           onInputChange={setUserInput}
@@ -165,14 +165,14 @@ export function HomePage() {
 
 type SummaryContentProps = {
   summary: string
-  isLoading: boolean
+  isSummarizing: boolean
   onSummarize: () => void
   hasUserInput: boolean
 }
 
 function SummaryContent({
   summary,
-  isLoading,
+  isSummarizing,
   onSummarize,
   hasUserInput,
 }: SummaryContentProps) {
@@ -182,7 +182,7 @@ function SummaryContent({
         <div className="max-h-full w-full overflow-auto py-4">
           {summary ? (
             <RenderMarkdown content={summary} />
-          ) : isLoading ? (
+          ) : isSummarizing ? (
             <div className="text-center">
               <h6 className="mb-2 text-lg font-medium text-gray-500">
                 Generating summary...
