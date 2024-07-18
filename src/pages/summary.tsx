@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 import { HorizontalSummaryList } from '@/components/horizontal-summary-list'
 import { LoadingScreen } from '@/components/loading-screen'
-import { MarkdownContent } from '@/components/markdown-content'
+import { RenderMarkdown } from '@/components/render-markdown'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import {
@@ -98,7 +98,7 @@ export function SummaryPage() {
         <div className="flex-grow overflow-auto p-4 pt-2">
           <Card className="markdown relative h-full overflow-visible">
             <CardContent className="h-full overflow-auto p-4">
-              <MarkdownContent content={mdString} />
+              <RenderMarkdown content={mdString} />
             </CardContent>
           </Card>
         </div>

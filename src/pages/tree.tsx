@@ -1,7 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
 
 import { LoadingScreen } from '@/components/loading-screen'
-import { MarkdownContent } from '@/components/markdown-content'
+import { RenderMarkdown } from '@/components/render-markdown'
 import { TopicBreadcrumbs } from '@/components/topic-breadcrumbs'
 import {
   Accordion,
@@ -112,7 +112,7 @@ function TreeCard({ trees }: TreeCardProps) {
   if (trees.length === 1) {
     return (
       <div className="rounded-md border p-2">
-        <MarkdownContent content={blockToMd(trees[0].block?.[0])} />
+        <RenderMarkdown content={blockToMd(trees[0].block?.[0])} />
       </div>
     )
   }
@@ -131,7 +131,7 @@ function TreeCard({ trees }: TreeCardProps) {
           </AccordionTrigger>
           <AccordionContent>
             <div className="rounded-md border p-2">
-              <MarkdownContent content={blockToMd(tree.block?.[0])} />
+              <RenderMarkdown content={blockToMd(tree.block?.[0])} />
             </div>
           </AccordionContent>
         </AccordionItem>

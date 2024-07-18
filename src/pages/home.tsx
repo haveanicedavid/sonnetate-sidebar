@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { HorizontalSummaryList } from '@/components/horizontal-summary-list'
 import { LoadingScreen } from '@/components/loading-screen'
-import { MarkdownContent } from '@/components/markdown-content'
+import { RenderMarkdown } from '@/components/render-markdown'
 import { SummaryInput } from '@/components/summary-input'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -181,7 +181,7 @@ function SummaryContent({
       <CardContent className="flex h-full flex-col items-center justify-center p-4">
         <div className="max-h-full w-full overflow-auto py-4">
           {summary ? (
-            <MarkdownContent content={summary} />
+            <RenderMarkdown content={summary} />
           ) : isLoading ? (
             <div className="text-center">
               <h6 className="mb-2 text-lg font-medium text-gray-500">

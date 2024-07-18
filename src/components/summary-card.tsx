@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import { Summary } from '@/db/types'
 
-import { MarkdownContent } from './markdown-content'
+import { RenderMarkdown } from './render-markdown'
 import { Badge } from './ui/badge'
 import { Button } from './ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
@@ -34,7 +34,7 @@ export function SummaryCard({ summary, showDomain }: SummaryCardProps) {
           <CardTitle className="text-xl font-semibold">{title}</CardTitle>
         </CardHeader>
         <CardContent className="p-4 pt-2">
-          <MarkdownContent content={description + ' [...]'} />
+          <RenderMarkdown content={description + ' [...]'} />
         </CardContent>
       </div>
       <CardContent className="flex justify-between p-4">

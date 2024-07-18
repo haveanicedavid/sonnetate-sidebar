@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 
-import { MarkdownContent } from './markdown-content'
+import { RenderMarkdown } from './render-markdown'
 
 type Summary = {
   id: string
@@ -33,7 +33,7 @@ export function HorizontalSummaryList({
               </CardHeader>
               <CardContent className="p-4 pt-0">
                 <div className="h-[100px] overflow-hidden">
-                  <MarkdownContent
+                  <RenderMarkdown
                     content={item.description}
                     className="text-sm"
                   />

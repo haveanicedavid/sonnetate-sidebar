@@ -6,7 +6,7 @@ import { treePathToSlug } from '@/lib/url'
 import { cn } from '@/lib/utils'
 import '@/styles/markdown.css'
 
-export function MarkdownContent({
+export function RenderMarkdown({
   content,
   disableLinks,
   className,
