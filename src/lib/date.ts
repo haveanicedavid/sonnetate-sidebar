@@ -9,4 +9,3 @@ export function getDayTimestamp(date: Date = new Date()): number {
     ? new Date(fourAM.getTime() - 24 * 60 * 60 * 1000).getTime()
     : fourAM.getTime()
 }
-

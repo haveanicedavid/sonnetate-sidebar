@@ -1,6 +1,8 @@
 import { Outlet } from 'react-router-dom'
-import { TooltipProvider } from '@/components/ui/tooltip'
+
 import { Toaster } from '@/components/ui/toaster'
+import { TooltipProvider } from '@/components/ui/tooltip'
+
 import { Header } from '../header'
 
 export function AppLayout() {
@@ -8,7 +10,7 @@ export function AppLayout() {
     <TooltipProvider>
       <div className="flex h-screen flex-col">
         <Header />
-        <main className="flex-grow overflow-auto dark:bg-muted/20 bg-muted/40">
+        <main className="flex-grow overflow-auto bg-muted/40 dark:bg-muted/20">
           <Outlet />
         </main>
         <Toaster />

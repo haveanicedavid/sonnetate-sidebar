@@ -19,7 +19,11 @@ export function flattenParsedMd(parsedMd: MdBlock[]): FlattenedMd {
   const topics: TopicSeed[] = []
   const topicsMap = new Map<string, TopicSeed>()
 
-  function flattenBlock(block: MdBlock, parentId: string | null = null, parentTopic: string | null = null): void {
+  function flattenBlock(
+    block: MdBlock,
+    parentId: string | null = null,
+    parentTopic: string | null = null
+  ): void {
     const { children, tree, ...rest } = block
     const flattenedBlock: BlockSeed = {
       ...rest,
@@ -52,7 +56,9 @@ export function flattenParsedMd(parsedMd: MdBlock[]): FlattenedMd {
     }
 
     if (children) {
-      children.forEach((child) => flattenBlock(child, block.id, tree?.topic.toLowerCase() || parentTopic))
+      children.forEach((child) =>
+        flattenBlock(child, block.id, tree?.topic.toLowerCase() || parentTopic)
+      )
     }
   }
 

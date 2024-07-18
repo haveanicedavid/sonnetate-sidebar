@@ -34,7 +34,7 @@ const columns: ColumnDef<Site>[] = [
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="w-full justify-start" 
+          className="w-full justify-start"
         >
           Domain
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -42,14 +42,14 @@ const columns: ColumnDef<Site>[] = [
       )
     },
   },
-    {
+  {
     accessorKey: 'summariesCount',
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="w-full justify-center" 
+          className="w-full justify-center"
         >
           Summaries
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -61,7 +61,8 @@ const columns: ColumnDef<Site>[] = [
         <div className="text-center">{row.original.summaries?.length || 0}</div>
       )
     },
-  },{
+  },
+  {
     accessorKey: 'lastReferenced',
     header: ({ column }) => {
       return (
@@ -139,7 +140,7 @@ export function SiteTable({ sites }: SiteTableProps) {
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && 'selected'}
-                className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                className="cursor-pointer transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
                 onClick={() => handleRowClick(row.original)}
               >
                 {row.getVisibleCells().map((cell) => (

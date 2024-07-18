@@ -35,7 +35,7 @@ const columns: ColumnDef<Topic>[] = [
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="w-full justify-start" 
+          className="w-full justify-start"
         >
           Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -50,7 +50,7 @@ const columns: ColumnDef<Topic>[] = [
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="w-full justify-center" 
+          className="w-full justify-center"
         >
           Subtopics
           <ArrowUpDown className="ml-2 h-4 w-4" />
