@@ -2,6 +2,7 @@ import { Eye } from 'lucide-react'
 import { useState } from 'react'
 
 import { LoadingScreen } from '@/components/loading-screen'
+import { TopicTreeView } from '@/components/topic-tree-view'
 import { TopicsTable } from '@/components/topics-table'
 import { Button } from '@/components/ui/button'
 import {
@@ -16,8 +17,6 @@ import {
 import { db } from '@/db'
 import type { Topic } from '@/db/types'
 import { useUser } from '@/db/ui-store'
-import { TopicTreeView } from '@/components/topic-tree-view'
-
 
 export function TopicsPage() {
   const [user] = useUser()
@@ -107,18 +106,20 @@ export function TopicsPage() {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        {viewMode === 'tree' ? (
-          <div className="space-y-4">
-            {filteredTrees.map((_tree) => {
-              const [tree] = _tree
-              return <TopicTreeView key={tree.id} tree={tree} defaultOpen />
-            })}
-          </div>
-        ) : (
-          <TopicsTable topics={filteredTopics} />
-        )}
+
+        <div className="rounded-md border bg-background">
+          {viewMode === 'tree' ? (
+            <div className="space-y-4 p-4">
+              {filteredTrees.map((_tree) => {
+                const [tree] = _tree
+                return <TopicTreeView key={tree.id} tree={tree} defaultOpen />
+              })}
+            </div>
+          ) : (
+            <TopicsTable topics={filteredTopics} />
+          )}
+        </div>
       </div>
     </div>
   )
 }
-

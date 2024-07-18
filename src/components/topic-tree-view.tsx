@@ -40,7 +40,7 @@ function TopicLabel({
   return (
     <Link
       to={`/trees/${treePathToSlug(path)}`}
-      className={`group flex items-center text-base font-semibold ${!hasChildren ? 'ml-6' : ''}`}
+      className={`group flex items-center text-base font-semibold text-primary/70 transition-colors hover:text-primary ${!hasChildren ? 'ml-6' : ''}`}
     >
       <span>{label}</span>
       <ArrowRight className="ml-1 h-4 w-4 transform opacity-0 transition-all duration-200 ease-in-out group-hover:translate-x-1 group-hover:opacity-100" />
@@ -73,7 +73,7 @@ export function TopicTreeView({
   const hasChildren = children.length > 0
 
   return (
-    <div className="relative">
+    <div className="relative mt-1">
       <div className="flex items-center">
         {hasChildren && (
           <ToggleButton isOpen={isOpen} onClick={() => setOpen(!isOpen)} />
@@ -91,7 +91,7 @@ export function TopicTreeView({
             height: isOpen && previous === isOpen ? 'auto' : height,
             overflow: 'hidden',
           }}
-          className="ml-2 mt-2 border-l-2 pl-2"
+          className="ml-2 border-l-2 pl-2"
         >
           <animated.div ref={ref} style={{ y }}>
             {children.map((childTree) => (

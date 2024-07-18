@@ -34,6 +34,7 @@ const columns: ColumnDef<Site>[] = [
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="w-full justify-start" 
         >
           Domain
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -41,13 +42,14 @@ const columns: ColumnDef<Site>[] = [
       )
     },
   },
-  {
+    {
     accessorKey: 'summariesCount',
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="w-full justify-center" 
         >
           Summaries
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -59,8 +61,7 @@ const columns: ColumnDef<Site>[] = [
         <div className="text-center">{row.original.summaries?.length || 0}</div>
       )
     },
-  },
-  {
+  },{
     accessorKey: 'lastReferenced',
     header: ({ column }) => {
       return (
