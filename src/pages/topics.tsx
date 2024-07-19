@@ -17,6 +17,7 @@ import {
 import { db } from '@/db'
 import type { Topic } from '@/db/types'
 import { useUser } from '@/db/ui-store'
+import { Card } from '@/components/ui/card'
 
 export function TopicsPage() {
   const [user] = useUser()
@@ -29,32 +30,15 @@ export function TopicsPage() {
           'users.id': user.id,
         },
       },
-      trees: {
-        $: {
-          where: {
-            'user.id': user.id,
-          },
-        },
+      parents: {},
+      children: {
         children: {
-          topic: {},
           children: {
-            topic: {},
             children: {
-              topic: {},
-              children: {
-                topic: {},
-                children: {
-                  topic: {},
-                  children: {
-                    topic: {},
-                    children: {},
-                  },
-                },
-              },
+              children: {} // h6
             },
           },
         },
-        topic: {},
       },
     },
   })
@@ -65,14 +49,8 @@ export function TopicsPage() {
   const allTopics = data.topics
 
   const filteredTopics = allTopics.filter(
-    (topic: Topic) =>
-      topic.trees &&
-      topic.trees.length > 0 &&
-      topic.trees[0].children &&
-      topic.trees[0].children.length > 0
+    (topic: Topic) => topic.parents?.length === 0
   )
-
-  const filteredTrees = filteredTopics.map((topic) => topic.trees)
 
   return (
     <div className="h-full overflow-y-auto">
@@ -107,18 +85,23 @@ export function TopicsPage() {
           </DropdownMenu>
         </div>
 
-        <div className="rounded-md border bg-background">
+        <Card className="bg-background">
           {viewMode === 'tree' ? (
             <div className="space-y-4 p-4">
-              {filteredTrees.map((_tree) => {
-                const [tree] = _tree
-                return <TopicTreeView key={tree.id} tree={tree} defaultOpen />
+              {filteredTopics.map((topic) => {
+                return (
+                  <TopicTreeView
+                    key={topic.id}
+                    topic={topic}
+                    path="/topics"
+                  />
+                )
               })}
             </div>
           ) : (
             <TopicsTable topics={filteredTopics} />
           )}
-        </div>
+        </Card>
       </div>
     </div>
   )

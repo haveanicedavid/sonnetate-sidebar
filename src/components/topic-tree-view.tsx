@@ -1,13 +1,17 @@
-import { animated, useSpring } from '@react-spring/web'
-import { ArrowRight, Minus, Plus } from 'lucide-react'
-import { useState } from 'react'
+import { atom, useAtom } from 'jotai'
+import { Minus, Plus } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import useMeasure from 'react-use-measure'
 
 import { Button } from '@/components/ui/button'
-import type { Tree } from '@/db/types'
-import { usePrevious } from '@/lib/hooks/use-previous'
-import { treePathToSlug } from '@/lib/url'
+import type { Topic } from '@/db/types'
+import { toShortId } from '@/lib/id'
+import { cn } from '@/lib/utils'
+
+import { CollapseTree } from './animations/collapse-tree'
+import { HoverArrow } from './ui/hover-arrow'
+
+const openTopicsAtom = atom(new Set())
 
 function ToggleButton({
   isOpen,
@@ -31,74 +35,89 @@ function ToggleButton({
 function TopicLabel({
   label,
   hasChildren,
-  path,
+  idPath,
 }: {
   label?: string
   hasChildren: boolean
-  path: string
+  idPath: string
 }) {
   return (
     <Link
-      to={`/trees/${treePathToSlug(path)}`}
-      className={`group flex items-center text-base font-semibold text-primary/70 transition-colors hover:text-primary ${!hasChildren ? 'ml-6' : ''}`}
+      to={idPath}
+      className={cn(
+        'group flex items-center text-base text-primary/70 transition-colors hover:text-primary',
+        !hasChildren && 'ml-6'
+      )}
     >
       <span>{label}</span>
-      <ArrowRight className="ml-1 h-4 w-4 transform opacity-0 transition-all duration-200 ease-in-out group-hover:translate-x-1 group-hover:opacity-100" />
+      <HoverArrow className="ml-1 h-4 w-4" />
     </Link>
   )
 }
 
 export function TopicTreeView({
-  tree,
-  defaultOpen = false,
+  topic,
+  path,
+  isFirstLevel = true,
 }: {
-  tree: Tree
-  defaultOpen?: boolean
+  topic: Topic
+  path: string
+  isFirstLevel?: boolean
 }) {
-  const [isOpen, setOpen] = useState(defaultOpen)
-  const previous = usePrevious(isOpen)
-  const [ref, { height: viewHeight }] = useMeasure()
+  const [openTopics, setOpenTopics] = useAtom(openTopicsAtom)
+  const [isLocalOpen, setIsLocalOpen] = useState(isFirstLevel)
+  const currentPath = `${path}/${toShortId(topic.id)}`
+  const isOpen = openTopics.has(currentPath) || (isFirstLevel && isLocalOpen)
 
-  const { height, opacity, y } = useSpring({
-    from: { height: 0, opacity: 0, y: 0 },
-    to: {
-      height: isOpen ? viewHeight : 0,
-      opacity: isOpen ? 1 : 0,
-      y: isOpen ? 0 : 20,
-    },
-  })
+  useEffect(() => {
+    if (isFirstLevel) {
+      setOpenTopics((prev) => new Set(prev).add(currentPath))
+    }
+  }, [isFirstLevel, currentPath, setOpenTopics])
 
-  const topic = tree.topic?.[0]
-  const children = tree.children || []
+  const children = topic.children || []
   const hasChildren = children.length > 0
+
+  if (!topic || !path) return null
+
+  const toggleOpen = () => {
+    if (isFirstLevel) {
+      setIsLocalOpen(!isLocalOpen)
+    }
+    setOpenTopics((prev) => {
+      const newSet = new Set(prev)
+      if (isOpen) {
+        newSet.delete(currentPath)
+      } else {
+        newSet.add(currentPath)
+      }
+      return newSet
+    })
+  }
 
   return (
     <div className="relative mt-1">
       <div className="flex items-center">
-        {hasChildren && (
-          <ToggleButton isOpen={isOpen} onClick={() => setOpen(!isOpen)} />
-        )}
+        {hasChildren && <ToggleButton isOpen={isOpen} onClick={toggleOpen} />}
         <TopicLabel
-          label={topic?.label}
+          label={topic.label}
           hasChildren={hasChildren}
-          path={tree.path}
+          idPath={currentPath}
         />
       </div>
       {hasChildren && (
-        <animated.div
-          style={{
-            opacity,
-            height: isOpen && previous === isOpen ? 'auto' : height,
-            overflow: 'hidden',
-          }}
-          className="ml-2 border-l-2 pl-2"
-        >
-          <animated.div ref={ref} style={{ y }}>
-            {children.map((childTree) => (
-              <TopicTreeView key={childTree.id} tree={childTree} />
+        <CollapseTree isOpen={isOpen}>
+          <div className="ml-2 border-l-2 pl-2">
+            {children.map((childTopic) => (
+              <TopicTreeView
+                key={childTopic.id}
+                topic={childTopic}
+                path={currentPath}
+                isFirstLevel={false}
+              />
             ))}
-          </animated.div>
-        </animated.div>
+          </div>
+        </CollapseTree>
       )}
     </div>
   )

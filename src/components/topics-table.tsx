@@ -21,7 +21,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import type { Topic } from '@/db/types'
-import { treePathToSlug } from '@/lib/url'
+import { toShortId } from '@/lib/id'
 
 type TopicsTableProps = {
   topics: Topic[]
@@ -118,7 +118,7 @@ export function TopicsTable({ topics }: TopicsTableProps) {
   })
 
   const handleRowClick = (topic: Topic) => {
-    navigate(`/trees/${treePathToSlug(topic.name)}`)
+    navigate(`/topics/${toShortId(topic.id)}`)
   }
 
   return (

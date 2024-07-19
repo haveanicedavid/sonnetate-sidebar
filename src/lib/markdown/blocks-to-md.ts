@@ -3,11 +3,13 @@ import type { Block } from '@/db/types'
 import type { MdBlock } from './types'
 
 export function blockToMd(
-  rootBlock?: MdBlock | Block,
-  removeTitle?: boolean
+  input?: MdBlock | Block | (MdBlock | Block)[]
 ): string {
-  if (!rootBlock) return ''
-  const _rootBlock = removeTitle ? { ...rootBlock, text: '' } : rootBlock
+  if (!input) {
+    console.warn('No input provided to blockToMd')
+    return ''
+  }
+
   function buildMarkdown(block: MdBlock | Block): string {
     let markdown = block?.text || ''
 
@@ -24,5 +26,13 @@ export function blockToMd(
     return markdown
   }
 
-  return buildMarkdown(_rootBlock).trim()
+  if (Array.isArray(input)) {
+    const sortedBlocks = [...input].sort((a, b) => a.order - b.order)
+    return sortedBlocks
+      .map((block) => buildMarkdown(block))
+      .join('\n\n')
+      .trim()
+  } else {
+    return buildMarkdown(input).trim()
+  }
 }

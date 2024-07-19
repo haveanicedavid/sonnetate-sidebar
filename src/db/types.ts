@@ -1,9 +1,11 @@
+import { MdBlockType } from "@/lib/markdown/types"
+
 export interface Block {
   id: string
   order: number
   text: string
   tree?: Tree
-  type: string
+  type: MdBlockType
   children?: Block[]
   parent?: Block
   user?: User

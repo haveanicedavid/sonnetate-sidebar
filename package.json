@@ -10,7 +10,7 @@
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "preview": "vite preview",
     "test": "vitest",
-    "watch": "tsc --noEmit --watch"
+    "watch": "tsc --project tsconfig.app.json --watch"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.24.3",
@@ -48,6 +48,7 @@
     "remark-parse": "^11.0.0",
     "remark-wiki-link": "^2.0.1",
     "remeda": "^2.2.2",
+    "short-uuid": "^5.2.0",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "unified": "^11.0.5",

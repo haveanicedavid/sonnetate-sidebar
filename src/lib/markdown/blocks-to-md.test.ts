@@ -3,7 +3,7 @@ import { describe, expect, test } from 'vitest'
 import { blockToMd } from './blocks-to-md'
 import type { MdBlock } from './types'
 
-describe('createMarkdownFromBlocks', () => {
+describe('blockToMd', () => {
   test('creates markdown string from nested blocks with proper spacing', () => {
     const rootBlock: MdBlock = {
       id: 'id1',
@@ -147,6 +147,90 @@ First
 Second
 
 Third`
+
+    expect(result).toBe(expectedMarkdown)
+  })
+
+  test('handles an array of blocks', () => {
+    const blocks: MdBlock[] = [
+      {
+        id: 'id1',
+        text: '# First Header',
+        type: 'heading',
+        tree: null,
+        parentId: 'root',
+        order: 0,
+        children: [],
+      },
+      {
+        id: 'id2',
+        text: 'First paragraph',
+        type: 'paragraph',
+        tree: null,
+        parentId: 'root',
+        order: 1,
+        children: [],
+      },
+      {
+        id: 'id3',
+        text: '## Second Header',
+        type: 'heading',
+        tree: null,
+        parentId: 'root',
+        order: 2,
+        children: [],
+      },
+    ]
+
+    const result = blockToMd(blocks)
+
+    const expectedMarkdown = `# First Header
+
+First paragraph
+
+## Second Header`
+
+    expect(result).toBe(expectedMarkdown)
+  })
+
+  test('handles an array of blocks with different orders', () => {
+    const blocks: MdBlock[] = [
+      {
+        id: 'id2',
+        text: 'Second paragraph',
+        type: 'paragraph',
+        tree: null,
+        parentId: 'root',
+        order: 1,
+        children: [],
+      },
+      {
+        id: 'id1',
+        text: '# First Header',
+        type: 'heading',
+        tree: null,
+        parentId: 'root',
+        order: 0,
+        children: [],
+      },
+      {
+        id: 'id3',
+        text: '## Third Header',
+        type: 'heading',
+        tree: null,
+        parentId: 'root',
+        order: 2,
+        children: [],
+      },
+    ]
+
+    const result = blockToMd(blocks)
+
+    const expectedMarkdown = `# First Header
+
+Second paragraph
+
+## Third Header`
 
     expect(result).toBe(expectedMarkdown)
   })

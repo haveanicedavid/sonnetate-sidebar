@@ -2,7 +2,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import remarkWikiLink from 'remark-wiki-link'
 
-import { treePathToSlug } from '@/lib/url'
+import { useTopicPathMap } from '@/lib/hooks/use-topic-path-map'
 import { cn } from '@/lib/utils'
 import '@/styles/markdown.css'
 
@@ -15,6 +15,8 @@ export function RenderMarkdown({
   disableLinks?: boolean
   className?: string
 }) {
+  const { topicShortIdByName } = useTopicPathMap()
+
   return (
     <div className={cn(className, { 'disable-links': disableLinks })}>
       <ReactMarkdown
@@ -26,7 +28,16 @@ export function RenderMarkdown({
             {
               aliasDivider: '|',
               hrefTemplate: (permalink: string) => {
-                return `#/trees/${treePathToSlug(permalink)}`
+                // TODO: should this live in the hook?
+                const path = permalink
+                  .replace(/_/g, ' ')
+                  .split('/')
+                  .map(
+                    (name) =>
+                      topicShortIdByName.get(name) || 'ERROR_MD_PATH_LINK'
+                  )
+                  .join('/')
+                return `#/topics/${path}`
               },
             },
           ],
