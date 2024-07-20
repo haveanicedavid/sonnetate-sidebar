@@ -1,12 +1,12 @@
 {
   "manifest_version": 3,
-  "name": "Sonnetate - AI powered sensemaking annotations",
-  "version": "1.0",
-  "description": "PKM inspired, AI fueled, annotations for the web",
+  "name": "Sonnetate - AI-backed sensemaking",
+  "version": "0.1.0",
+  "description": "PKM inspired, AI fueled annotations for the web",
   "side_panel": {
     "default_path": "index.html"
   },
-  "permissions": ["sidePanel", "activeTab", "tabs"],
+  "permissions": ["sidePanel", "activeTab", "tabs", "storage", "alarms"],
   "background": {
     "service_worker": "src/background.ts",
     "type": "module"
@@ -14,5 +14,11 @@
   "action": {
     "default_title": "Open Sonnetate"
   },
-  "host_permissions": ["https://*.anthropic.com/"]
+  "host_permissions": ["https://*.anthropic.com/"],
+  "web_accessible_resources": [
+    {
+      "resources": ["**/*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }
