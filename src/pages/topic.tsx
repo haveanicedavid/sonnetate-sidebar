@@ -2,12 +2,12 @@ import { useParams } from 'react-router-dom'
 
 import { LoadingScreen } from '@/components/loading-screen'
 import { RenderMarkdown } from '@/components/render-markdown'
-import { TopicBreadcrumbsNew } from '@/components/topic-breadcrumbs-new'
+import { TopicBreadcrumbs } from '@/components/topic-breadcrumbs'
 import { TopicTreeView } from '@/components/topic-tree-view'
 import { Card } from '@/components/ui/card'
 import { db } from '@/db'
 import { buildTopicWhereClause } from '@/db/queries/topic-queries'
-import type { Topic, Tree } from '@/db/types'
+import type { Block, Topic, Tree } from '@/db/types'
 import { toFullId } from '@/lib/id'
 import { blockToMd } from '@/lib/markdown/blocks-to-md'
 
@@ -82,7 +82,6 @@ export function TopicPage() {
     },
   })
 
-  const trees = data?.trees
   if (isLoading) return <LoadingScreen />
 
   if (error) {
@@ -90,12 +89,22 @@ export function TopicPage() {
     return <div>Error loading topic data. Please try again later.</div>
   }
 
+  const trees = data?.trees
+
   const showTree =
     trees?.length && trees.find((tree) => tree?.children?.length > 0)
 
+  const filteredChildren: Array<Block[]> =
+    trees
+      ?.map((tree) => {
+        const children = tree.block?.[0]?.children ?? []
+        return children.length > 0 ? children : null
+      })
+      .filter((child): child is Block[] => Boolean(child)) || []
+
   return (
     <div className="h-full overflow-y-auto p-4">
-      <TopicBreadcrumbsNew topicIds={topicIds} />
+      <TopicBreadcrumbs topicIds={topicIds} />
       {!isLoading && showTree ? (
         <Card className="mt-4 bg-background p-4">
           {trees.map((tree) => (
@@ -108,14 +117,14 @@ export function TopicPage() {
         </Card>
       ) : null}
       <div className="mt-4 space-y-4">
-        {trees?.map((tree) => {
-          const block = tree?.block?.[0]
+        {filteredChildren.map((blocks) => {
           return (
-            <Card key={'blocks-' + tree.id} className="flex-col space-x-2 p-4">
+            <Card key={'blocks-' + blocks[0].id} className="flex-col space-x-2 p-4">
               <div className="mt-2">
+
                 <RenderMarkdown
-                  key={block.id}
-                  content={blockToMd(block?.children)}
+                  key={'md- ' + blocks[0].id}
+                  content={blockToMd(blocks)}
                 />
               </div>
             </Card>
@@ -125,3 +134,4 @@ export function TopicPage() {
     </div>
   )
 }
+

@@ -44,7 +44,7 @@ const columns: ColumnDef<Topic>[] = [
     },
   },
   {
-    accessorKey: 'trees',
+    accessorKey: 'children',
     header: ({ column }) => {
       return (
         <Button
@@ -59,12 +59,12 @@ const columns: ColumnDef<Topic>[] = [
     },
     cell: ({ row }) => {
       const topic = row.original
-      const trees = topic.trees?.[0]?.children || []
+      const trees = topic?.children || []
       return <div className="text-center">{trees.length}</div>
     },
     sortingFn: (rowA, rowB) => {
-      const aLength = rowA.original.trees?.[0]?.children?.length || 0
-      const bLength = rowB.original.trees?.[0]?.children?.length || 0
+      const aLength = rowA.original?.children?.length || 0
+      const bLength = rowB.original?.children?.length || 0
       return aLength - bLength
     },
   },

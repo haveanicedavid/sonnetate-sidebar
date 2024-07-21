@@ -24,7 +24,19 @@ import { HoverArrow } from './ui/hover-arrow'
 /**
  * @param topicIds - An array of topic IDs ordered by hierarchy
  */
-export function TopicBreadcrumbsNew({ topicIds }: { topicIds: string[] }) {
+export function TopicBreadcrumbs({ topicIds }: { topicIds?: string[] }) {
+  if (!topicIds?.length) {
+    return (
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbPage>Topics</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+    )
+  }
+
   const topicMap = topicIdMap(topicIds)
 
   const { isLoading, data } = db.useQuery({
@@ -101,7 +113,6 @@ function TopicTreeHoverCard({
   const [isOpen, setIsOpen] = useState(false)
   const splitUrl = url.split('/')
 
-
   const siblings = (previousTopic?.children || [])
     .filter((sibling) => sibling.id !== topic.id)
     .map(({ id, label }) => {
@@ -113,7 +124,7 @@ function TopicTreeHoverCard({
       }
     })
 
-  if (!siblings.length) {
+  if (!siblings.length || siblings.length === 0) {
     return (
       <BreadcrumbLink asChild>
         <Link to={url}>{topic.label}</Link>

@@ -48,7 +48,7 @@ export function TopicsPage() {
 
   const allTopics = data.topics
 
-  const filteredTopics = allTopics.filter(
+  const topLevelTopics = allTopics.filter(
     (topic: Topic) => topic.parents?.length === 0
   )
 
@@ -87,8 +87,8 @@ export function TopicsPage() {
 
         <Card className="bg-background">
           {viewMode === 'tree' ? (
-            <div className="space-y-4 p-4">
-              {filteredTopics.map((topic) => {
+            <div className="space-y-1 p-4">
+              {topLevelTopics.map((topic) => {
                 return (
                   <TopicTreeView
                     key={topic.id}
@@ -99,7 +99,7 @@ export function TopicsPage() {
               })}
             </div>
           ) : (
-            <TopicsTable topics={filteredTopics} />
+            <TopicsTable topics={allTopics} />
           )}
         </Card>
       </div>

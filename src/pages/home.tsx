@@ -15,7 +15,7 @@ import { useUser } from '@/db/ui-store'
 import { streamTransformedMarkdown } from '@/lib/ai/messages'
 import { useCurrentTab } from '@/lib/hooks/use-current-tab'
 
-import { MARKDOWN_STUB_WITH_HIERARCHY, MARKDOWN_STUB_WITH_HIERARCHY_ALT } from '@/lib/markdown/stub'
+// import { MARKDOWN_STUB_WITH_HIERARCHY, MARKDOWN_STUB_WITH_HIERARCHY_ALT } from '@/lib/markdown/stub'
 
 export function HomePage() {
   const { url, title: pageTitle } = useCurrentTab()
@@ -24,8 +24,8 @@ export function HomePage() {
   const [userInput, setUserInput] = useState('')
   const [newSummaryId, setNewSummaryId] = useState(id())
   // const [summary, setSummary] = useState(MARKDOWN_STUB_WITH_HIERARCHY)
-  const [summary, setSummary] = useState(MARKDOWN_STUB_WITH_HIERARCHY_ALT)
-  // const [summary, setSummary] = useState('')
+  // const [summary, setSummary] = useState(MARKDOWN_STUB_WITH_HIERARCHY_ALT)
+  const [summary, setSummary] = useState('')
   const [isSummarizing, setIsSummarizing] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [user] = useUser()
@@ -48,7 +48,7 @@ export function HomePage() {
   useEffect(() => {
     if (!url) return
     setNewSummaryId(id())
-    // setSummary('')
+    setSummary('')
   }, [url])
 
   async function handleSummarize() {

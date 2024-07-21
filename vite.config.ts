@@ -5,21 +5,20 @@ import { defineConfig } from 'vite'
 
 import manifest from './manifest.json'
 
-export default defineConfig({
-  plugins: [
-    react(),
-    crx({ manifest: manifest as ManifestV3Export }),
-  ],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
+export default defineConfig(({ command }) => {
+  const isProduction = command === 'build'
+
+  return {
+    plugins: [react(), crx({ manifest: manifest as ManifestV3Export })],
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, './src'),
+      },
     },
-  },
-  server: {
-    port: 5173,
-    strictPort: true,
-    hmr: {
-      port: 5173,
+    server: {
+      // port: 5173,
+      // strictPort: true,
+      hmr: !isProduction,
     },
-  },
+  }
 })

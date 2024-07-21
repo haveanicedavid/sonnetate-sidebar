@@ -1,5 +1,5 @@
 import { atom, useAtom } from 'jotai'
-import { Minus, Plus } from 'lucide-react'
+import { Minus, Plus, Circle } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -46,9 +46,10 @@ function TopicLabel({
       to={idPath}
       className={cn(
         'group flex items-center text-base text-primary/70 transition-colors hover:text-primary',
-        !hasChildren && 'ml-6'
+        !hasChildren && 'ml-1.5'
       )}
     >
+      {!hasChildren && <Circle className="mr-3 h-1 w-1 fill-primary/20 text-primary/20" />}
       <span>{label}</span>
       <HoverArrow className="ml-1 h-4 w-4" />
     </Link>
@@ -96,8 +97,8 @@ export function TopicTreeView({
   }
 
   return (
-    <div className="relative mt-1">
-      <div className="flex items-center">
+    <div className="relative">
+      <div className="flex items-center mb-1">
         {hasChildren && <ToggleButton isOpen={isOpen} onClick={toggleOpen} />}
         <TopicLabel
           label={topic.label}
@@ -107,7 +108,7 @@ export function TopicTreeView({
       </div>
       {hasChildren && (
         <CollapseTree isOpen={isOpen}>
-          <div className="ml-2 border-l-2 pl-2">
+          <div className="ml-1.5 border-l-2 pl-2">
             {children.map((childTopic) => (
               <TopicTreeView
                 key={childTopic.id}
