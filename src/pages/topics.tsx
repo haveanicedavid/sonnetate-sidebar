@@ -2,7 +2,7 @@ import { Eye } from 'lucide-react'
 import { useState } from 'react'
 
 import { LoadingScreen } from '@/components/loading-screen'
-import { TopicTreeView } from '@/components/topic-tree-view'
+import { TopicTree } from '@/components/topic-tree'
 import { TopicsTable } from '@/components/topics-table'
 import { Button } from '@/components/ui/button'
 import {
@@ -90,7 +90,7 @@ export function TopicsPage() {
             <div className="space-y-1 p-4">
               {topLevelTopics.map((topic) => {
                 return (
-                  <TopicTreeView
+                  <TopicTree
                     key={topic.id}
                     topic={topic}
                     path="/topics"

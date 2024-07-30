@@ -56,7 +56,10 @@ function TopicLabel({
   )
 }
 
-export function TopicTreeView({
+/**
+ * A recursive component that renders a tree of topics
+ */
+export function TopicTree({
   topic,
   path,
   isFirstLevel = true,
@@ -110,7 +113,7 @@ export function TopicTreeView({
         <CollapseTree isOpen={isOpen}>
           <div className="ml-1.5 border-l-2 pl-2">
             {children.map((childTopic) => (
-              <TopicTreeView
+              <TopicTree
                 key={childTopic.id}
                 topic={childTopic}
                 path={currentPath}

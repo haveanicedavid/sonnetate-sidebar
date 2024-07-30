@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { LoadingScreen } from '@/components/loading-screen'
 import { RenderMarkdown } from '@/components/render-markdown'
 import { TopicBreadcrumbs } from '@/components/topic-breadcrumbs'
-import { TopicTreeView } from '@/components/topic-tree-view'
+import { TopicTree } from '@/components/topic-tree'
 import { Card } from '@/components/ui/card'
 import { db } from '@/db'
 import { buildTopicWhereClause } from '@/db/queries/topic-queries'
@@ -25,7 +25,7 @@ const TreeComponent = ({ tree, topicPath }: TreeProps) => {
         const topic = childTree?.topic?.[0]
         if (!topic?.id) return null
         return (
-          <TopicTreeView
+          <TopicTree
             key={topic.id}
             topic={topic as Topic}
             path={`/topics/${topicPath}`}
@@ -90,10 +90,13 @@ export function TopicPage() {
   }
 
   const trees = data?.trees
+  console.log("🪚 trees:", trees);
 
   const showTree =
     trees?.length && trees.find((tree) => tree?.children?.length > 0)
 
+  // top level tree is the current topic, so we want to display `children`, but
+  // not all have them
   const filteredChildren: Array<Block[]> =
     trees
       ?.map((tree) => {
