@@ -16,8 +16,8 @@ export default defineConfig(({ command }) => {
       },
     },
     server: {
-      // port: 5173,
-      // strictPort: true,
+      port: 5173,
+      strictPort: true,
       hmr: !isProduction,
     },
   }
