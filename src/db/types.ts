@@ -1,4 +1,4 @@
-import { MdBlockType } from "@/lib/markdown/types"
+import type { MdBlockType } from '@/lib/markdown/types'
 
 export interface Block {
   id: string

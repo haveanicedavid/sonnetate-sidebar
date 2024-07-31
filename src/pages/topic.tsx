@@ -1,41 +1,15 @@
 import { useParams } from 'react-router-dom'
 
 import { LoadingScreen } from '@/components/loading-screen'
+import { TreesOutline } from '@/components/outline-trees'
 import { RenderMarkdown } from '@/components/render-markdown'
 import { TopicBreadcrumbs } from '@/components/topic-breadcrumbs'
-import { TopicTree } from '@/components/topic-tree'
 import { Card } from '@/components/ui/card'
 import { db } from '@/db'
 import { buildTopicWhereClause } from '@/db/queries/topic-queries'
-import type { Block, Topic, Tree } from '@/db/types'
+import type { Block } from '@/db/types'
 import { toFullId } from '@/lib/id'
 import { blockToMd } from '@/lib/markdown/blocks-to-md'
-
-type TreeProps = {
-  tree: Tree // Replace 'any' with a more specific type if available
-  topicPath: string
-}
-
-const TreeComponent = ({ tree, topicPath }: TreeProps) => {
-  const children = tree?.children ?? []
-
-  return (
-    <div key={tree.id}>
-      {children.map((childTree) => {
-        const topic = childTree?.topic?.[0]
-        if (!topic?.id) return null
-        return (
-          <TopicTree
-            key={topic.id}
-            topic={topic as Topic}
-            path={`/topics/${topicPath}`}
-          />
-        )
-      })}
-      <div>{tree.topic?.[0]?.label}</div>
-    </div>
-  )
-}
 
 export function TopicPage() {
   const { '*': topicPath } = useParams()
@@ -66,13 +40,16 @@ export function TopicPage() {
         },
       },
       children: {
-        topic: {
+        topic: {},
+        children: {
+          topic: {},
           children: {
+            topic: {},
             children: {
+              topic: {},
               children: {
-                children: {
-                  children: {},
-                },
+                topic: {},
+                children: {},
               },
             },
           },
@@ -90,14 +67,18 @@ export function TopicPage() {
   }
 
   const trees = data?.trees
-  console.log("🪚 trees:", trees);
+
+  const childTreeIds = trees?.reduce((acc, curr) => {
+    const ids = curr.children?.map((child) => child.id) ?? []
+    return [...acc, ...ids]
+  }, [] as string[])
 
   const showTree =
     trees?.length && trees.find((tree) => tree?.children?.length > 0)
 
   // top level tree is the current topic, so we want to display `children`, but
   // not all have them
-  const filteredChildren: Array<Block[]> =
+  const childBlocks: Array<Block[]> =
     trees
       ?.map((tree) => {
         const children = tree.block?.[0]?.children ?? []
@@ -110,21 +91,17 @@ export function TopicPage() {
       <TopicBreadcrumbs topicIds={topicIds} />
       {!isLoading && showTree ? (
         <Card className="mt-4 bg-background p-4">
-          {trees.map((tree) => (
-            <TreeComponent
-              key={'tree-' + tree.id}
-              tree={tree}
-              topicPath={topicPath}
-            />
-          ))}
+          <TreesOutline treeIds={childTreeIds} basePath={topicPath} />
         </Card>
       ) : null}
       <div className="mt-4 space-y-4">
-        {filteredChildren.map((blocks) => {
+        {childBlocks.map((blocks) => {
           return (
-            <Card key={'blocks-' + blocks[0].id} className="flex-col space-x-2 p-4">
+            <Card
+              key={'blocks-' + blocks[0].id}
+              className="flex-col space-x-2 p-4"
+            >
               <div className="mt-2">
-
                 <RenderMarkdown
                   key={'md- ' + blocks[0].id}
                   content={blockToMd(blocks)}
@@ -137,4 +114,3 @@ export function TopicPage() {
     </div>
   )
 }
-

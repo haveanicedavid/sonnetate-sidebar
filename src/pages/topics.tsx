@@ -2,9 +2,10 @@ import { Eye } from 'lucide-react'
 import { useState } from 'react'
 
 import { LoadingScreen } from '@/components/loading-screen'
-import { TopicTree } from '@/components/topic-tree'
+import { TopicsOutline } from '@/components/outline-topics'
 import { TopicsTable } from '@/components/topics-table'
 import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,7 +18,6 @@ import {
 import { db } from '@/db'
 import type { Topic } from '@/db/types'
 import { useUser } from '@/db/ui-store'
-import { Card } from '@/components/ui/card'
 
 export function TopicsPage() {
   const [user] = useUser()
@@ -35,11 +35,12 @@ export function TopicsPage() {
         children: {
           children: {
             children: {
-              children: {} // h6
+              children: {}, // h6
             },
           },
         },
       },
+      trees: {},
     },
   })
 
@@ -88,15 +89,7 @@ export function TopicsPage() {
         <Card className="bg-background">
           {viewMode === 'tree' ? (
             <div className="space-y-1 p-4">
-              {topLevelTopics.map((topic) => {
-                return (
-                  <TopicTree
-                    key={topic.id}
-                    topic={topic}
-                    path="/topics"
-                  />
-                )
-              })}
+              <TopicsOutline topics={topLevelTopics} basePath="/topics" />
             </div>
           ) : (
             <TopicsTable topics={allTopics} />
