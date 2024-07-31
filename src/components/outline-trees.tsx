@@ -1,4 +1,3 @@
-import { db } from '@/db'
 import type { Tree } from '@/db/types'
 import { toShortId } from '@/lib/id'
 import { mergeDuplicateOutlineNodes } from '@/lib/outline'
@@ -6,44 +5,12 @@ import { mergeDuplicateOutlineNodes } from '@/lib/outline'
 import { Outline, type OutlineProps } from './outline'
 
 export function TreesOutline({
-  treeIds,
+  trees,
   basePath,
 }: {
-  treeIds: Array<string>
+  trees: Tree[]
   basePath: string
 }) {
-  const { data, isLoading } = db.useQuery({
-    trees: {
-      $: {
-        where: {
-          id: {
-            in: treeIds,
-          },
-        },
-      },
-      topic: {},
-      children: {
-        topic: {},
-        children: {
-          topic: {},
-          children: {
-            topic: {},
-            children: {
-              topic: {},
-              children: {
-                topic: {},
-              },
-            },
-          },
-        },
-      },
-    },
-  })
-
-  const trees = data?.trees
-
-  if (isLoading || !trees) return null
-
   const mergedOutlineProps = mergeDuplicateOutlineNodes(
     trees.map((tree) =>
       treeToOutlineProps({ tree, basePath, isFirstLevel: true })

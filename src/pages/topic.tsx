@@ -7,7 +7,7 @@ import { TopicBreadcrumbs } from '@/components/topic-breadcrumbs'
 import { Card } from '@/components/ui/card'
 import { db } from '@/db'
 import { buildTopicWhereClause } from '@/db/queries/topic-queries'
-import type { Block } from '@/db/types'
+import type { Block, Tree } from '@/db/types'
 import { toFullId } from '@/lib/id'
 import { blockToMd } from '@/lib/markdown/blocks-to-md'
 
@@ -68,16 +68,16 @@ export function TopicPage() {
 
   const trees = data?.trees
 
-  const childTreeIds = trees?.reduce((acc, curr) => {
-    const ids = curr.children?.map((child) => child.id) ?? []
-    return [...acc, ...ids]
-  }, [] as string[])
+  const childTrees = trees?.reduce((acc, curr) => {
+    const children = curr.children ?? []
+    return [...acc, ...children]
+  }, [] as Tree[])
 
   const showTree =
     trees?.length && trees.find((tree) => tree?.children?.length > 0)
 
-  // top level tree is the current topic, so we want to display `children`, but
-  // not all have them
+  // top level tree is the current topic, so we want to display `children` for
+  // that topic, but not all have them so we filter
   const childBlocks: Array<Block[]> =
     trees
       ?.map((tree) => {
@@ -91,7 +91,7 @@ export function TopicPage() {
       <TopicBreadcrumbs topicIds={topicIds} />
       {!isLoading && showTree ? (
         <Card className="mt-4 bg-background p-4">
-          <TreesOutline treeIds={childTreeIds} basePath={topicPath} />
+          <TreesOutline trees={childTrees} basePath={topicPath} />
         </Card>
       ) : null}
       <div className="mt-4 space-y-4">
