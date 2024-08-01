@@ -1,4 +1,4 @@
-export function createSystemPrompt(tags?: string) {
+export function createSystemPrompt() {
   //   const tagPrompt = `
   // - If the following comma-separated words are relevant as section headings, use them, but ONLY if they are suitable for the webpage summary. Otherwise create new ones. The tags are here in triple quotes:
   // """

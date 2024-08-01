@@ -80,7 +80,7 @@ export function HomePage() {
     }
   }
 
-  async function handleSave(isPublic?: boolean) {
+  async function handleSave() {
     setError(null)
     if (!newSummaryId) {
       setError('No summary to save')
@@ -89,7 +89,6 @@ export function HomePage() {
     try {
       createSummary({
         md: summary,
-        isPublic,
         id: newSummaryId,
         pageTitle: pageTitle || 'Untitled',
         url: url || 'https://www.sonnetate.com',
@@ -99,7 +98,7 @@ export function HomePage() {
       setError(err instanceof Error ? err.message : String(err))
     } finally {
       toast({
-        description: `Summary ${isPublic ? 'shared' : 'saved'}`,
+        description: 'Summary saved',
         duration: 2500,
         type: 'background',
       })
@@ -118,7 +117,6 @@ export function HomePage() {
 
   const fetchedSummary = summaries.find((s) => s.id === newSummaryId)
   const summarySaved = Boolean(fetchedSummary)
-  const summaryShared = Boolean(fetchedSummary?.isPublic)
 
   if (isLoadingData) return <LoadingScreen />
 
@@ -153,7 +151,6 @@ export function HomePage() {
           userInput={userInput}
           isLoading={isSummarizing}
           summarySaved={summarySaved}
-          summaryShared={summaryShared}
           onInputChange={setUserInput}
           onSummarize={handleSummarize}
           onSave={handleSave}

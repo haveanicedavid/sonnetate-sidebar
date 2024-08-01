@@ -102,10 +102,7 @@ export function TopicPage() {
               className="flex-col space-x-2 p-4"
             >
               <div className="mt-2">
-                <RenderMarkdown
-                  key={'md- ' + blocks[0].id}
-                  content={blockToMd(blocks)}
-                />
+                <RenderMarkdown content={blockToMd(blocks)} />
               </div>
             </Card>
           )

@@ -1,4 +1,4 @@
-import { Save, Share } from 'lucide-react'
+import { Save } from 'lucide-react'
 import { FormEvent } from 'react'
 
 import { Button } from './ui/button'
@@ -14,18 +14,16 @@ type SummaryInputProps = {
   userInput: string
   isLoading: boolean
   summarySaved: boolean
-  summaryShared: boolean
   hasSummary: boolean
   onInputChange: (value: string) => void
   onSummarize: () => void
-  onSave: (isPublic?: boolean) => void
+  onSave: () => void
 }
 
 export function SummaryInput({
   userInput,
   isLoading,
   summarySaved,
-  summaryShared,
   hasSummary,
   onInputChange,
   onSummarize,
@@ -66,22 +64,6 @@ export function SummaryInput({
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>Save summary</p>
-                </TooltipContent>
-              </Tooltip>
-              <Tooltip delayDuration={100}>
-                <TooltipTrigger asChild>
-                  <Button
-                    type="button"
-                    className="h-8 w-8 p-0"
-                    variant="ghost"
-                    onClick={() => onSave(true)}
-                    disabled={isLoading || summaryShared}
-                  >
-                    <Share className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Share summary</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

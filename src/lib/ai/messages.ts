@@ -11,7 +11,6 @@ export async function* streamTransformedMarkdown({
   url,
   apiKey,
   prompt,
-  tags,
 }: {
   url: string
   apiKey?: string
@@ -29,7 +28,7 @@ export async function* streamTransformedMarkdown({
     model: 'claude-3-sonnet-20240229',
     max_tokens: 1000,
     temperature: 0.5,
-    system: createSystemPrompt(tags),
+    system: createSystemPrompt(),
     messages: [
       {
         role: 'user',

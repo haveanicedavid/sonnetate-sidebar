@@ -15,7 +15,6 @@ export interface Summary {
   id: string
   dayCreated: number
   description: string
-  isPublic: boolean
   pageTitle: string
   prompt?: string
   site: Site[]
@@ -40,7 +39,6 @@ export interface Tree {
   id: string
   context: string
   dayCreated: number
-  isPublic?: boolean
   path: string
   block?: Block[]
   children?: Tree[]

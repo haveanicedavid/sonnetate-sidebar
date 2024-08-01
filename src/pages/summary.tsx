@@ -1,19 +1,11 @@
-import { Share } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { HorizontalSummaryList } from '@/components/horizontal-summary-list'
 import { LoadingScreen } from '@/components/loading-screen'
 import { RenderMarkdown } from '@/components/render-markdown'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
+import { TooltipProvider } from '@/components/ui/tooltip'
 import { db } from '@/db'
-import { shareSummary } from '@/db/actions/summary'
 import { useUser } from '@/db/ui-store'
 import { useCurrentTab } from '@/lib/hooks/use-current-tab'
 import { blockToMd } from '@/lib/markdown/blocks-to-md'
@@ -65,13 +57,6 @@ export function SummaryPage() {
   }
 
   const mdString = blockToMd(rootBlock)
-  const isPublic = currentSummary.isPublic
-
-  const handleShare = () => {
-    if (currentSummary.id) {
-      shareSummary(currentSummary.id)
-    }
-  }
 
   const handleViewSummary = (summaryId: string) => {
     navigate(`/summaries/${summaryId}`)
@@ -101,24 +86,6 @@ export function SummaryPage() {
               <RenderMarkdown content={mdString} />
             </CardContent>
           </Card>
-        </div>
-
-        <div className="fixed bottom-8 right-8">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                size="icon"
-                variant="secondary"
-                onClick={handleShare}
-                disabled={isPublic}
-              >
-                <Share className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{isPublic ? 'Already shared' : 'Share summary'}</p>
-            </TooltipContent>
-          </Tooltip>
         </div>
       </div>
     </TooltipProvider>

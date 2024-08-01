@@ -9,7 +9,6 @@ import { getUrlComponents } from '@/lib/url'
 
 export function createSummary({
   id: summaryId,
-  isPublic = false,
   md,
   pageTitle,
   prompt,
@@ -18,7 +17,6 @@ export function createSummary({
   createdOn,
 }: {
   id: string
-  isPublic?: boolean
   md: string
   pageTitle: string
   prompt?: string
@@ -58,7 +56,6 @@ export function createSummary({
   const treeTxs = trees.map(({ parentId, blockId, path, id, topic }) => {
     return tx.trees[id]
       .update({
-        isPublic,
         context: description,
         dayCreated,
         path,
@@ -93,7 +90,6 @@ export function createSummary({
         pageTitle,
         prompt: prompt || 'Summarize this page',
         title: trees[0].topic,
-        isPublic,
         dayCreated,
         url,
       })
@@ -106,8 +102,4 @@ export function createSummary({
     ...treeTxs,
     ...blockTxs,
   ])
-}
-
-export function shareSummary(summaryId: string) {
-  db.transact([tx.summaries[summaryId].update({ isShared: true })])
 }
