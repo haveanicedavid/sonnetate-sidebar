@@ -9,10 +9,7 @@ type AnimatedContainerProps = {
   children: ReactNode
 }
 
-export function CollapseTree({
-  isOpen,
-  children,
-}: AnimatedContainerProps) {
+export function CollapseTree({ isOpen, children }: AnimatedContainerProps) {
   const [ref, { height: viewHeight }] = useMeasure()
   const previous = usePrevious(isOpen)
 

@@ -1,7 +1,7 @@
 import type { Topic } from '@/db/types'
+import { toShortId } from '@/lib/id'
 
 import { Outline, type OutlineProps } from './outline'
-import { toShortId } from '@/lib/id'
 
 export function TopicsOutline({
   topics,
@@ -13,7 +13,11 @@ export function TopicsOutline({
   return topics.map((topic) => (
     <Outline
       key={basePath + topic.id}
-      {...topicToOutlineProps({ topic, basePath: basePath, isFirstLevel: true })}
+      {...topicToOutlineProps({
+        topic,
+        basePath: basePath,
+        isFirstLevel: true,
+      })}
     />
   ))
 }

@@ -11,7 +11,6 @@ import { HoverArrow } from './ui/hover-arrow'
 
 const openTopicsAtom = atom(new Set<string>())
 
-
 export type OutlineProps = {
   shortId: string
   label: string
@@ -19,7 +18,6 @@ export type OutlineProps = {
   basePath: string
   isFirstLevel?: boolean
 }
-
 
 export function Outline({
   shortId,
@@ -107,4 +105,3 @@ export function Outline({
     </div>
   )
 }
-

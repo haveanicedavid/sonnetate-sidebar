@@ -2,6 +2,7 @@ import { id } from '@instantdb/react'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { PlateEditor } from '@/components/editor/slate-editor'
 import { HorizontalSummaryList } from '@/components/horizontal-summary-list'
 import { LoadingScreen } from '@/components/loading-screen'
 import { RenderMarkdown } from '@/components/render-markdown'
@@ -178,6 +179,7 @@ function SummaryContent({
     <Card className="markdown relative h-full overflow-hidden">
       <CardContent className="flex h-full flex-col items-center justify-center p-4">
         <div className="max-h-full w-full overflow-auto py-4">
+          <PlateEditor />
           {summary ? (
             <RenderMarkdown content={summary} />
           ) : isSummarizing ? (
