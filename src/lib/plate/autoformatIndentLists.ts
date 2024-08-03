@@ -1,5 +1,5 @@
-import { AutoformatRule } from '@udecode/plate-autoformat';
-import { ListStyleType, toggleIndentList } from '@udecode/plate-indent-list';
+import { AutoformatRule } from '@udecode/plate-autoformat'
+import { ListStyleType, toggleIndentList } from '@udecode/plate-indent-list'
 
 export const autoformatIndentLists: AutoformatRule[] = [
   {
@@ -9,7 +9,7 @@ export const autoformatIndentLists: AutoformatRule[] = [
     format: (editor) => {
       toggleIndentList(editor, {
         listStyleType: ListStyleType.Disc,
-      });
+      })
     },
   },
   {
@@ -21,4 +21,4 @@ export const autoformatIndentLists: AutoformatRule[] = [
         listStyleType: ListStyleType.Decimal,
       }),
   },
-];
+]

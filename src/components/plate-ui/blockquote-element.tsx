@@ -1,9 +1,6 @@
-'use client';
-
-import React from 'react';
-
-import { cn, withRef } from '@udecode/cn';
-import { PlateElement } from '@udecode/plate-common';
+import { cn, withRef } from '@udecode/cn'
+import { PlateElement } from '@udecode/plate-common'
+import React from 'react'
 
 export const BlockquoteElement = withRef<typeof PlateElement>(
   ({ children, className, ...props }, ref) => {
@@ -16,6 +13,6 @@ export const BlockquoteElement = withRef<typeof PlateElement>(
       >
         <blockquote>{children}</blockquote>
       </PlateElement>
-    );
+    )
   }
-);
+)

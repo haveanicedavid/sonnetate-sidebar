@@ -1,13 +1,12 @@
-import React from 'react';
-
-import { cn, withRef } from '@udecode/cn';
-import { PlateElement, useElement } from '@udecode/plate-common';
-import { type TLinkElement, useLink } from '@udecode/plate-link';
+import { cn, withRef } from '@udecode/cn'
+import { PlateElement, useElement } from '@udecode/plate-common'
+import { type TLinkElement, useLink } from '@udecode/plate-link'
+import React from 'react'
 
 export const LinkElement = withRef<typeof PlateElement>(
   ({ children, className, ...props }, ref) => {
-    const element = useElement<TLinkElement>();
-    const { props: linkProps } = useLink({ element });
+    const element = useElement<TLinkElement>()
+    const { props: linkProps } = useLink({ element })
 
     return (
       <PlateElement
@@ -22,6 +21,6 @@ export const LinkElement = withRef<typeof PlateElement>(
       >
         <a>{children}</a>
       </PlateElement>
-    );
+    )
   }
-);
+)

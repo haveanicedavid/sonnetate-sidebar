@@ -1,18 +1,13 @@
-import {
-  cn,
-  createPrimitiveComponent,
-  withCn,
-  withVariants,
-} from '@udecode/cn';
+import { cn, createPrimitiveComponent, withCn, withVariants } from '@udecode/cn'
 import {
   Caption as CaptionPrimitive,
   CaptionTextarea as CaptionTextareaPrimitive,
   useCaptionButton,
   useCaptionButtonState,
-} from '@udecode/plate-caption';
-import { cva } from 'class-variance-authority';
+} from '@udecode/plate-caption'
+import { cva } from 'class-variance-authority'
 
-import { Button } from './button';
+import { Button } from './button'
 
 const captionVariants = cva('max-w-full', {
   defaultVariants: {
@@ -25,11 +20,11 @@ const captionVariants = cva('max-w-full', {
       right: 'ml-auto',
     },
   },
-});
+})
 
 export const Caption = withVariants(CaptionPrimitive, captionVariants, [
   'align',
-]);
+])
 
 export const CaptionTextarea = withCn(
   CaptionTextareaPrimitive,
@@ -38,9 +33,9 @@ export const CaptionTextarea = withCn(
     'focus:outline-none focus:[&::placeholder]:opacity-0',
     'text-center print:placeholder:text-transparent'
   )
-);
+)
 
 export const CaptionButton = createPrimitiveComponent(Button)({
   propsHook: useCaptionButton,
   stateHook: useCaptionButtonState,
-});
+})

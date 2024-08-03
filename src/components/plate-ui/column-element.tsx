@@ -1,17 +1,15 @@
-import React from 'react';
-
-import type { TColumnElement } from '@udecode/plate-layout';
-
-import { cn, withRef } from '@udecode/cn';
-import { PlateElement, useElement, withHOC } from '@udecode/plate-common';
-import { ResizableProvider } from '@udecode/plate-resizable';
-import { useReadOnly } from 'slate-react';
+import { cn, withRef } from '@udecode/cn'
+import { PlateElement, useElement, withHOC } from '@udecode/plate-common'
+import type { TColumnElement } from '@udecode/plate-layout'
+import { ResizableProvider } from '@udecode/plate-resizable'
+import React from 'react'
+import { useReadOnly } from 'slate-react'
 
 export const ColumnElement = withHOC(
   ResizableProvider,
   withRef<typeof PlateElement>(({ children, className, ...props }, ref) => {
-    const readOnly = useReadOnly();
-    const { width } = useElement<TColumnElement>();
+    const readOnly = useReadOnly()
+    const { width } = useElement<TColumnElement>()
 
     return (
       <PlateElement
@@ -25,6 +23,6 @@ export const ColumnElement = withHOC(
       >
         {children}
       </PlateElement>
-    );
+    )
   })
-);
+)

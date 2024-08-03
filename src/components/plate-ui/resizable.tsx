@@ -1,13 +1,10 @@
-'use client';
-
-import React from 'react';
-
-import { cn, withRef, withVariants } from '@udecode/cn';
+import { cn, withRef, withVariants } from '@udecode/cn'
 import {
   Resizable as ResizablePrimitive,
   ResizeHandle as ResizeHandlePrimitive,
-} from '@udecode/plate-resizable';
-import { cva } from 'class-variance-authority';
+} from '@udecode/plate-resizable'
+import { cva } from 'class-variance-authority'
+import React from 'react'
 
 export const mediaResizeHandleVariants = cva(
   cn(
@@ -22,7 +19,7 @@ export const mediaResizeHandleVariants = cva(
       },
     },
   }
-);
+)
 
 const resizeHandleVariants = cva(cn('absolute z-40'), {
   variants: {
@@ -33,13 +30,13 @@ const resizeHandleVariants = cva(cn('absolute z-40'), {
       top: 'w-full cursor-row-resize',
     },
   },
-});
+})
 
 const ResizeHandleVariants = withVariants(
   ResizeHandlePrimitive,
   resizeHandleVariants,
   ['direction']
-);
+)
 
 export const ResizeHandle = withRef<typeof ResizeHandlePrimitive>(
   (props, ref) => (
@@ -49,7 +46,7 @@ export const ResizeHandle = withRef<typeof ResizeHandlePrimitive>(
       {...props}
     />
   )
-);
+)
 
 const resizableVariants = cva('', {
   variants: {
@@ -59,8 +56,8 @@ const resizableVariants = cva('', {
       right: 'ml-auto',
     },
   },
-});
+})
 
 export const Resizable = withVariants(ResizablePrimitive, resizableVariants, [
   'align',
-]);
+])

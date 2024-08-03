@@ -1,8 +1,7 @@
-import React from 'react';
-
-import { withRef, withVariants } from '@udecode/cn';
-import { PlateElement } from '@udecode/plate-common';
-import { cva } from 'class-variance-authority';
+import { withRef, withVariants } from '@udecode/cn'
+import { PlateElement } from '@udecode/plate-common'
+import { cva } from 'class-variance-authority'
+import React from 'react'
 
 const headingVariants = cva('', {
   variants: {
@@ -19,18 +18,18 @@ const headingVariants = cva('', {
       h6: 'mt-[0.75em] text-base font-semibold tracking-tight',
     },
   },
-});
+})
 
 const HeadingElementVariants = withVariants(PlateElement, headingVariants, [
   'isFirstBlock',
   'variant',
-]);
+])
 
 export const HeadingElement = withRef<typeof HeadingElementVariants>(
   ({ children, isFirstBlock, variant = 'h1', ...props }, ref) => {
-    const { editor, element } = props;
+    const { editor, element } = props
 
-    const Element = variant!;
+    const Element = variant!
 
     return (
       <HeadingElementVariants
@@ -42,6 +41,6 @@ export const HeadingElement = withRef<typeof HeadingElementVariants>(
       >
         <Element>{children}</Element>
       </HeadingElementVariants>
-    );
+    )
   }
-);
+)

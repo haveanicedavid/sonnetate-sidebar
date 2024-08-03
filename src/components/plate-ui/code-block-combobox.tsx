@@ -1,78 +1,73 @@
-'use client';
-
 /* eslint-disable unicorn/prefer-export-from */
-
-import React, { useState } from 'react';
-
-import { cn } from '@udecode/cn';
+import { cn } from '@udecode/cn'
 import {
   useCodeBlockCombobox,
   useCodeBlockComboboxState,
-} from '@udecode/plate-code-block';
+} from '@udecode/plate-code-block'
 // Prism must be imported before all language files
-import Prism from 'prismjs';
+import Prism from 'prismjs'
+import 'prismjs/components/prism-antlr4.js'
+import 'prismjs/components/prism-bash.js'
+import 'prismjs/components/prism-c.js'
+import 'prismjs/components/prism-cmake.js'
+import 'prismjs/components/prism-coffeescript.js'
+import 'prismjs/components/prism-cpp.js'
+import 'prismjs/components/prism-csharp.js'
+import 'prismjs/components/prism-css.js'
+import 'prismjs/components/prism-dart.js'
+// import 'prismjs/components/prism-django.js';
+import 'prismjs/components/prism-docker.js'
+// import 'prismjs/components/prism-ejs.js';
+import 'prismjs/components/prism-erlang.js'
+import 'prismjs/components/prism-git.js'
+import 'prismjs/components/prism-go.js'
+import 'prismjs/components/prism-graphql.js'
+import 'prismjs/components/prism-groovy.js'
+import 'prismjs/components/prism-java.js'
+import 'prismjs/components/prism-javascript.js'
+import 'prismjs/components/prism-json.js'
+import 'prismjs/components/prism-jsx.js'
+import 'prismjs/components/prism-kotlin.js'
+import 'prismjs/components/prism-latex.js'
+import 'prismjs/components/prism-less.js'
+import 'prismjs/components/prism-lua.js'
+import 'prismjs/components/prism-makefile.js'
+import 'prismjs/components/prism-markdown.js'
+import 'prismjs/components/prism-matlab.js'
+import 'prismjs/components/prism-objectivec.js'
+import 'prismjs/components/prism-perl.js'
+// import 'prismjs/components/prism-php.js';
+import 'prismjs/components/prism-powershell.js'
+import 'prismjs/components/prism-properties.js'
+import 'prismjs/components/prism-protobuf.js'
+import 'prismjs/components/prism-python.js'
+import 'prismjs/components/prism-r.js'
+import 'prismjs/components/prism-ruby.js'
+import 'prismjs/components/prism-sass.js'
+import 'prismjs/components/prism-scala.js'
+import 'prismjs/components/prism-scheme.js'
+import 'prismjs/components/prism-scss.js'
+import 'prismjs/components/prism-sql.js'
+import 'prismjs/components/prism-swift.js'
+import 'prismjs/components/prism-tsx.js'
+import 'prismjs/components/prism-typescript.js'
+import 'prismjs/components/prism-wasm.js'
+import 'prismjs/components/prism-yaml.js'
+import React, { useState } from 'react'
 
-import { Icons } from '@/components/icons';
+import { Icons } from '@/components/icons'
 
-import { Button } from './button';
+import { Button } from './button'
 import {
   Command,
   CommandEmpty,
   CommandInput,
   CommandItem,
   CommandList,
-} from './command';
-import { Popover, PopoverContent, PopoverTrigger } from './popover';
+} from './command'
+import { Popover, PopoverContent, PopoverTrigger } from './popover'
 
-import 'prismjs/components/prism-antlr4.js';
-import 'prismjs/components/prism-bash.js';
-import 'prismjs/components/prism-c.js';
-import 'prismjs/components/prism-cmake.js';
-import 'prismjs/components/prism-coffeescript.js';
-import 'prismjs/components/prism-cpp.js';
-import 'prismjs/components/prism-csharp.js';
-import 'prismjs/components/prism-css.js';
-import 'prismjs/components/prism-dart.js';
-// import 'prismjs/components/prism-django.js';
-import 'prismjs/components/prism-docker.js';
-// import 'prismjs/components/prism-ejs.js';
-import 'prismjs/components/prism-erlang.js';
-import 'prismjs/components/prism-git.js';
-import 'prismjs/components/prism-go.js';
-import 'prismjs/components/prism-graphql.js';
-import 'prismjs/components/prism-groovy.js';
-import 'prismjs/components/prism-java.js';
-import 'prismjs/components/prism-javascript.js';
-import 'prismjs/components/prism-json.js';
-import 'prismjs/components/prism-jsx.js';
-import 'prismjs/components/prism-kotlin.js';
-import 'prismjs/components/prism-latex.js';
-import 'prismjs/components/prism-less.js';
-import 'prismjs/components/prism-lua.js';
-import 'prismjs/components/prism-makefile.js';
-import 'prismjs/components/prism-markdown.js';
-import 'prismjs/components/prism-matlab.js';
-import 'prismjs/components/prism-objectivec.js';
-import 'prismjs/components/prism-perl.js';
-// import 'prismjs/components/prism-php.js';
-import 'prismjs/components/prism-powershell.js';
-import 'prismjs/components/prism-properties.js';
-import 'prismjs/components/prism-protobuf.js';
-import 'prismjs/components/prism-python.js';
-import 'prismjs/components/prism-r.js';
-import 'prismjs/components/prism-ruby.js';
-import 'prismjs/components/prism-sass.js';
-import 'prismjs/components/prism-scala.js';
-import 'prismjs/components/prism-scheme.js';
-import 'prismjs/components/prism-scss.js';
-import 'prismjs/components/prism-sql.js';
-import 'prismjs/components/prism-swift.js';
-import 'prismjs/components/prism-tsx.js';
-import 'prismjs/components/prism-typescript.js';
-import 'prismjs/components/prism-wasm.js';
-import 'prismjs/components/prism-yaml.js';
-
-export { Prism };
+export { Prism }
 
 const languages: { label: string; value: string }[] = [
   { label: 'Plain Text', value: 'text' },
@@ -128,15 +123,15 @@ const languages: { label: string; value: string }[] = [
   { label: 'Swift', value: 'swift' },
   { label: 'XML', value: 'xml' },
   { label: 'YAML', value: 'yaml' },
-];
+]
 
 export function CodeBlockCombobox() {
-  const state = useCodeBlockComboboxState();
-  const { commandItemProps } = useCodeBlockCombobox(state);
+  const state = useCodeBlockComboboxState()
+  const { commandItemProps } = useCodeBlockCombobox(state)
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
 
-  if (state.readOnly) return null;
+  if (state.readOnly) return null
 
   return (
     <Popover onOpenChange={setOpen} open={open}>
@@ -166,8 +161,8 @@ export function CodeBlockCombobox() {
                 className="cursor-pointer"
                 key={language.value}
                 onSelect={(_value) => {
-                  commandItemProps.onSelect(_value);
-                  setOpen(false);
+                  commandItemProps.onSelect(_value)
+                  setOpen(false)
                 }}
                 value={language.value}
               >
@@ -184,5 +179,5 @@ export function CodeBlockCombobox() {
         </Command>
       </PopoverContent>
     </Popover>
-  );
+  )
 }

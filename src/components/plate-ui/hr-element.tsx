@@ -1,15 +1,14 @@
-import React from 'react';
-
-import { cn, withRef } from '@udecode/cn';
-import { PlateElement } from '@udecode/plate-common';
-import { useFocused, useSelected } from 'slate-react';
+import { cn, withRef } from '@udecode/cn'
+import { PlateElement } from '@udecode/plate-common'
+import React from 'react'
+import { useFocused, useSelected } from 'slate-react'
 
 export const HrElement = withRef<typeof PlateElement>(
   ({ className, nodeProps, ...props }, ref) => {
-    const { children } = props;
+    const { children } = props
 
-    const selected = useSelected();
-    const focused = useFocused();
+    const selected = useSelected()
+    const focused = useFocused()
 
     return (
       <PlateElement ref={ref} {...props}>
@@ -25,6 +24,6 @@ export const HrElement = withRef<typeof PlateElement>(
         </div>
         {children}
       </PlateElement>
-    );
+    )
   }
-);
+)

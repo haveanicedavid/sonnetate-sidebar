@@ -1,9 +1,6 @@
-'use client';
-
-import React from 'react';
-
-import { cn, withRef } from '@udecode/cn';
-import { PlateLeaf } from '@udecode/plate-common';
+import { cn, withRef } from '@udecode/cn'
+import { PlateLeaf } from '@udecode/plate-common'
+import React from 'react'
 
 export const CodeLeaf = withRef<typeof PlateLeaf>(
   ({ children, className, ...props }, ref) => {
@@ -19,6 +16,6 @@ export const CodeLeaf = withRef<typeof PlateLeaf>(
       >
         <code>{children}</code>
       </PlateLeaf>
-    );
+    )
   }
-);
+)

@@ -1,8 +1,5 @@
-import React from 'react';
-
-import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
-
-import { ELEMENT_BLOCKQUOTE } from '@udecode/plate-block-quote';
+import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu'
+import { ELEMENT_BLOCKQUOTE } from '@udecode/plate-block-quote'
 import {
   collapseSelection,
   focusEditor,
@@ -11,11 +8,12 @@ import {
   toggleNodeType,
   useEditorRef,
   useEditorSelector,
-} from '@udecode/plate-common';
-import { ELEMENT_H1, ELEMENT_H2, ELEMENT_H3 } from '@udecode/plate-heading';
-import { ELEMENT_PARAGRAPH } from '@udecode/plate-paragraph';
+} from '@udecode/plate-common'
+import { ELEMENT_H1, ELEMENT_H2, ELEMENT_H3 } from '@udecode/plate-heading'
+import { ELEMENT_PARAGRAPH } from '@udecode/plate-paragraph'
+import React from 'react'
 
-import { Icons } from '@/components/icons';
+import { Icons } from '@/components/icons'
 
 import {
   DropdownMenu,
@@ -25,8 +23,8 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
   useOpenState,
-} from './dropdown-menu';
-import { ToolbarButton } from './toolbar';
+} from './dropdown-menu'
+import { ToolbarButton } from './toolbar'
 
 const items = [
   {
@@ -71,38 +69,37 @@ const items = [
   //   description: 'Numbered list',
   //   icon: Icons.ol,
   // },
-];
+]
 
-const defaultItem = items.find((item) => item.value === ELEMENT_PARAGRAPH)!;
+const defaultItem = items.find((item) => item.value === ELEMENT_PARAGRAPH)!
 
 export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
   const value: string = useEditorSelector((editor) => {
-    let initialNodeType: string = ELEMENT_PARAGRAPH;
-    let allNodesMatchInitialNodeType = false;
+    let initialNodeType: string = ELEMENT_PARAGRAPH
+    let allNodesMatchInitialNodeType = false
     const codeBlockEntries = getNodeEntries(editor, {
       match: (n) => isBlock(editor, n),
       mode: 'highest',
-    });
-    const nodes = Array.from(codeBlockEntries);
+    })
+    const nodes = Array.from(codeBlockEntries)
 
     if (nodes.length > 0) {
-      initialNodeType = nodes[0][0].type as string;
+      initialNodeType = nodes[0][0].type as string
       allNodesMatchInitialNodeType = nodes.every(([node]) => {
-        const type: string = (node?.type as string) || ELEMENT_PARAGRAPH;
+        const type: string = (node?.type as string) || ELEMENT_PARAGRAPH
 
-        return type === initialNodeType;
-      });
+        return type === initialNodeType
+      })
     }
 
-    return allNodesMatchInitialNodeType ? initialNodeType : ELEMENT_PARAGRAPH;
-  }, []);
+    return allNodesMatchInitialNodeType ? initialNodeType : ELEMENT_PARAGRAPH
+  }, [])
 
-  const editor = useEditorRef();
-  const openState = useOpenState();
+  const editor = useEditorRef()
+  const openState = useOpenState()
 
-  const selectedItem =
-    items.find((item) => item.value === value) ?? defaultItem;
-  const { icon: SelectedItemIcon, label: selectedItemLabel } = selectedItem;
+  const selectedItem = items.find((item) => item.value === value) ?? defaultItem
+  const { icon: SelectedItemIcon, label: selectedItemLabel } = selectedItem
 
   return (
     <DropdownMenu modal={false} {...openState} {...props}>
@@ -134,11 +131,11 @@ export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
             //   }
             // } else {
             //   unwrapList(editor);
-            toggleNodeType(editor, { activeType: type });
+            toggleNodeType(editor, { activeType: type })
             // }
 
-            collapseSelection(editor);
-            focusEditor(editor);
+            collapseSelection(editor)
+            focusEditor(editor)
           }}
           value={value}
         >
@@ -155,5 +152,5 @@ export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }

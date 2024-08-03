@@ -4,6 +4,6 @@ export const commentsUsers = {
     name: 'zbeyens',
     avatarUrl: 'https://avatars.githubusercontent.com/u/19695832?s=96&v=4',
   },
-};
+}
 
-export const myUserId = '1';
+export const myUserId = '1'

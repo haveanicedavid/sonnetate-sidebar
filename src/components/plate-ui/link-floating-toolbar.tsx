@@ -1,14 +1,10 @@
-'use client';
-
-import React from 'react';
-
-import { cn } from '@udecode/cn';
-import { useFormInputProps } from '@udecode/plate-common';
+import { cn } from '@udecode/cn'
+import { useFormInputProps } from '@udecode/plate-common'
 import {
   type UseVirtualFloatingOptions,
   flip,
   offset,
-} from '@udecode/plate-floating';
+} from '@udecode/plate-floating'
 import {
   FloatingLinkUrlInput,
   type LinkFloatingToolbarState,
@@ -17,14 +13,15 @@ import {
   useFloatingLinkEditState,
   useFloatingLinkInsert,
   useFloatingLinkInsertState,
-} from '@udecode/plate-link';
+} from '@udecode/plate-link'
+import React from 'react'
 
-import { Icons } from '@/components/icons';
+import { Icons } from '@/components/icons'
 
-import { buttonVariants } from './button';
-import { inputVariants } from './input';
-import { popoverVariants } from './popover';
-import { Separator } from './separator';
+import { buttonVariants } from './button'
+import { inputVariants } from './input'
+import { popoverVariants } from './popover'
+import { Separator } from './separator'
 
 const floatingOptions: UseVirtualFloatingOptions = {
   middleware: [
@@ -35,10 +32,10 @@ const floatingOptions: UseVirtualFloatingOptions = {
     }),
   ],
   placement: 'bottom-start',
-};
+}
 
 export interface LinkFloatingToolbarProps {
-  state?: LinkFloatingToolbarState;
+  state?: LinkFloatingToolbarState
 }
 
 export function LinkFloatingToolbar({ state }: LinkFloatingToolbarProps) {
@@ -48,13 +45,13 @@ export function LinkFloatingToolbar({ state }: LinkFloatingToolbarProps) {
       ...floatingOptions,
       ...state?.floatingOptions,
     },
-  });
+  })
   const {
     hidden,
     props: insertProps,
     ref: insertRef,
     textInputProps,
-  } = useFloatingLinkInsert(insertState);
+  } = useFloatingLinkInsert(insertState)
 
   const editState = useFloatingLinkEditState({
     ...state,
@@ -62,18 +59,18 @@ export function LinkFloatingToolbar({ state }: LinkFloatingToolbarProps) {
       ...floatingOptions,
       ...state?.floatingOptions,
     },
-  });
+  })
   const {
     editButtonProps,
     props: editProps,
     ref: editRef,
     unlinkButtonProps,
-  } = useFloatingLinkEdit(editState);
+  } = useFloatingLinkEdit(editState)
   const inputProps = useFormInputProps({
     preventDefaultOnEnterKeydown: true,
-  });
+  })
 
-  if (hidden) return null;
+  if (hidden) return null
 
   const input = (
     <div className="flex w-[330px] flex-col" {...inputProps}>
@@ -99,7 +96,7 @@ export function LinkFloatingToolbar({ state }: LinkFloatingToolbarProps) {
         />
       </div>
     </div>
-  );
+  )
 
   const editContent = editState.isEditing ? (
     input
@@ -137,7 +134,7 @@ export function LinkFloatingToolbar({ state }: LinkFloatingToolbarProps) {
         <Icons.unlink width={18} />
       </button>
     </div>
-  );
+  )
 
   return (
     <>
@@ -157,5 +154,5 @@ export function LinkFloatingToolbar({ state }: LinkFloatingToolbarProps) {
         {editContent}
       </div>
     </>
-  );
+  )
 }

@@ -1,10 +1,10 @@
-import { AutoformatRule } from '@udecode/plate-autoformat';
-import { ELEMENT_BLOCKQUOTE } from '@udecode/plate-block-quote';
+import { AutoformatRule } from '@udecode/plate-autoformat'
+import { ELEMENT_BLOCKQUOTE } from '@udecode/plate-block-quote'
 import {
   ELEMENT_CODE_BLOCK,
   insertEmptyCodeBlock,
-} from '@udecode/plate-code-block';
-import { ELEMENT_DEFAULT, insertNodes, setNodes } from '@udecode/plate-common';
+} from '@udecode/plate-code-block'
+import { ELEMENT_DEFAULT, insertNodes, setNodes } from '@udecode/plate-common'
 import {
   ELEMENT_H1,
   ELEMENT_H2,
@@ -12,10 +12,10 @@ import {
   ELEMENT_H4,
   ELEMENT_H5,
   ELEMENT_H6,
-} from '@udecode/plate-heading';
-import { ELEMENT_HR } from '@udecode/plate-horizontal-rule';
+} from '@udecode/plate-heading'
+import { ELEMENT_HR } from '@udecode/plate-horizontal-rule'
 
-import { preFormat } from '@/lib/plate/autoformatUtils';
+import { preFormat } from '@/lib/plate/autoformatUtils'
 
 export const autoformatBlocks: AutoformatRule[] = [
   {
@@ -70,7 +70,7 @@ export const autoformatBlocks: AutoformatRule[] = [
       insertEmptyCodeBlock(editor, {
         defaultType: ELEMENT_DEFAULT,
         insertNodesOptions: { select: true },
-      });
+      })
     },
   },
   {
@@ -78,11 +78,11 @@ export const autoformatBlocks: AutoformatRule[] = [
     type: ELEMENT_HR,
     match: ['---', '—-', '___ '],
     format: (editor) => {
-      setNodes(editor, { type: ELEMENT_HR });
+      setNodes(editor, { type: ELEMENT_HR })
       insertNodes(editor, {
         type: ELEMENT_DEFAULT,
         children: [{ text: '' }],
-      });
+      })
     },
   },
-];
+]

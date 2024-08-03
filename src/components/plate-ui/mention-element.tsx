@@ -1,22 +1,20 @@
-import React from 'react';
-
-import type { TMentionElement } from '@udecode/plate-mention';
-
-import { cn, withRef } from '@udecode/cn';
-import { PlateElement, getHandler, useElement } from '@udecode/plate-common';
-import { useFocused, useSelected } from 'slate-react';
+import { cn, withRef } from '@udecode/cn'
+import { PlateElement, getHandler, useElement } from '@udecode/plate-common'
+import type { TMentionElement } from '@udecode/plate-mention'
+import React from 'react'
+import { useFocused, useSelected } from 'slate-react'
 
 export const MentionElement = withRef<
   typeof PlateElement,
   {
-    onClick?: (mentionNode: any) => void;
-    prefix?: string;
-    renderLabel?: (mentionable: TMentionElement) => string;
+    onClick?: (mentionNode: any) => void
+    prefix?: string
+    renderLabel?: (mentionable: TMentionElement) => string
   }
 >(({ children, className, onClick, prefix, renderLabel, ...props }, ref) => {
-  const element = useElement<TMentionElement>();
-  const selected = useSelected();
-  const focused = useFocused();
+  const element = useElement<TMentionElement>()
+  const selected = useSelected()
+  const focused = useFocused()
 
   return (
     <PlateElement
@@ -38,5 +36,5 @@ export const MentionElement = withRef<
       {renderLabel ? renderLabel(element) : element.value}
       {children}
     </PlateElement>
-  );
-});
+  )
+})

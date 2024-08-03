@@ -1,62 +1,58 @@
-'use client';
-
-import React from 'react';
-
+import { cn, withRef } from '@udecode/cn'
 import type {
   ClassNames,
   PlateElementProps,
   TEditor,
-} from '@udecode/plate-common';
-import type { DropTargetMonitor } from 'react-dnd';
-
-import { cn, withRef } from '@udecode/cn';
+} from '@udecode/plate-common'
 import {
   type DragItemNode,
   useDraggable,
   useDraggableState,
-} from '@udecode/plate-dnd';
-import { blockSelectionActions } from '@udecode/plate-selection';
+} from '@udecode/plate-dnd'
+import { blockSelectionActions } from '@udecode/plate-selection'
+import React from 'react'
+import type { DropTargetMonitor } from 'react-dnd'
 
-import { Icons } from '@/components/icons';
+import { Icons } from '@/components/icons'
 
 import {
   Tooltip,
   TooltipContent,
   TooltipPortal,
   TooltipTrigger,
-} from './tooltip';
+} from './tooltip'
 
 export interface DraggableProps
   extends PlateElementProps,
     ClassNames<{
       /** Block. */
-      block: string;
+      block: string
 
       /** Block and gutter. */
-      blockAndGutter: string;
+      blockAndGutter: string
 
       /** Block toolbar in the gutter. */
-      blockToolbar: string;
+      blockToolbar: string
 
       /**
        * Block toolbar wrapper in the gutter left. It has the height of a line
        * of the block.
        */
-      blockToolbarWrapper: string;
+      blockToolbarWrapper: string
 
-      blockWrapper: string;
+      blockWrapper: string
 
       /** Button to dnd the block, in the block toolbar. */
-      dragHandle: string;
+      dragHandle: string
 
       /** Icon of the drag button, in the drag icon. */
-      dragIcon: string;
+      dragIcon: string
 
       /** Show a dropline above or below the block when dragging a block. */
-      dropLine: string;
+      dropLine: string
 
       /** Gutter at the left side of the editor. It has the height of the block */
-      gutterLeft: string;
+      gutterLeft: string
     }> {
   /**
    * Intercepts the drop handling. If `false` is returned, the default drop
@@ -66,12 +62,12 @@ export interface DraggableProps
   onDropHandler?: (
     editor: TEditor,
     props: {
-      dragItem: DragItemNode;
-      id: string;
-      monitor: DropTargetMonitor<DragItemNode, unknown>;
-      nodeRef: any;
+      dragItem: DragItemNode
+      id: string
+      monitor: DropTargetMonitor<DragItemNode, unknown>
+      nodeRef: any
     }
-  ) => boolean;
+  ) => boolean
 }
 
 const DragHandle = () => {
@@ -81,8 +77,8 @@ const DragHandle = () => {
         <Icons.dragHandle
           className="size-4 text-muted-foreground"
           onClick={(event) => {
-            event.stopPropagation();
-            event.preventDefault();
+            event.stopPropagation()
+            event.preventDefault()
 
             // if (element.id) {
             //   blockSelectionActions.addSelectedRow(element.id as string);
@@ -90,7 +86,7 @@ const DragHandle = () => {
             // }
           }}
           onMouseDown={() => {
-            blockSelectionActions.resetSelectedIds();
+            blockSelectionActions.resetSelectedIds()
           }}
         />
       </TooltipTrigger>
@@ -98,22 +94,22 @@ const DragHandle = () => {
         <TooltipContent>Drag to move</TooltipContent>
       </TooltipPortal>
     </Tooltip>
-  );
-};
+  )
+}
 
 export const Draggable = withRef<'div', DraggableProps>(
   ({ className, classNames = {}, onDropHandler, ...props }, ref) => {
-    const { children, element } = props;
+    const { children, element } = props
 
-    const state = useDraggableState({ element, onDropHandler });
-    const { dropLine, isDragging, isHovered } = state;
+    const state = useDraggableState({ element, onDropHandler })
+    const { dropLine, isDragging, isHovered } = state
     const {
       droplineProps,
       groupProps,
       gutterLeftProps,
       handleRef,
       previewRef,
-    } = useDraggable(state);
+    } = useDraggable(state)
 
     return (
       <div
@@ -168,6 +164,6 @@ export const Draggable = withRef<'div', DraggableProps>(
           )}
         </div>
       </div>
-    );
+    )
   }
-);
+)

@@ -6,10 +6,10 @@ import {
   MARK_SUBSCRIPT,
   MARK_SUPERSCRIPT,
   MARK_UNDERLINE,
-} from '@udecode/plate-basic-marks';
-import { MARK_HIGHLIGHT } from '@udecode/plate-highlight';
+} from '@udecode/plate-basic-marks'
+import { MARK_HIGHLIGHT } from '@udecode/plate-highlight'
 
-import { MyAutoformatRule } from '@/lib/plate/plate-types';
+import { MyAutoformatRule } from '@/lib/plate/plate-types'
 
 export const autoformatMarks: MyAutoformatRule[] = [
   {
@@ -82,4 +82,4 @@ export const autoformatMarks: MyAutoformatRule[] = [
     type: MARK_CODE,
     match: '`',
   },
-];
+]

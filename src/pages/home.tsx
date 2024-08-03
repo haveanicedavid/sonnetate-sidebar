@@ -123,6 +123,7 @@ export function HomePage() {
 
   return (
     <div className="flex h-full flex-col">
+          <PlateEditor />
       {uiSummaries.length > 0 && (
         <div className="p-4 pb-0">
           <HorizontalSummaryList
@@ -179,7 +180,6 @@ function SummaryContent({
     <Card className="markdown relative h-full overflow-hidden">
       <CardContent className="flex h-full flex-col items-center justify-center p-4">
         <div className="max-h-full w-full overflow-auto py-4">
-          <PlateEditor />
           {summary ? (
             <RenderMarkdown content={summary} />
           ) : isSummarizing ? (

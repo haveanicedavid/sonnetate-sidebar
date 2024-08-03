@@ -1,13 +1,5 @@
-'use client';
-
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-
-import type { ValueId } from '@/config/customizer-plugins';
-
-import { cn } from '@udecode/cn';
-import { createAutoformatPlugin } from '@udecode/plate-autoformat';
+import { cn } from '@udecode/cn'
+import { createAutoformatPlugin } from '@udecode/plate-autoformat'
 import {
   createBoldPlugin,
   createCodePlugin,
@@ -16,36 +8,36 @@ import {
   createSubscriptPlugin,
   createSuperscriptPlugin,
   createUnderlinePlugin,
-} from '@udecode/plate-basic-marks';
+} from '@udecode/plate-basic-marks'
 import {
   ELEMENT_BLOCKQUOTE,
   createBlockquotePlugin,
-} from '@udecode/plate-block-quote';
+} from '@udecode/plate-block-quote'
 import {
   createExitBreakPlugin,
   createSingleLinePlugin,
   createSoftBreakPlugin,
-} from '@udecode/plate-break';
-import { createCaptionPlugin } from '@udecode/plate-caption';
+} from '@udecode/plate-break'
+import { createCaptionPlugin } from '@udecode/plate-caption'
 import {
   ELEMENT_CODE_BLOCK,
   createCodeBlockPlugin,
-} from '@udecode/plate-code-block';
-import { createCommentsPlugin } from '@udecode/plate-comments';
+} from '@udecode/plate-code-block'
+import { createCommentsPlugin } from '@udecode/plate-comments'
 import {
   Plate,
   type PlatePluginComponent,
   type Value,
   createPlugins,
-} from '@udecode/plate-common';
-import { createDndPlugin } from '@udecode/plate-dnd';
-import { createEmojiPlugin } from '@udecode/plate-emoji';
-import { createExcalidrawPlugin } from '@udecode/plate-excalidraw';
+} from '@udecode/plate-common'
+import { createDndPlugin } from '@udecode/plate-dnd'
+import { createEmojiPlugin } from '@udecode/plate-emoji'
+import { createExcalidrawPlugin } from '@udecode/plate-excalidraw'
 import {
   createFontBackgroundColorPlugin,
   createFontColorPlugin,
   createFontSizePlugin,
-} from '@udecode/plate-font';
+} from '@udecode/plate-font'
 import {
   ELEMENT_H1,
   ELEMENT_H2,
@@ -54,103 +46,104 @@ import {
   ELEMENT_H5,
   ELEMENT_H6,
   createHeadingPlugin,
-} from '@udecode/plate-heading';
-import { createHighlightPlugin } from '@udecode/plate-highlight';
-import { createHorizontalRulePlugin } from '@udecode/plate-horizontal-rule';
-import { createIndentPlugin } from '@udecode/plate-indent';
-import { createIndentListPlugin } from '@udecode/plate-indent-list';
-import { createJuicePlugin } from '@udecode/plate-juice';
-import { createKbdPlugin } from '@udecode/plate-kbd';
-import { createColumnPlugin } from '@udecode/plate-layout';
-import { createLineHeightPlugin } from '@udecode/plate-line-height';
-import { createLinkPlugin } from '@udecode/plate-link';
-import { createListPlugin, createTodoListPlugin } from '@udecode/plate-list';
-import {
-  createImagePlugin,
-  createMediaEmbedPlugin,
-} from '@udecode/plate-media';
-import { createMentionPlugin } from '@udecode/plate-mention';
-import { createNodeIdPlugin } from '@udecode/plate-node-id';
-import { createNormalizeTypesPlugin } from '@udecode/plate-normalizers';
+} from '@udecode/plate-heading'
+import { createHighlightPlugin } from '@udecode/plate-highlight'
+import { createHorizontalRulePlugin } from '@udecode/plate-horizontal-rule'
+import { createIndentPlugin } from '@udecode/plate-indent'
+import { createIndentListPlugin } from '@udecode/plate-indent-list'
+import { createJuicePlugin } from '@udecode/plate-juice'
+import { createKbdPlugin } from '@udecode/plate-kbd'
+import { createColumnPlugin } from '@udecode/plate-layout'
+import { createLineHeightPlugin } from '@udecode/plate-line-height'
+import { createLinkPlugin } from '@udecode/plate-link'
+import { createListPlugin, createTodoListPlugin } from '@udecode/plate-list'
+import { createImagePlugin, createMediaEmbedPlugin } from '@udecode/plate-media'
+import { createMentionPlugin } from '@udecode/plate-mention'
+import { createNodeIdPlugin } from '@udecode/plate-node-id'
+import { createNormalizeTypesPlugin } from '@udecode/plate-normalizers'
 import {
   ELEMENT_PARAGRAPH,
   createParagraphPlugin,
-} from '@udecode/plate-paragraph';
-import { createResetNodePlugin } from '@udecode/plate-reset-node';
+} from '@udecode/plate-paragraph'
+import { createResetNodePlugin } from '@udecode/plate-reset-node'
 import {
   createDeletePlugin,
   createSelectOnBackspacePlugin,
-} from '@udecode/plate-select';
-import { createBlockSelectionPlugin } from '@udecode/plate-selection';
-import { createDeserializeDocxPlugin } from '@udecode/plate-serializer-docx';
-import { createDeserializeMdPlugin } from '@udecode/plate-serializer-md';
-import { createSlashPlugin } from '@udecode/plate-slash-command';
-import { createTabbablePlugin } from '@udecode/plate-tabbable';
-import { createTablePlugin } from '@udecode/plate-table';
-import { ELEMENT_TOGGLE, createTogglePlugin } from '@udecode/plate-toggle';
-import { createTrailingBlockPlugin } from '@udecode/plate-trailing-block';
+} from '@udecode/plate-select'
+import { createBlockSelectionPlugin } from '@udecode/plate-selection'
+import { createDeserializeDocxPlugin } from '@udecode/plate-serializer-docx'
+import { createDeserializeMdPlugin } from '@udecode/plate-serializer-md'
+import { createSlashPlugin } from '@udecode/plate-slash-command'
+import { createTabbablePlugin } from '@udecode/plate-tabbable'
+import { createTablePlugin } from '@udecode/plate-table'
+import { ELEMENT_TOGGLE, createTogglePlugin } from '@udecode/plate-toggle'
+import { createTrailingBlockPlugin } from '@udecode/plate-trailing-block'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 
-import { settingsStore } from '@/components/context/settings-store';
-import { PlaygroundFixedToolbarButtons } from '@/components/plate-ui/playground-fixed-toolbar-buttons';
-import { PlaygroundFloatingToolbarButtons } from '@/components/plate-ui/playground-floating-toolbar-buttons';
-import { captionPlugin } from '@/lib/plate/demo/plugins/captionPlugin';
-import { createPlateUI } from '@/plate/create-plate-ui';
-import { CommentsProvider } from '@/plate/demo/comments/CommentsProvider';
-import { editableProps } from '@/plate/demo/editableProps';
-import { isEnabled } from '@/plate/demo/is-enabled';
-import { alignPlugin } from '@/plate/demo/plugins/alignPlugin';
-import { autoformatIndentLists } from '@/plate/demo/plugins/autoformatIndentLists';
-import { autoformatLists } from '@/plate/demo/plugins/autoformatLists';
-import { autoformatRules } from '@/plate/demo/plugins/autoformatRules';
-import { dragOverCursorPlugin } from '@/plate/demo/plugins/dragOverCursorPlugin';
-import { exitBreakPlugin } from '@/plate/demo/plugins/exitBreakPlugin';
-import { forcedLayoutPlugin } from '@/plate/demo/plugins/forcedLayoutPlugin';
-import { lineHeightPlugin } from '@/plate/demo/plugins/lineHeightPlugin';
-import { linkPlugin } from '@/plate/demo/plugins/linkPlugin';
-import { resetBlockTypePlugin } from '@/plate/demo/plugins/resetBlockTypePlugin';
-import { selectOnBackspacePlugin } from '@/plate/demo/plugins/selectOnBackspacePlugin';
-import { softBreakPlugin } from '@/plate/demo/plugins/softBreakPlugin';
-import { tabbablePlugin } from '@/plate/demo/plugins/tabbablePlugin';
-import { trailingBlockPlugin } from '@/plate/demo/plugins/trailingBlockPlugin';
-import { usePlaygroundValue } from '@/plate/demo/values/usePlaygroundValue';
-import { Prism } from '@/components/plate-ui/code-block-combobox';
-import { CommentsPopover } from '@/components/plate-ui/comments-popover';
-import { CursorOverlay } from '@/components/plate-ui/cursor-overlay';
-import { Editor } from '@/components/plate-ui/editor';
-import { FixedToolbar } from '@/components/plate-ui/fixed-toolbar';
-import { FloatingToolbar } from '@/components/plate-ui/floating-toolbar';
-import { ImagePreview } from '@/components/plate-ui/image-preview';
+import { settingsStore } from '@/components/context/settings-store'
+import { Prism } from '@/components/plate-ui/code-block-combobox'
+import { CommentsPopover } from '@/components/plate-ui/comments-popover'
+import { CursorOverlay } from '@/components/plate-ui/cursor-overlay'
+import { Editor } from '@/components/plate-ui/editor'
+import { FixedToolbar } from '@/components/plate-ui/fixed-toolbar'
+import { FloatingToolbar } from '@/components/plate-ui/floating-toolbar'
+import { ImagePreview } from '@/components/plate-ui/image-preview'
 import {
   FireLiComponent,
   FireMarker,
-} from '@/components/plate-ui/indent-fire-marker-component';
+} from '@/components/plate-ui/indent-fire-marker-component'
 import {
   TodoLi,
   TodoMarker,
-} from '@/components/plate-ui/indent-todo-marker-component';
+} from '@/components/plate-ui/indent-todo-marker-component'
+import { PlaygroundFixedToolbarButtons } from '@/components/plate-ui/playground-fixed-toolbar-buttons'
+import { PlaygroundFloatingToolbarButtons } from '@/components/plate-ui/playground-floating-toolbar-buttons'
+import type { ValueId } from '@/config/customizer-plugins'
+import { captionPlugin } from '@/lib/plate/demo/plugins/captionPlugin'
+import { createPlateUI } from '@/plate/create-plate-ui'
+import { CommentsProvider } from '@/plate/demo/comments/CommentsProvider'
+import { editableProps } from '@/plate/demo/editableProps'
+import { isEnabled } from '@/plate/demo/is-enabled'
+import { alignPlugin } from '@/plate/demo/plugins/alignPlugin'
+import { autoformatIndentLists } from '@/plate/demo/plugins/autoformatIndentLists'
+import { autoformatLists } from '@/plate/demo/plugins/autoformatLists'
+import { autoformatRules } from '@/plate/demo/plugins/autoformatRules'
+import { dragOverCursorPlugin } from '@/plate/demo/plugins/dragOverCursorPlugin'
+import { exitBreakPlugin } from '@/plate/demo/plugins/exitBreakPlugin'
+import { forcedLayoutPlugin } from '@/plate/demo/plugins/forcedLayoutPlugin'
+import { lineHeightPlugin } from '@/plate/demo/plugins/lineHeightPlugin'
+import { linkPlugin } from '@/plate/demo/plugins/linkPlugin'
+import { resetBlockTypePlugin } from '@/plate/demo/plugins/resetBlockTypePlugin'
+import { selectOnBackspacePlugin } from '@/plate/demo/plugins/selectOnBackspacePlugin'
+import { softBreakPlugin } from '@/plate/demo/plugins/softBreakPlugin'
+import { tabbablePlugin } from '@/plate/demo/plugins/tabbablePlugin'
+import { trailingBlockPlugin } from '@/plate/demo/plugins/trailingBlockPlugin'
+import { usePlaygroundValue } from '@/plate/demo/values/usePlaygroundValue'
 
 export const usePlaygroundPlugins = ({
   components = createPlateUI(),
   id,
 }: {
-  components?: Record<string, PlatePluginComponent>;
-  id?: ValueId;
+  components?: Record<string, PlatePluginComponent>
+  id?: ValueId
 } = {}) => {
-  const enabled = settingsStore.use.checkedPlugins();
+  const enabled = settingsStore.use.checkedPlugins()
 
   const autoformatOptions = {
     enableUndoOnDelete: true,
     rules: [...autoformatRules],
-  };
+  }
 
   if (id === 'indentlist') {
-    autoformatOptions.rules.push(...autoformatIndentLists);
+    autoformatOptions.rules.push(...autoformatIndentLists)
   } else if (id === 'list') {
-    autoformatOptions.rules.push(...autoformatLists);
+    autoformatOptions.rules.push(...autoformatLists)
   } else if (enabled.listStyleType) {
-    autoformatOptions.rules.push(...autoformatIndentLists);
+    autoformatOptions.rules.push(...autoformatIndentLists)
   } else if (enabled.list) {
-    autoformatOptions.rules.push(...autoformatLists);
+    autoformatOptions.rules.push(...autoformatLists)
   }
 
   return useMemo(
@@ -338,42 +331,42 @@ export const usePlaygroundPlugins = ({
         {
           components,
         }
-      );
+      )
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [enabled]
-  );
-};
+  )
+}
 
 // reset editor when initialValue changes
 export const useInitialValueVersion = (initialValue: Value) => {
-  const enabled = settingsStore.use.checkedPlugins();
-  const [version, setVersion] = useState(1);
-  const prevEnabled = useRef(enabled);
-  const prevInitialValueRef = useRef(initialValue);
+  const enabled = settingsStore.use.checkedPlugins()
+  const [version, setVersion] = useState(1)
+  const prevEnabled = useRef(enabled)
+  const prevInitialValueRef = useRef(initialValue)
 
   useEffect(() => {
-    if (enabled === prevEnabled.current) return;
+    if (enabled === prevEnabled.current) return
 
-    prevEnabled.current = enabled;
-    setVersion((v) => v + 1);
-  }, [enabled]);
+    prevEnabled.current = enabled
+    setVersion((v) => v + 1)
+  }, [enabled])
 
   useEffect(() => {
-    if (initialValue === prevInitialValueRef.current) return;
+    if (initialValue === prevInitialValueRef.current) return
 
-    prevInitialValueRef.current = initialValue;
-    setVersion((v) => v + 1);
-  }, [initialValue]);
+    prevInitialValueRef.current = initialValue
+    setVersion((v) => v + 1)
+  }, [initialValue])
 
-  return version;
-};
+  return version
+}
 
 export function PlaygroundDemo({ id }: { id?: ValueId }) {
-  const containerRef = useRef(null);
-  const enabled = settingsStore.use.checkedComponents();
-  const initialValue = usePlaygroundValue(id);
-  const key = useInitialValueVersion(initialValue);
+  const containerRef = useRef(null)
+  const enabled = settingsStore.use.checkedComponents()
+  const initialValue = usePlaygroundValue(id)
+  const key = useInitialValueVersion(initialValue)
 
   const plugins = usePlaygroundPlugins({
     components: createPlateUI(
@@ -384,7 +377,7 @@ export function PlaygroundDemo({ id }: { id?: ValueId }) {
       }
     ),
     id,
-  });
+  })
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -456,6 +449,5 @@ export function PlaygroundDemo({ id }: { id?: ValueId }) {
         </Plate>
       </div>
     </DndProvider>
-  );
+  )
 }
-
