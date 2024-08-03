@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
-import type { Topic, Tree } from '@/db/types'
+import type { Site, Topic, Tree } from '@/db/types'
 import { toShortId } from '@/lib/id'
 import { mergeDuplicateOutlineNodes } from '@/lib/outline'
 import { cn } from '@/lib/utils'
@@ -140,6 +140,37 @@ export function TreesOutline({
   return mergedOutlineProps.map((props) => (
     <Outline key={basePath + props.shortId} {...props} />
   ))
+}
+
+export function SiteOutline({
+  site,
+  basePath,
+}: {
+  site: Site
+  basePath: string
+}) {
+  const trees = site.summaries?.[0].trees
+  if (!trees) {
+    throw new Error('Site must have trees to render outline')
+  }
+  const mergedOutlineProps = mergeDuplicateOutlineNodes(
+    trees.map((tree) =>
+      treeToOutlineProps({ tree, basePath, isFirstLevel: true })
+    )
+  )
+
+  return (
+    <Outline
+      basePath={`/sites/`}
+      label={site.name}
+      isFirstLevel
+      shortId={site.id}
+      children={mergedOutlineProps}
+    />
+  )
+  // return mergedOutlineProps.map((props) => (
+  //   <Outline key={basePath + props.shortId} {...props} />
+  // ))
 }
 
 function topicToOutlineProps({

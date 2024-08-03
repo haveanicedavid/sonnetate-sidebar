@@ -19,6 +19,7 @@ export interface Summary {
   prompt?: string
   site: Site[]
   title: string
+  trees?: Tree[]
   url: string
   rootBlock: Block[]
   user: User
