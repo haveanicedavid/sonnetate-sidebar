@@ -1,5 +1,5 @@
 import { Save } from 'lucide-react'
-import { FormEvent } from 'react'
+import type { FormEvent } from 'react'
 
 import { Button } from './ui/button'
 import { Input } from './ui/input'

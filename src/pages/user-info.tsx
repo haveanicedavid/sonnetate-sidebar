@@ -1,4 +1,5 @@
-import { UserInfoForm, UserInfoFormValues } from '@/components/user-info-form'
+import type { UserInfoFormValues } from '@/components/user-info-form'
+import { UserInfoForm } from '@/components/user-info-form'
 import { createOrUpdateUser } from '@/db/actions/user'
 
 export function UserInfoPage({ authId }: { authId: string }) {

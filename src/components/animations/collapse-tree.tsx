@@ -1,5 +1,5 @@
 import { animated, useSpring } from '@react-spring/web'
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import useMeasure from 'react-use-measure'
 
 import { usePrevious } from '@/lib/hooks/use-previous'
@@ -9,10 +9,7 @@ type AnimatedContainerProps = {
   children: ReactNode
 }
 
-export function CollapseTree({
-  isOpen,
-  children,
-}: AnimatedContainerProps) {
+export function CollapseTree({ isOpen, children }: AnimatedContainerProps) {
   const [ref, { height: viewHeight }] = useMeasure()
   const previous = usePrevious(isOpen)
 

@@ -15,7 +15,11 @@ export function SitesPage() {
           serverCreatedAt: 'desc',
         },
       },
-      summaries: {},
+      summaries: {
+        trees: {
+          topic: {},
+        },
+      },
     },
   })
 

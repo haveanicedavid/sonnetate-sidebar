@@ -1,4 +1,4 @@
-import Anthropic from '@anthropic-ai/sdk'
+import type Anthropic from '@anthropic-ai/sdk'
 import { describe, expect, test } from 'vitest'
 
 import { StreamingMarkdownTransformer } from './response-transformer'

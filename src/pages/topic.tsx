@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom'
 
 import { LoadingScreen } from '@/components/loading-screen'
-import { TreesOutline } from '@/components/outline-trees'
+import { TreesOutline } from '@/components/outline'
 import { RenderMarkdown } from '@/components/render-markdown'
 import { TopicBreadcrumbs } from '@/components/topic-breadcrumbs'
 import { Card } from '@/components/ui/card'
