@@ -9,12 +9,14 @@ import { SummariesPage } from './pages/summaries'
 import { SummaryPage } from './pages/summary'
 import { TopicPage } from './pages/topic'
 import { TopicsPage } from './pages/topics'
+import { JournalPage } from './pages/journal'
 
 export function Routes() {
   return (
     <ReactRoutes>
       <Route element={<AppLayout />}>
-        <Route path="/" element={<HomePage />} />
+        {/* <Route path="/" element={<HomePage />} /> */}
+        <Route path="/" element={<JournalPage/>} />
         <Route path="settings" element={<SettingsPage />} />
         <Route path="topics">
           <Route index element={<TopicsPage />} />
