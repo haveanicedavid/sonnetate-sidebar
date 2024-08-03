@@ -4,13 +4,15 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
+import type { Topic, Tree } from '@/db/types'
+import { toShortId } from '@/lib/id'
+import { mergeDuplicateOutlineNodes } from '@/lib/outline'
 import { cn } from '@/lib/utils'
 
 import { CollapseTree } from './animations/collapse-tree'
 import { HoverArrow } from './ui/hover-arrow'
 
 const openTopicsAtom = atom(new Set<string>())
-
 
 export type OutlineProps = {
   shortId: string
@@ -19,7 +21,6 @@ export type OutlineProps = {
   basePath: string
   isFirstLevel?: boolean
 }
-
 
 export function Outline({
   shortId,
@@ -108,3 +109,91 @@ export function Outline({
   )
 }
 
+export function TopicsOutline({
+  topics,
+  basePath,
+}: {
+  topics: Array<Topic>
+  basePath: string
+}) {
+  return topics.map((topic) => (
+    <Outline
+      key={basePath + topic.id}
+      {...topicToOutlineProps({ topic, basePath, isFirstLevel: true })}
+    />
+  ))
+}
+
+export function TreesOutline({
+  trees,
+  basePath,
+}: {
+  trees: Tree[]
+  basePath: string
+}) {
+  const mergedOutlineProps = mergeDuplicateOutlineNodes(
+    trees.map((tree) =>
+      treeToOutlineProps({ tree, basePath, isFirstLevel: true })
+    )
+  )
+
+  return mergedOutlineProps.map((props) => (
+    <Outline key={basePath + props.shortId} {...props} />
+  ))
+}
+
+function topicToOutlineProps({
+  topic,
+  basePath,
+  isFirstLevel = false,
+}: {
+  topic: Topic
+  basePath: string
+  isFirstLevel?: boolean
+}): OutlineProps {
+  const shortId = toShortId(topic.id)
+  return {
+    shortId,
+    label: topic.label,
+    children:
+      topic.children?.map((child) =>
+        topicToOutlineProps({
+          topic: child,
+          basePath: `${basePath}/${shortId}`,
+          isFirstLevel: false,
+        })
+      ) || [],
+    basePath,
+    isFirstLevel,
+  }
+}
+
+function treeToOutlineProps({
+  tree,
+  basePath,
+  isFirstLevel = false,
+}: {
+  tree: Tree
+  basePath: string
+  isFirstLevel?: boolean
+}): OutlineProps {
+  const topic = tree.topic?.[0]
+  if (!topic) {
+    throw new Error('Tree must have a topic')
+  }
+  const shortId = toShortId(topic.id)
+  return {
+    shortId,
+    label: topic.label,
+    children:
+      tree.children?.map((child) => {
+        return treeToOutlineProps({
+          tree: child,
+          basePath: `${basePath}/${shortId}`,
+          isFirstLevel: false,
+        })
+      }) || [],
+    basePath,
+    isFirstLevel,
+  }
+}

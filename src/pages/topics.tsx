@@ -2,7 +2,7 @@ import { Eye } from 'lucide-react'
 import { useState } from 'react'
 
 import { LoadingScreen } from '@/components/loading-screen'
-import { TopicsOutline } from '@/components/outline-topics'
+import { TopicsOutline } from '@/components/outline'
 import { TopicsTable } from '@/components/topics-table'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
