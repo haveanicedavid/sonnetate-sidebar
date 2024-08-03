@@ -15,7 +15,7 @@ import {
   HoverCardTrigger,
 } from '@/components/ui/hover-card'
 import { db } from '@/db'
-import { Topic } from '@/db/types'
+import type { Topic } from '@/db/types'
 import { toShortId } from '@/lib/id'
 import { topicIdMap } from '@/lib/maps'
 

@@ -17,8 +17,8 @@ export function SitesPage() {
       },
       summaries: {
         trees: {
-          topic: {}
-        }
+          topic: {},
+        },
       },
     },
   })

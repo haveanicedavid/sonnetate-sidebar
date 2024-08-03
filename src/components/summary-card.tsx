@@ -1,7 +1,7 @@
 import { ExternalLink } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
-import { Summary } from '@/db/types'
+import type { Summary } from '@/db/types'
 
 import { RenderMarkdown } from './render-markdown'
 import { Badge } from './ui/badge'

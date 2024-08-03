@@ -1,7 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 
 import { useToast } from '@/components/ui/use-toast'
-import { UserInfoForm, UserInfoFormValues } from '@/components/user-info-form'
+import type { UserInfoFormValues } from '@/components/user-info-form'
+import { UserInfoForm } from '@/components/user-info-form'
 import { createOrUpdateUser } from '@/db/actions/user'
 import { useUser } from '@/db/ui-store'
 

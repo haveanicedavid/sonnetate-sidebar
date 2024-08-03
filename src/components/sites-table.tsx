@@ -1,6 +1,5 @@
+import type { ColumnDef, SortingState } from '@tanstack/react-table'
 import {
-  ColumnDef,
-  SortingState,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
@@ -20,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Site } from '@/db/types'
+import type { Site } from '@/db/types'
 
 type SiteTableProps = {
   sites: Site[]
