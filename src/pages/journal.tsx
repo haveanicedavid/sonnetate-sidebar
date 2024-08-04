@@ -1,7 +1,7 @@
 import type { JSONContent } from '@tiptap/core'
 import { useState } from 'react'
 
-import { Tiptap } from '@/components/editor/tiptap'
+import { Tiptap } from '@/editor/tiptap'
 
 export function JournalPage() {
   const [text, setText] = useState('# Hello\n\n- list')
