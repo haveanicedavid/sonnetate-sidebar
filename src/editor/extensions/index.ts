@@ -7,9 +7,17 @@ import { Markdown } from 'tiptap-markdown'
 import UniqueId from 'tiptap-unique-id'
 
 import { suggestions } from './mention/suggestion'
+// import { TopicHeading, topicHeadingSuggestions } from './topic-heading'
+import { CustomHeading } from './custom-heading/custom-heading'
 
 export const TiptapExtensions = [
-  StarterKit,
+  StarterKit.configure({
+    heading: false,
+  }),
+  // TopicHeading.configure({
+  //   suggestion: topicHeadingSuggestions,
+  // }),
+  CustomHeading,
   BubbleMenu.configure({
     element: document.querySelector('.bubble-menu') as HTMLElement,
   }),
