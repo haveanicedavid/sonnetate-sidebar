@@ -1,32 +1,30 @@
-import React, { useEffect, useRef } from 'react'
+import React, { forwardRef } from 'react'
+
+import { cn } from '@/lib/utils'
 
 interface MentionItemProps extends React.ComponentPropsWithoutRef<'div'> {
   isActive: boolean
 }
 
-export const MentionItem = ({
-  isActive,
-  className,
-  style,
-  ...props
-}: MentionItemProps) => {
-  const ref = useRef<HTMLDivElement | null>(null)
+export const MentionItem = forwardRef<HTMLDivElement, MentionItemProps>(
+  ({ isActive, className, children, ...props }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          'cursor-pointer px-3 py-2 text-sm transition-colors duration-100',
+          'hover:bg-gray-100 dark:hover:bg-gray-700',
+          isActive
+            ? 'bg-gray-100 dark:bg-gray-700'
+            : 'bg-white dark:bg-gray-800',
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </div>
+    )
+  }
+)
 
-  useEffect(() => {
-    if (isActive) {
-      ref.current?.scrollIntoView({ block: 'nearest' })
-    }
-  }, [isActive])
-
-  return (
-    <div
-      ref={ref}
-      className={'mentionsItem' + (className ? ` ${className}` : '')}
-      style={{
-        backgroundColor: isActive ? 'lightgrey' : undefined,
-        ...style,
-      }}
-      {...props}
-    />
-  )
-}
+MentionItem.displayName = 'MentionItem'

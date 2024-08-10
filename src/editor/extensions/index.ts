@@ -40,7 +40,7 @@ export const TiptapExtensions = [
           { href: `#/topics/${node.attrs.id}` },
           options.HTMLAttributes
         ),
-        `${options.suggestion.char}${node.attrs.label ?? node.attrs.id}`,
+        `${node.attrs.label ?? node.attrs.id}`,
       ]
     },
   }),

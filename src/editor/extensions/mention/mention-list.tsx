@@ -36,7 +36,6 @@ export const MentionList = forwardRef<MentionListActions, MentionListProps>(
       )
       .slice(0, 7)
 
-    // TODO: should this use shadcn popover?
     const { refs, floatingStyles } = useFloating({
       whileElementsMounted: autoUpdate,
       middleware: [offset(5), flip(), shift()],
@@ -90,8 +89,8 @@ export const MentionList = forwardRef<MentionListActions, MentionListProps>(
     return createPortal(
       <div
         ref={refs.setFloating}
-        className="mentionsContainer"
         style={floatingStyles}
+        className="z-50 w-64 overflow-hidden rounded-md border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800"
       >
         {filteredTopics.map((item, index) => (
           <MentionItem
@@ -108,3 +107,5 @@ export const MentionList = forwardRef<MentionListActions, MentionListProps>(
     )
   }
 )
+
+MentionList.displayName = "MentionList"
